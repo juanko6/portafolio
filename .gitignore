@@ -1,0 +1,23 @@
+# dependencias
+node_modules/
+
+# build
+dist/
+
+# logs
+logs/
+*.log
+npm-debug.log*
+
+# editores / SO
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# entorno
+.env
+.env.*
+
+# descargas temporales (Unsplash antes de mover a public/img)
+downloads/
