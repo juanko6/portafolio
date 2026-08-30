@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **Fase 0** · Actualizado: 30/08/2026
+Estado: **Fase 1** · Actualizado: 30/08/2026
 
 ## 0. Decisiones fijadas
 
@@ -74,13 +74,13 @@ Reglas:
 ## 3. Tareas (1 commit c/u)
 
 ### Fase 0 — Setup
-- [ ] T0.1 `git init` + `.gitignore` + commit inicial
-- [ ] T0.2 Vite vanilla MPA (4 entradas) + `package.json`
-- [ ] T0.3 ESLint (flat config) + Prettier + script `lint`
-- [ ] T0.4 Vitest + script `test` + test de humo
-- [ ] T0.5 Estructura de carpetas + CSS base (reset, tokens, tipografías)
-- [ ] T0.6 Repo GitHub público + push
-- [ ] T0.7 GitHub Actions CI (lint + test + build)
+- [x] T0.1 `git init` + `.gitignore` + commit inicial
+- [x] T0.2 Vite vanilla MPA (4 entradas) + `package.json`
+- [x] T0.3 ESLint (flat config) + Prettier + script `lint`
+- [x] T0.4 Vitest + script `test` + test de humo
+- [x] T0.5 Estructura de carpetas + CSS base (reset, tokens, tipografías)
+- [x] T0.6 Repo GitHub público + push
+- [x] T0.7 GitHub Actions CI (lint + test + build)
 
 ### Fase 1 — Fundamento
 - [ ] T1.1 Sistema de diseño en `tokens.css` (colores, glow, bordes, espaciados)
