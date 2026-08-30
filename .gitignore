@@ -21,3 +21,8 @@ Thumbs.db
 
 # descargas temporales (Unsplash antes de mover a public/img)
 downloads/
+
+# material local, fuera del repo público
+cv/
+brand/
+referencia/

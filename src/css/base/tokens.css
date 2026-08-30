@@ -1,0 +1,58 @@
+/* Design tokens — T1.1 (base creada en T0.5)
+   Paleta extraída de referencia fayemi.design:
+   negro + glow verde ácido + texto gris con halo. */
+
+:root {
+  /* Color */
+  --color-bg: #080808;
+  --color-panel: #202020;
+  --color-surface: #484b45;
+  --color-text: #cccfca;
+  --color-muted: #6b6e68;
+  --color-glow: #90ff21;
+  --color-glow-soft: rgba(144, 255, 33, 0.5);
+  --color-glow-faint: rgba(144, 255, 33, 0.15);
+
+  /* Glow / halos */
+  --glow-text: 0 0 8px rgba(204, 207, 202, 0.75);
+  --glow-accent: 0 0 8px rgba(144, 255, 33, 0.5);
+
+  /* Bordes */
+  --border-subtle: 1px solid rgba(204, 207, 202, 0.18);
+  --border-glow: 1px solid var(--color-glow);
+  --radius-chip: 4px;
+
+  /* Espaciado (escala 4) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* Tipografía (equivalencias Google Fonts de Suisse, ref T1.2) */
+  --font-display: "Playfair Display", "Suisse Works", serif;
+  --font-body: "Inter", "Suisse Intl", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Suisse Mono", monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.75rem;
+  --text-4xl: 4rem;
+  --text-5xl: 6rem;
+
+  /* Layout */
+  --content-max: 72rem;
+  --content-pad: 1.5rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration: 240ms;
+}
