@@ -1,15 +1,21 @@
 import { mount } from "../components/page.js";
 import { t } from "../i18n/index.js";
+import { LINKS } from "../components/footer.js";
 
 const { main, refresh } = mount(document.querySelector("#app"), {
   page: "info",
 });
 
 /* Crea un bloque con etiqueta (pill) + contenido y lo añade a main */
-function section(labelKey, innerHTML) {
+function section(labelKey, content) {
   const s = document.createElement("section");
   s.className = "info__section";
-  s.innerHTML = `<span class="info__label" data-i18n="${labelKey}"></span>${innerHTML}`;
+  const label = document.createElement("span");
+  label.className = "info__label";
+  label.setAttribute("data-i18n", labelKey);
+  s.appendChild(label);
+  if (typeof content === "string") s.insertAdjacentHTML("beforeend", content);
+  else s.appendChild(content);
   main.appendChild(s);
   return s;
 }
@@ -50,5 +56,49 @@ section(
   "info.extra.title",
   `<ul class="info__list" data-list="info.extra.items"></ul>`
 );
+
+/* T3.3 — RESUMEN (historial: título + sub) */
+const WEB_URLS = [
+  { href: LINKS.mail, external: false },
+  { href: LINKS.github, external: true },
+  { href: LINKS.linkedin, external: true },
+  { href: "https://menuunfolded.com", external: true },
+];
+
+const resumenEl = document.createElement("ul");
+resumenEl.className = "info__resumen";
+t("info.resumen.items").forEach((item) => {
+  const [title, ...rest] = item.split(" · ");
+  const li = document.createElement("li");
+  li.className = "info__resumen__item";
+  const titleEl = document.createElement("span");
+  titleEl.className = "info__resumen__title";
+  titleEl.textContent = title;
+  li.appendChild(titleEl);
+  if (rest.length) {
+    const subEl = document.createElement("span");
+    subEl.className = "info__resumen__sub";
+    subEl.textContent = rest.join(" / ");
+    li.appendChild(subEl);
+  }
+  resumenEl.appendChild(li);
+});
+section("info.resumen.title", resumenEl);
+
+/* T3.3 — ON THE WEB (enlaces inline) */
+const webLinks = t("info.onTheWeb.links");
+const webEl = document.createElement("div");
+webEl.className = "info__web";
+webLinks.forEach((label, i) => {
+  const url = WEB_URLS[i] ?? { href: "#", external: false };
+  const a = document.createElement("a");
+  a.className = "info__weblink";
+  a.textContent = label;
+  a.href = url.href;
+  if (url.external) a.setAttribute("target", "_blank");
+  webEl.appendChild(a);
+  if (i < webLinks.length - 1) webEl.append(",\u00a0");
+});
+section("info.onTheWeb.title", webEl);
 
 refresh();

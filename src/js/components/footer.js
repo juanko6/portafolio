@@ -1,4 +1,4 @@
-const LINKS = {
+export const LINKS = {
   mail: "mailto:juanko6@gmail.com",
   github: "https://github.com/juanko6",
   linkedin: "https://www.linkedin.com/in/juanko6",

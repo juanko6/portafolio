@@ -136,3 +136,61 @@
 .info__list li:hover {
   color: var(--color-text);
 }
+
+/* RESUMEN (historial: título + sub) */
+
+.info__resumen {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 48ch;
+}
+
+.info__resumen__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.info__resumen__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.info__resumen__sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ON THE WEB (enlaces inline) */
+
+.info__web {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  max-width: 48ch;
+}
+
+.info__weblink {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration) var(--ease-out);
+}
+
+.info__weblink:hover {
+  color: var(--color-glow);
+}
