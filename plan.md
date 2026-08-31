@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **Fase 2 completa → Fase 3 — Info (aboutme)** · Actualizado: 31/08/2026
+Estado: **Fase 3 completa → Fase 4 — Work** · Actualizado: 31/08/2026
 
 ## 0. Decisiones fijadas
 
@@ -99,11 +99,11 @@ Reglas:
 - [x] T2.6 Responsive lobby (móvil primero)
 
 ### Fase 3 — Info (aboutme)
-- [ ] T3.1 Título grande + badge `¡HOLA!` + sub
-- [ ] T3.2 Bloques `SOBRE MÍ`, `EMAIL`, `FOCUS`, `EXTRA`
-- [ ] T3.3 Bloque `RESUMEN` + `ON THE WEB`
-- [ ] T3.4 Bloque `COLOFÓN` + imagen retrato (Unsplash placeholder)
-- [ ] T3.5 Footer + responsive info
+- [x] T3.1 Título grande + badge `¡HOLA!` + sub
+- [x] T3.2 Bloques `SOBRE MÍ`, `EMAIL`, `FOCUS`, `EXTRA`
+- [x] T3.3 Bloque `RESUMEN` + `ON THE WEB`
+- [x] T3.4 Bloque `COLOFÓN` + imagen retrato (Unsplash placeholder)
+- [x] T3.5 Footer + responsive info
 
 ### Fase 4 — Work + detail
 - [ ] T4.1 `data/projects.js` (4 proyectos) + test de integridad
