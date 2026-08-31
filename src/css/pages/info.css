@@ -242,3 +242,16 @@
   color: var(--color-muted);
   max-width: 52ch;
 }
+
+/* Responsive: móvil primero */
+
+@media (max-width: 48em) {
+  .info {
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .info__portrait {
+    max-width: 100%;
+  }
+}
