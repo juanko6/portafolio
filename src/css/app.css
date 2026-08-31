@@ -1,0 +1,10 @@
+/* Hoja de estilos única del sitio (base + componentes compartidos).
+   Las páginas añaden sus propios styles importando desde aquí o vía <link>. */
+
+@import "./base/reset.css";
+@import "./base/tokens.css";
+@import "./base/typography.css";
+@import "./components/layout.css";
+@import "./components/clock.css";
+@import "./components/nav.css";
+@import "./components/footer.css";

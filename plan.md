@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **Fase 1** · Actualizado: 30/08/2026
+Estado: **Fase 1 completa → Fase 2 — Lobby** · Actualizado: 30/08/2026
 
 ## 0. Decisiones fijadas
 
@@ -83,12 +83,12 @@ Reglas:
 - [x] T0.7 GitHub Actions CI (lint + test + build)
 
 ### Fase 1 — Fundamento
-- [ ] T1.1 Sistema de diseño en `tokens.css` (colores, glow, bordes, espaciados)
-- [ ] T1.2 Tipografías (Google Fonts: serif display + mono) y escala tipográfica
-- [ ] T1.3 `i18n/index.js` + `es.json` con TODO el texto (§4)
-- [ ] T1.4 Componente `Page` (nav+footer+clock) + CSS
-- [ ] T1.5 Componente `Clock` (CET en vivo) + test
-- [ ] T1.6 Componente `Nav` (labels por página, `Back`) + CSS
+- [x] T1.1 Sistema de diseño en `tokens.css` (colores, glow, bordes, espaciados)
+- [x] T1.2 Tipografías (Google Fonts: serif display + mono) y escala tipográfica
+- [x] T1.3 `i18n/index.js` + `es.json` con TODO el texto (§4)
+- [x] T1.4 Componente `Page` (nav+footer+clock) + CSS
+- [x] T1.5 Componente `Clock` (CET en vivo) + test
+- [x] T1.6 Componente `Nav` (labels por página, `Back`) + CSS
 
 ### Fase 2 — Lobby
 - [ ] T2.1 `HeroCanvas`: grid de partículas reactivo al mouse

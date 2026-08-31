@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "name": "JUAN GUTIÉRREZ",
+    "lobby": "Lobby",
+    "info": "Info",
+    "work": "Work",
+    "notfound": "404",
+    "back": "Back"
+  },
+  "clock": {
+    "tz": "CET"
+  },
+  "footer": {
+    "location": "Alicante, ESPAÑA",
+    "backToTop": "Back to top",
+    "links": {
+      "mail": "Mail",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    },
+    "copyright": "©JG/"
+  },
+  "lobby": {
+    "badges": {
+      "fs": "FS",
+      "year": "26"
+    },
+    "desc": "DESARROLLADOR FULL STACK EN ÚLTIMO CURSO DE INGENIERÍA INFORMÁTICA. DISEÑO Y CONSTRUYO SISTEMAS COMPLETOS DE EXTREMO A EXTREMO, DEL DOMINIO AL DESPLIEGUE EN CLOUD. TENGO PRODUCTO PROPIO EN PRODUCCIÓN CON CLIENTE REAL Y SUSCRIPCIÓN.",
+    "status": "DISPONIBLE PARA CONVENIO DE PRÁCTICAS Y PUESTOS REMOTE EN ESPAÑA. ¡HABLEMOS DE TU PROYECTO!",
+    "cta": {
+      "info": "Info",
+      "work": "Work"
+    }
+  },
+  "info": {
+    "badge": "¡HOLA!",
+    "title": "¡HOLA! SOY JUAN GUTIÉRREZ, DESARROLLADOR FULL STACK Y MENTE DE PRODUCTO.",
+    "sub": "Último curso de Ingeniería Informática. Siempre buscando colaborar con equipos y productos con criterio.",
+    "sobreMi": "Trabajo de extremo a extremo: especificación escrita, dominio, contrato de API, backend y frontend con TDD. Integro IA en producto real, incluida inferencia local. Mi formación en Marketing y 10 años en entornos digitales aportan criterio de producto y conversión.*",
+    "nota": "*Esto es solo una lista truncada. Si tienes algo tangencial o igual de interesante en mente, escríbeme.",
+    "email": "juanko6@gmail.com",
+    "focus": {
+      "title": "FOCUS",
+      "items": [
+        "Full Stack",
+        "Next.js / React",
+        "FastAPI / Node",
+        "PostgreSQL",
+        "Docker / Cloud",
+        "LLM & Inferencia local",
+        "TDD & SDD",
+        "IA en producto"
+      ]
+    },
+    "extra": {
+      "title": "EXTRA",
+      "items": [
+        "Español (nativo)",
+        "Inglés (B2, acreditado U. de Alicante)",
+        "Convenio de prácticas disponible",
+        "Carné B"
+      ]
+    },
+    "resumen": {
+      "title": "RESUMEN",
+      "items": [
+        "FULL STACK DEV · 2026 – PRESENTE · menuunfolded.com",
+        "FREELANCE FULL STACK · MAR 23 – DIC 24 · EE. UU.",
+        "WEB & MARKETING DIGITAL · 2021 – 2023 · BOGOTÁ"
+      ]
+    },
+    "onTheWeb": {
+      "title": "ON THE WEB",
+      "links": ["Mail", "GitHub", "LinkedIn", "menuunfolded.com"]
+    },
+    "colofon": {
+      "title": "COLOFÓN",
+      "desarrollo": "DESARROLLO: Juan C. Gutiérrez",
+      "tipografia": "TIPOGRAFÍA: [TBD]",
+      "bonus": "Me inspira la música, el cine y la intersección con el producto. Si tienes un track nuevo que funcione, mándamelo."
+    }
+  },
+  "work": {
+    "title": "TRABAJO SELECCIONADO {count}",
+    "years": "2025—26",
+    "sub": "Sistemas completos de extremo a extremo, construidos como one-man band: especificación, tests y deploy.",
+    "letsTalk": {
+      "title": "LET'S TALK",
+      "body": "Para hablar de colaboraciones o proyectos, envía un email a juanko6@gmail.com"
+    }
+  },
+  "project": {
+    "about": "ABOUT",
+    "rol": "ROL",
+    "extra": "EXTRA",
+    "repo": "Repo",
+    "site": "Site vivo",
+    "expand": "Expand"
+  },
+  "notfound": {
+    "title": "ERROR (404)",
+    "body": "Algo salió mal, la página que solicitas no está disponible.",
+    "back": "Volver a /Lobby"
+  }
+}

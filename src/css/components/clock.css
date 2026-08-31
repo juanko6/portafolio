@@ -1,0 +1,31 @@
+/* Clock — hora CET en vivo */
+
+.c-clock__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.05em;
+  line-height: 1;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+}
+
+.c-clock__colon {
+  animation: c-clock-blink 1s steps(1, end) infinite;
+}
+
+.c-clock__tz {
+  color: var(--color-muted);
+}
+
+@keyframes c-clock-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0.25;
+  }
+}

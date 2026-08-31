@@ -3,7 +3,7 @@
 Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 
 ## Estado actual
-- **Fase:** 1 — Fundamento (Fase 0 completa: repo `github.com/juanko6/portafolio` público, CI en `.github/workflows/ci.yml`).
+- **Fase:** 1 — Fundamento **completa** (T1.1–T1.6 ✅). Siguiente: **Fase 2 — Lobby**. Fase 0 completa (repo `github.com/juanko6/portafolio` público, CI en `.github/workflows/ci.yml`).
 - **Última actualización:** 30/08/2026.
 - **Cómo actualizar:** editar "Estado actual" + añadir fila en "Log" al terminar cada tarea (1 commit = 1 tarea, `T#.# desc`).
 
@@ -33,8 +33,6 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 
 ## Pendiente / abierto
 - **Visual del hero:** estilo del canvas (partículas, grid, glitch) → T2.1–2.2.
-- **Fuentes tipográficas:** ref usa "Suisse" (comercial) → Google Fonts en T1.2.
-- **Colores:** ref es negro + glow; paleta final en T1.1 (`tokens.css`).
 - **Imágenes reales** (bust 3D, retrato, capturas de producto) → T6.4 opcional.
 - **URL de Loomcast** (si aparece) → actualizar `projects.js`.
 
@@ -56,3 +54,8 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 30/08/2026 | T0.5 | Carpetas `src/` según plan + CSS base (reset, tokens con paleta de la ref, tipografías) + favicon. |
 | 30/08/2026 | T0.6 | Repo público `juanko6/portafolio` + push. cv/brand/referencia ignorados. |
 | 30/08/2026 | T0.7 | CI GitHub Actions (lint + test + build, Node 22). |
+| 30/08/2026 | T1.1–T1.2 | tokens + tipografías ya existían desde T0.5; cerradas aquí. |
+| 30/08/2026 | T1.3 | `i18n/index.js` (t/apply/setLang) + `es.json` (todo §4) + 5 tests. |
+| 30/08/2026 | T1.5 | `Clock` CET (`getClockParts` puro + `mount`) + `clock.css` + 3 tests. |
+| 30/08/2026 | T1.6 | `Nav` (nombre+label, slot reloj, slot lang, `Back` solo no-lobby) + `nav.css`. |
+| 30/08/2026 | T1.4 | `Page` (shell nav+clock+footer), `footer`, `layout.css`, `app.css` (agregador) + cableado de los 4 HTML (1 `<link>` + `<script type="module">`). lint/test/build verdes. |
