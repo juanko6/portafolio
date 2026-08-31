@@ -144,12 +144,21 @@ export function mount(el, opts = {}) {
     ro.observe(el);
   }
 
+  let glitchTimer = null;
+  if (!reduceMotion) {
+    glitchTimer = setInterval(() => {
+      stage.classList.add("is-glitch");
+      setTimeout(() => stage.classList.remove("is-glitch"), 120);
+    }, 4200);
+  }
+
   return {
     stop() {
       cancelAnimationFrame(raf);
       el.removeEventListener("pointermove", onPointerMove);
       el.removeEventListener("pointerleave", onPointerLeave);
       if (ro) ro.disconnect();
+      if (glitchTimer) clearInterval(glitchTimer);
     },
   };
 }

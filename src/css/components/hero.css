@@ -6,10 +6,70 @@
   overflow: hidden;
 }
 
+/* Base: glow radial suave (sustituye a la imagen de fondo opcional) */
+.c-hero-canvas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 55% 55% at 50% 46%,
+    var(--color-glow-faint),
+    transparent 72%
+  );
+}
+
 .c-hero-canvas__canvas {
   position: absolute;
   inset: 0;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* Capa superior: scanlines + flicker (glitch sutil) */
+.c-hero-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0 2px,
+    rgba(204, 207, 202, 0.04) 2px 3px,
+    rgba(0, 0, 0, 0) 3px 4px
+  );
+  animation: c-hero-flicker 6s steps(1, end) infinite;
+}
+
+/* Jitter de glitch: micro-desplazamiento instantáneo */
+.c-hero-canvas.is-glitch .c-hero-canvas__canvas {
+  transform: translateX(1.5px);
+}
+
+@keyframes c-hero-flicker {
+  0%,
+  96%,
+  100% {
+    opacity: 0.55;
+  }
+  97% {
+    opacity: 0.9;
+  }
+  98% {
+    opacity: 0.2;
+  }
+  99% {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-hero-canvas::after {
+    animation: none;
+  }
 }
