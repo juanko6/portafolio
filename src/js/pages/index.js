@@ -6,6 +6,14 @@ const { main, refresh } = mountPage(
   { page: "lobby" }
 );
 
+const cta = document.createElement("nav");
+cta.className = "lobby__cta";
+cta.innerHTML = `
+  <a class="c-btn c-btn--lg" href="/info.html" data-i18n="lobby.cta.info"></a>
+  <a class="c-btn c-btn--lg" href="/work.html" data-i18n="lobby.cta.work"></a>
+`;
+main.appendChild(cta);
+
 const hero = document.createElement("div");
 hero.className = "lobby__hero";
 main.appendChild(hero);
