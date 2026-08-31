@@ -101,4 +101,36 @@ webLinks.forEach((label, i) => {
 });
 section("info.onTheWeb.title", webEl);
 
+/* T3.4 — COLOFÓN (desarrollo + tipografía + retrato + bonus) */
+function colofonField(key) {
+  const [label, value] = t(key).split(": ");
+  const field = document.createElement("div");
+  field.className = "info__colofon-field";
+  const labelEl = document.createElement("span");
+  labelEl.className = "info__colofon-label";
+  labelEl.textContent = label;
+  const valueEl = document.createElement("span");
+  valueEl.className = "info__colofon-value";
+  valueEl.textContent = value;
+  field.appendChild(labelEl);
+  field.appendChild(valueEl);
+  return field;
+}
+
+const colofonEl = document.createElement("div");
+colofonEl.className = "info__colofon";
+colofonEl.appendChild(colofonField("info.colofon.desarrollo"));
+colofonEl.appendChild(colofonField("info.colofon.tipografia"));
+const portrait = document.createElement("img");
+portrait.className = "info__portrait";
+portrait.src = "/img/retrato.jpg";
+portrait.alt = "";
+portrait.loading = "lazy";
+colofonEl.appendChild(portrait);
+const bonus = document.createElement("p");
+bonus.className = "info__bonus";
+bonus.setAttribute("data-i18n", "info.colofon.bonus");
+colofonEl.appendChild(bonus);
+section("info.colofon.title", colofonEl);
+
 refresh();
