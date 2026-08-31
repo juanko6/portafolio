@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **Fase 1 completa → Fase 2 — Lobby** · Actualizado: 30/08/2026
+Estado: **Fase 2 completa → Fase 3 — Info (aboutme)** · Actualizado: 31/08/2026
 
 ## 0. Decisiones fijadas
 
@@ -91,12 +91,12 @@ Reglas:
 - [x] T1.6 Componente `Nav` (labels por página, `Back`) + CSS
 
 ### Fase 2 — Lobby
-- [ ] T2.1 `HeroCanvas`: grid de partículas reactivo al mouse
-- [ ] T2.2 Polish hero: glitch sutil + imagen Unsplash de base (opcional)
-- [ ] T2.3 Sección: badges `FS` `26` + descripción + STATUS
-- [ ] T2.4 Botones `Info` / `Work` grandes con glow
-- [ ] T2.5 Footer en lobby
-- [ ] T2.6 Responsive lobby (móvil primero)
+- [x] T2.1 `HeroCanvas`: grid de partículas reactivo al mouse
+- [x] T2.2 Polish hero: glitch sutil + glow base (Unsplash descartada)
+- [x] T2.3 Sección: badges `FS` `26` + descripción + STATUS
+- [x] T2.4 Botones `Info` / `Work` grandes con glow
+- [x] T2.5 Footer en lobby (ya inyectado por Page T1.4)
+- [x] T2.6 Responsive lobby (móvil primero)
 
 ### Fase 3 — Info (aboutme)
 - [ ] T3.1 Título grande + badge `¡HOLA!` + sub
@@ -178,6 +178,4 @@ Reglas:
 
 ## 6. Riesgos / abierto
 - Fuentes: ref usa "Suisse" (comercial) → equivalentes Google Fonts en T1.2.
-- Paleta final → T1.1 (la ref: negro + glow).
-- Visual del canvas → decidir en T2.1–2.2.
 - Imágenes reales → T6.4 opcional.

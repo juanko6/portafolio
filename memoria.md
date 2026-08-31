@@ -3,8 +3,8 @@
 Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 
 ## Estado actual
-- **Fase:** 1 — Fundamento **completa** (T1.1–T1.6 ✅). Siguiente: **Fase 2 — Lobby**. Fase 0 completa (repo `github.com/juanko6/portafolio` público, CI en `.github/workflows/ci.yml`).
-- **Última actualización:** 30/08/2026.
+- **Fase:** 2 — Lobby **completa** (T2.1–T2.6 ✅). Siguiente: **Fase 3 — Info (aboutme)**.
+- **Última actualización:** 31/08/2026.
 - **Cómo actualizar:** editar "Estado actual" + añadir fila en "Log" al terminar cada tarea (1 commit = 1 tarea, `T#.# desc`).
 
 ## Decisiones tomadas (no reabrir sin motivo)
@@ -25,6 +25,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 13 | Vite **8.x**: entradas MPA en `input` de primer nivel de `vite.config.js` | Así documenta Vite 8 (`build.rollupOptions` quedó proxy de `rolldownOptions`) |
 | 14 | Google Fonts: **Playfair Display** (display serif) + **Inter** (body) + **JetBrains Mono** (mono) | Equivalencias de Suisse Works/Intl/Mono de la ref (T1.2 adelantado a tokens.css) |
 | 15 | Paleta base ya fijada en `tokens.css`: bg `#080808`, glow `#90ff21`, texto `#cccfca`, panel `#202020`, superficie `#484b45` | Extraída del CSS de la ref (fayemi.design) |
+| 16 | Hero: **sin imagen Unsplash** de base; glow radial CSS como sustituto | Una cara genérica no encaja con el grid abstracto; el glow mantiene la estética de la ref |
 
 ## Fuentes del proyecto
 - `referencia/` — HTML guardado + 4 screenshots de fayemi.design (estilo objetivo)
@@ -32,7 +33,6 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - `brand/*.ai` — ficheros de marca (Adobe Illustrator, aún no extraídos)
 
 ## Pendiente / abierto
-- **Visual del hero:** estilo del canvas (partículas, grid, glitch) → T2.1–2.2.
 - **Imágenes reales** (bust 3D, retrato, capturas de producto) → T6.4 opcional.
 - **URL de Loomcast** (si aparece) → actualizar `projects.js`.
 
@@ -59,3 +59,8 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 30/08/2026 | T1.5 | `Clock` CET (`getClockParts` puro + `mount`) + `clock.css` + 3 tests. |
 | 30/08/2026 | T1.6 | `Nav` (nombre+label, slot reloj, slot lang, `Back` solo no-lobby) + `nav.css`. |
 | 30/08/2026 | T1.4 | `Page` (shell nav+clock+footer), `footer`, `layout.css`, `app.css` (agregador) + cableado de los 4 HTML (1 `<link>` + `<script type="module">`). lint/test/build verdes. |
+| 31/08/2026 | T2.1 | `HeroCanvas`: grid de partículas (26px gap) con spring physics + reactividad al mouse. `createGrid`/`displacement` exportados (testables). 4 tests. |
+| 31/08/2026 | T2.2 | Polish hero: glow radial `::before` (Unsplash descartada — cara genérica no encaja), scanlines + flicker `::after`, glitch jitter 120ms cada 4.2s. `prefers-reduced-motion` respeta todo. |
+| 31/08/2026 | T2.3 | Sección meta: badges (★ FS 26) + desc mono uppercase + STATUS (label glow + texto). `statusLabel` añadido a es.json. |
+| 31/08/2026 | T2.4 | CTA `Info`/`Work` grandes: `--font-display` (Playfair), `clamp(2rem,6vw,4.5rem)`, glow radial `::after` al hover. |
+| 31/08/2026 | T2.5–T2.6 | T2.5: footer ya inyectado por Page (no-op). T2.6: media queries 48em/30em — CTA apilados, hero compacto, meta column. Fix: `--color-text-dim`→`--color-muted`. |
