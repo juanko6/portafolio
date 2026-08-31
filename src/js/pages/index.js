@@ -1,10 +1,9 @@
 import { mount as mountPage } from "../components/page.js";
 import { mount as mountHero } from "../components/hero-canvas.js";
 
-const { main, refresh } = mountPage(
-  document.querySelector("#app"),
-  { page: "lobby" }
-);
+const { main, refresh } = mountPage(document.querySelector("#app"), {
+  page: "lobby",
+});
 
 const cta = document.createElement("nav");
 cta.className = "lobby__cta";
