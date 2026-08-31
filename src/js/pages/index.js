@@ -1,9 +1,29 @@
 import { mount as mountPage } from "../components/page.js";
 import { mount as mountHero } from "../components/hero-canvas.js";
 
-const { main } = mountPage(document.querySelector("#app"), { page: "lobby" });
+const { main, refresh } = mountPage(
+  document.querySelector("#app"),
+  { page: "lobby" }
+);
 
 const hero = document.createElement("div");
 hero.className = "lobby__hero";
 main.appendChild(hero);
 mountHero(hero, {});
+
+const meta = document.createElement("section");
+meta.className = "lobby__meta";
+meta.innerHTML = `
+  <div class="lobby__badges" data-i18n-block="lobby__badges">
+    <span class="c-badge c-badge--star">★</span>
+    <span class="c-badge" data-i18n="lobby.badges.fs"></span>
+    <span class="c-badge" data-i18n="lobby.badges.year"></span>
+  </div>
+  <p class="lobby__desc" data-i18n="lobby.desc"></p>
+  <div class="lobby__status">
+    <span class="lobby__status__label" data-i18n="lobby.statusLabel"></span>
+    <span class="lobby__status__text" data-i18n="lobby.status"></span>
+  </div>
+`;
+main.appendChild(meta);
+refresh();
