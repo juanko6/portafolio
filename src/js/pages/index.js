@@ -1,3 +1,9 @@
-import { mount } from "../components/page.js";
+import { mount as mountPage } from "../components/page.js";
+import { mount as mountHero } from "../components/hero-canvas.js";
 
-mount(document.querySelector("#app"), { page: "lobby" });
+const { main } = mountPage(document.querySelector("#app"), { page: "lobby" });
+
+const hero = document.createElement("div");
+hero.className = "lobby__hero";
+main.appendChild(hero);
+mountHero(hero, {});

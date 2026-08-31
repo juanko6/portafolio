@@ -8,3 +8,5 @@
 @import "./components/clock.css";
 @import "./components/nav.css";
 @import "./components/footer.css";
+@import "./components/hero.css";
+@import "./pages/lobby.css";
