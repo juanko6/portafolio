@@ -3,5 +3,6 @@ node_modules/
 referencia/
 package-lock.json
 downloads/
+.playwright-mcp/
 *.md
 

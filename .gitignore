@@ -26,3 +26,6 @@ downloads/
 cv/
 brand/
 referencia/
+
+# artefactos de QA visual (Playwright MCP)
+.playwright-mcp/

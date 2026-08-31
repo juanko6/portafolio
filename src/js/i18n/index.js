@@ -71,6 +71,16 @@ export function apply(scope = document) {
   scope.querySelectorAll("[data-i18n]").forEach((el) => {
     el.textContent = t(el.getAttribute("data-i18n"));
   });
+  scope.querySelectorAll("[data-list]").forEach((el) => {
+    const items = t(el.getAttribute("data-list"));
+    if (!Array.isArray(items)) return;
+    el.textContent = "";
+    items.forEach((item) => {
+      const node = el.ownerDocument.createElement("li");
+      node.textContent = item;
+      el.appendChild(node);
+    });
+  });
   if (typeof document !== "undefined" && scope === document) {
     document.documentElement.setAttribute("lang", current);
   }
