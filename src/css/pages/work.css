@@ -1,0 +1,82 @@
+.work__head {
+  padding: clamp(2rem, 8vw, 6rem) clamp(1.25rem, 6vw, 4rem) 2rem;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.work__title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.work__years {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--c-ink-soft);
+  margin-top: 0.75rem;
+}
+
+.work__sub {
+  font-size: 0.9rem;
+  color: var(--c-ink-soft);
+  max-width: 46ch;
+  margin-top: 1.5rem;
+  line-height: 1.6;
+}
+
+.work-list {
+  list-style: none;
+}
+
+.work-card {
+  border-bottom: 1px solid var(--c-line);
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 6vw, 4rem);
+}
+
+.work-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.work-card__title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.work-card__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.work-card__timeline,
+.work-card__place {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--c-ink-soft);
+}
+
+@media (max-width: 600px) {
+  .work-card__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .work-card__meta {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
