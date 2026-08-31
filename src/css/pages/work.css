@@ -1,82 +1,131 @@
+/* Work — head */
 .work__head {
-  padding: clamp(2rem, 8vw, 6rem) clamp(1.25rem, 6vw, 4rem) 2rem;
-  border-bottom: 1px solid var(--c-line);
+  padding: var(--space-9) var(--content-pad) var(--space-6);
+  border-bottom: var(--border-subtle);
 }
 
 .work__title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 7vw, 5rem);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.05;
   letter-spacing: -0.01em;
+  text-shadow: var(--glow-text);
 }
 
 .work__years {
   display: inline-block;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
   letter-spacing: 0.2em;
-  color: var(--c-ink-soft);
-  margin-top: 0.75rem;
+  color: var(--color-muted);
+  margin-top: var(--space-3);
 }
 
 .work__sub {
-  font-size: 0.9rem;
-  color: var(--c-ink-soft);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
   max-width: 46ch;
-  margin-top: 1.5rem;
+  margin-top: var(--space-5);
   line-height: 1.6;
 }
 
+/* Work — list */
 .work-list {
   list-style: none;
 }
 
 .work-card {
-  border-bottom: 1px solid var(--c-line);
-  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 6vw, 4rem);
+  border-bottom: var(--border-subtle);
+  padding: var(--space-6) var(--content-pad);
 }
 
 .work-card__head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .work-card__title {
-  font-family: var(--font-sans);
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 500;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  text-shadow: var(--glow-text);
 }
 
 .work-card__meta {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.25rem;
+  gap: var(--space-1);
   flex-shrink: 0;
 }
 
 .work-card__timeline,
 .work-card__place {
+  font-family: var(--font-mono);
   font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  color: var(--c-ink-soft);
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+}
+
+/* Work — acciones (T4.3) */
+.work-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.work-card__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.55rem 1.25rem;
+  border: var(--border-subtle);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    border-color var(--duration) var(--ease-out),
+    color var(--duration) var(--ease-out);
+}
+
+.work-card__btn:hover {
+  border-color: var(--color-text);
+}
+
+.work-card__chevron {
+  display: inline-flex;
+  transition: transform var(--duration) var(--ease-out);
+}
+
+.work-card__chevron svg {
+  display: block;
+}
+
+.work-card.is-open .work-card__chevron {
+  transform: rotate(180deg);
 }
 
 @media (max-width: 600px) {
   .work-card__head {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   .work-card__meta {
     align-items: flex-start;
     flex-direction: row;
-    gap: 1rem;
+    gap: var(--space-4);
   }
 }
