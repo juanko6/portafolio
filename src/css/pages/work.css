@@ -116,6 +116,57 @@
   transform: rotate(180deg);
 }
 
+/* Work — detail (T4.4) */
+.work-card__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-top: var(--space-6);
+}
+
+.work-card__carousel {
+  margin: 0 calc(-1 * var(--content-pad));
+}
+
+.work-card__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.work-card__label {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3em 0.8em;
+  border: var(--border-subtle);
+  border-radius: var(--radius-chip);
+  color: var(--color-muted);
+}
+
+.work-card__text {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--color-text);
+  max-width: 60ch;
+}
+
+.work-card__roles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.work-card__roles li {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+}
+
 @media (max-width: 600px) {
   .work-card__head {
     flex-direction: column;

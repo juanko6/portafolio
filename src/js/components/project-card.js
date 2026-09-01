@@ -1,4 +1,5 @@
 import { t } from "../i18n/index.js";
+import { mount as mountCarousel } from "./carousel.js";
 
 const CHEVRON =
   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
@@ -28,6 +29,7 @@ export function mount(el, { project }) {
   const detail = document.createElement("div");
   detail.className = "work-card__detail";
   detail.hidden = true;
+  buildDetail(detail, project);
 
   const actions = document.createElement("div");
   actions.className = "work-card__actions";
@@ -68,4 +70,47 @@ function makeLink(label, href) {
   a.rel = "noopener noreferrer";
   a.textContent = label;
   return a;
+}
+
+function buildDetail(detail, project) {
+  const carouselWrap = document.createElement("div");
+  carouselWrap.className = "work-card__carousel";
+  mountCarousel(carouselWrap, { images: project.images });
+  detail.appendChild(carouselWrap);
+
+  detail.appendChild(makeSection("project.about", project.about));
+  detail.appendChild(makeSection("project.rol", makeRoleList(project.rol)));
+
+  if (project.extra) {
+    detail.appendChild(makeSection("project.extra", project.extra));
+  }
+}
+
+function makeSection(labelKey, content) {
+  const s = document.createElement("div");
+  s.className = "work-card__section";
+  const label = document.createElement("span");
+  label.className = "work-card__label";
+  label.textContent = t(labelKey);
+  s.appendChild(label);
+  if (typeof content === "string") {
+    const p = document.createElement("p");
+    p.className = "work-card__text";
+    p.textContent = content;
+    s.appendChild(p);
+  } else {
+    s.appendChild(content);
+  }
+  return s;
+}
+
+function makeRoleList(items) {
+  const ul = document.createElement("ul");
+  ul.className = "work-card__roles";
+  for (const item of items) {
+    const li = document.createElement("li");
+    li.textContent = item;
+    ul.appendChild(li);
+  }
+  return ul;
 }
