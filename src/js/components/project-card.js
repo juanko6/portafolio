@@ -74,7 +74,6 @@ function makeLink(label, href) {
 
 function buildDetail(detail, project) {
   const carouselWrap = document.createElement("div");
-  carouselWrap.className = "work-card__carousel";
   mountCarousel(carouselWrap, { images: project.images });
   detail.appendChild(carouselWrap);
 
