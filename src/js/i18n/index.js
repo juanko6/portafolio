@@ -1,6 +1,7 @@
 import es from "./locales/es.json";
+import en from "./locales/en.json";
 
-const DICTS = { es };
+const DICTS = { es, en };
 const STORAGE_KEY = "i18n-lang";
 const DEFAULT_LANG = "es";
 
@@ -39,9 +40,17 @@ export function availableLangs() {
 
 export function setLang(lang) {
   if (!DICTS[lang]) return current;
+  const changed = current !== lang;
   current = lang;
   writeStored(lang);
-  if (typeof document !== "undefined") apply(document);
+  if (typeof document !== "undefined") {
+    apply(document);
+    if (changed) {
+      document.dispatchEvent(
+        new CustomEvent("i18n:change", { detail: { lang } })
+      );
+    }
+  }
   return current;
 }
 

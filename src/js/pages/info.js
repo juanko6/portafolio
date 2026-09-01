@@ -6,6 +6,13 @@ const { main, refresh } = mount(document.querySelector("#app"), {
   page: "info",
 });
 
+const WEB_URLS = [
+  { href: LINKS.mail, external: false },
+  { href: LINKS.github, external: true },
+  { href: LINKS.linkedin, external: true },
+  { href: "https://menuunfolded.com", external: true },
+];
+
 /* Crea un bloque con etiqueta (pill) + contenido y lo añade a main */
 function section(labelKey, content) {
   const s = document.createElement("section");
@@ -20,86 +27,46 @@ function section(labelKey, content) {
   return s;
 }
 
-/* T3.1 — Head: badge + título + sub */
-const head = document.createElement("header");
-head.className = "info__head";
-head.innerHTML = `
-  <span class="info__badge" data-i18n="info.badge"></span>
-  <h1 class="info__title" data-i18n="info.title"></h1>
-  <p class="info__sub" data-i18n="info.sub"></p>
-`;
-main.appendChild(head);
-
-/* T3.2 — SOBRE MÍ */
-section(
-  "info.sobreMi.title",
-  `
-  <p class="info__sobre" data-i18n="info.sobreMi.text"></p>
-  <p class="info__nota" data-i18n="info.sobreMi.nota"></p>
-`
-);
-
-/* T3.2 — EMAIL */
-section(
-  "info.email.title",
-  `<a class="info__email" href="mailto:${t("info.email.text")}" data-i18n="info.email.text"></a>`
-);
-
-/* T3.2 — FOCUS */
-section(
-  "info.focus.title",
-  `<ul class="info__list" data-list="info.focus.items"></ul>`
-);
-
-/* T3.2 — EXTRA */
-section(
-  "info.extra.title",
-  `<ul class="info__list" data-list="info.extra.items"></ul>`
-);
-
 /* T3.3 — RESUMEN (historial: título + sub) */
-const WEB_URLS = [
-  { href: LINKS.mail, external: false },
-  { href: LINKS.github, external: true },
-  { href: LINKS.linkedin, external: true },
-  { href: "https://menuunfolded.com", external: true },
-];
-
-const resumenEl = document.createElement("ul");
-resumenEl.className = "info__resumen";
-t("info.resumen.items").forEach((item) => {
-  const [title, ...rest] = item.split(" · ");
-  const li = document.createElement("li");
-  li.className = "info__resumen__item";
-  const titleEl = document.createElement("span");
-  titleEl.className = "info__resumen__title";
-  titleEl.textContent = title;
-  li.appendChild(titleEl);
-  if (rest.length) {
-    const subEl = document.createElement("span");
-    subEl.className = "info__resumen__sub";
-    subEl.textContent = rest.join(" / ");
-    li.appendChild(subEl);
-  }
-  resumenEl.appendChild(li);
-});
-section("info.resumen.title", resumenEl);
+function buildResumen() {
+  const resumenEl = document.createElement("ul");
+  resumenEl.className = "info__resumen";
+  t("info.resumen.items").forEach((item) => {
+    const [title, ...rest] = item.split(" · ");
+    const li = document.createElement("li");
+    li.className = "info__resumen__item";
+    const titleEl = document.createElement("span");
+    titleEl.className = "info__resumen__title";
+    titleEl.textContent = title;
+    li.appendChild(titleEl);
+    if (rest.length) {
+      const subEl = document.createElement("span");
+      subEl.className = "info__resumen__sub";
+      subEl.textContent = rest.join(" / ");
+      li.appendChild(subEl);
+    }
+    resumenEl.appendChild(li);
+  });
+  return resumenEl;
+}
 
 /* T3.3 — ON THE WEB (enlaces inline) */
-const webLinks = t("info.onTheWeb.links");
-const webEl = document.createElement("div");
-webEl.className = "info__web";
-webLinks.forEach((label, i) => {
-  const url = WEB_URLS[i] ?? { href: "#", external: false };
-  const a = document.createElement("a");
-  a.className = "info__weblink";
-  a.textContent = label;
-  a.href = url.href;
-  if (url.external) a.setAttribute("target", "_blank");
-  webEl.appendChild(a);
-  if (i < webLinks.length - 1) webEl.append(",\u00a0");
-});
-section("info.onTheWeb.title", webEl);
+function buildWeb() {
+  const webLinks = t("info.onTheWeb.links");
+  const webEl = document.createElement("div");
+  webEl.className = "info__web";
+  webLinks.forEach((label, i) => {
+    const url = WEB_URLS[i] ?? { href: "#", external: false };
+    const a = document.createElement("a");
+    a.className = "info__weblink";
+    a.textContent = label;
+    a.href = url.href;
+    if (url.external) a.setAttribute("target", "_blank");
+    webEl.appendChild(a);
+    if (i < webLinks.length - 1) webEl.append(",\u00a0");
+  });
+  return webEl;
+}
 
 /* T3.4 — COLOFÓN (desarrollo + tipografía + retrato + bonus) */
 function colofonField(key) {
@@ -117,20 +84,78 @@ function colofonField(key) {
   return field;
 }
 
-const colofonEl = document.createElement("div");
-colofonEl.className = "info__colofon";
-colofonEl.appendChild(colofonField("info.colofon.desarrollo"));
-colofonEl.appendChild(colofonField("info.colofon.tipografia"));
-const portrait = document.createElement("img");
-portrait.className = "info__portrait";
-portrait.src = "/img/retrato.jpg";
-portrait.alt = "";
-portrait.loading = "lazy";
-colofonEl.appendChild(portrait);
-const bonus = document.createElement("p");
-bonus.className = "info__bonus";
-bonus.setAttribute("data-i18n", "info.colofon.bonus");
-colofonEl.appendChild(bonus);
-section("info.colofon.title", colofonEl);
+function buildColofon() {
+  const colofonEl = document.createElement("div");
+  colofonEl.className = "info__colofon";
+  colofonEl.appendChild(colofonField("info.colofon.desarrollo"));
+  colofonEl.appendChild(colofonField("info.colofon.tipografia"));
+  const portrait = document.createElement("img");
+  portrait.className = "info__portrait";
+  portrait.src = "/img/retrato.jpg";
+  portrait.alt = "";
+  portrait.loading = "lazy";
+  colofonEl.appendChild(portrait);
+  const bonus = document.createElement("p");
+  bonus.className = "info__bonus";
+  bonus.setAttribute("data-i18n", "info.colofon.bonus");
+  colofonEl.appendChild(bonus);
+  return colofonEl;
+}
 
-refresh();
+/* T3.1 + T3.2 + T3.3 + T3.4 + T5.2 — Construye toda la página. Se reconstruye
+   en cada cambio de idioma (evento i18n:change) porque RESUMEN, ON THE WEB y
+   COLOFÓN se generan con t() dinámicamente y apply() no los refresca. */
+function build() {
+  main.innerHTML = "";
+
+  /* T3.1 — Head: badge + título + sub */
+  const head = document.createElement("header");
+  head.className = "info__head";
+  head.innerHTML = `
+    <span class="info__badge" data-i18n="info.badge"></span>
+    <h1 class="info__title" data-i18n="info.title"></h1>
+    <p class="info__sub" data-i18n="info.sub"></p>
+  `;
+  main.appendChild(head);
+
+  /* T3.2 — SOBRE MÍ */
+  section(
+    "info.sobreMi.title",
+    `
+    <p class="info__sobre" data-i18n="info.sobreMi.text"></p>
+    <p class="info__nota" data-i18n="info.sobreMi.nota"></p>
+  `
+  );
+
+  /* T3.2 — EMAIL */
+  section(
+    "info.email.title",
+    `<a class="info__email" href="mailto:${t("info.email.text")}" data-i18n="info.email.text"></a>`
+  );
+
+  /* T3.2 — FOCUS */
+  section(
+    "info.focus.title",
+    `<ul class="info__list" data-list="info.focus.items"></ul>`
+  );
+
+  /* T3.2 — EXTRA */
+  section(
+    "info.extra.title",
+    `<ul class="info__list" data-list="info.extra.items"></ul>`
+  );
+
+  /* T3.3 — RESUMEN */
+  section("info.resumen.title", buildResumen());
+
+  /* T3.3 — ON THE WEB */
+  section("info.onTheWeb.title", buildWeb());
+
+  /* T3.4 — COLOFÓN */
+  section("info.colofon.title", buildColofon());
+
+  refresh();
+}
+
+build();
+document.addEventListener("i18n:change", build);

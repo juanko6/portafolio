@@ -1,4 +1,5 @@
-import { t } from "../i18n/index.js";
+import { getLang, t } from "../i18n/index.js";
+import { getProjectContent } from "../data/projects.js";
 import { mount as mountCarousel } from "./carousel.js";
 
 const CHEVRON =
@@ -6,6 +7,7 @@ const CHEVRON =
 
 export function mount(el, { project }) {
   el.className = "work-card";
+  const content = getProjectContent(project, getLang());
 
   const head = document.createElement("div");
   head.className = "work-card__head";
@@ -18,10 +20,10 @@ export function mount(el, { project }) {
   meta.className = "work-card__meta";
   const timeline = document.createElement("span");
   timeline.className = "work-card__timeline";
-  timeline.textContent = project.timeline;
+  timeline.textContent = content.timeline;
   const place = document.createElement("span");
   place.className = "work-card__place";
-  place.textContent = project.place;
+  place.textContent = content.place;
   meta.append(timeline, place);
 
   head.append(title, meta);
@@ -29,7 +31,7 @@ export function mount(el, { project }) {
   const detail = document.createElement("div");
   detail.className = "work-card__detail";
   detail.hidden = true;
-  buildDetail(detail, project);
+  buildDetail(detail, project, content);
 
   const actions = document.createElement("div");
   actions.className = "work-card__actions";
@@ -72,16 +74,16 @@ function makeLink(label, href) {
   return a;
 }
 
-function buildDetail(detail, project) {
+function buildDetail(detail, project, content) {
   const carouselWrap = document.createElement("div");
   mountCarousel(carouselWrap, { images: project.images });
   detail.appendChild(carouselWrap);
 
-  detail.appendChild(makeSection("project.about", project.about));
+  detail.appendChild(makeSection("project.about", content.about));
   detail.appendChild(makeSection("project.rol", makeRoleList(project.rol)));
 
-  if (project.extra) {
-    detail.appendChild(makeSection("project.extra", project.extra));
+  if (content.extra) {
+    detail.appendChild(makeSection("project.extra", content.extra));
   }
 }
 

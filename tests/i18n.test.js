@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { availableLangs, getLang, setLang, t } from "../src/js/i18n/index.js";
 
 describe("i18n (es)", () => {
@@ -24,5 +24,24 @@ describe("i18n (es)", () => {
   it("setLang rechaza idiomas sin diccionario", () => {
     expect(setLang("fr")).toBe(getLang());
     expect(getLang()).toBe("es");
+  });
+});
+
+describe("i18n (en)", () => {
+  afterEach(() => setLang("es"));
+
+  it("en está disponible y setLang('en') lo activa", () => {
+    expect(availableLangs()).toContain("en");
+    expect(setLang("en")).toBe("en");
+    expect(getLang()).toBe("en");
+  });
+
+  it("traduce claves al inglés", () => {
+    setLang("en");
+    expect(t("work.title", { count: "(4)" })).toBe("SELECTED WORK (4)");
+    expect(t("project.rol")).toBe("ROLE");
+    expect(t("project.site")).toBe("Live site");
+    expect(t("notfound.back")).toBe("Back to /Lobby");
+    expect(t("footer.location")).toBe("Alicante, SPAIN");
   });
 });

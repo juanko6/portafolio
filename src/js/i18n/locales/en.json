@@ -1,0 +1,114 @@
+{
+  "nav": {
+    "name": "JUAN GUTIÉRREZ",
+    "lobby": "Lobby",
+    "info": "Info",
+    "work": "Work",
+    "notfound": "404",
+    "back": "Back"
+  },
+  "clock": {
+    "tz": "CET"
+  },
+  "footer": {
+    "location": "Alicante, SPAIN",
+    "backToTop": "Back to top",
+    "links": {
+      "mail": "Mail",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    },
+    "copyright": "©JG/"
+  },
+  "lobby": {
+    "badges": {
+      "fs": "FS",
+      "year": "26"
+    },
+    "desc": "FULL STACK DEVELOPER IN THE FINAL YEAR OF COMPUTER ENGINEERING. I DESIGN AND BUILD COMPLETE SYSTEMS END TO END, FROM DOMAIN TO CLOUD DEPLOYMENT. I HAVE MY OWN PRODUCT LIVE IN PRODUCTION WITH A REAL CLIENT AND SUBSCRIPTION.",
+    "statusLabel": "STATUS",
+    "status": "AVAILABLE FOR AN INTERNSHIP AGREEMENT AND REMOTE ROLES IN SPAIN. LET'S TALK ABOUT YOUR PROJECT!",
+    "cta": {
+      "info": "Info",
+      "work": "Work"
+    }
+  },
+  "info": {
+    "badge": "HI!",
+    "title": "HI! I'M JUAN GUTIÉRREZ, A FULL STACK DEVELOPER AND A PRODUCT MIND.",
+    "sub": "Final year of Computer Engineering. Always looking to collaborate with teams and products that value craft.",
+    "sobreMi": {
+      "title": "ABOUT ME",
+      "text": "I work end to end: written spec, domain, API contract, backend and frontend with TDD. I integrate AI into real products, including local inference. My marketing background and 10 years in digital environments bring product and conversion judgment.*",
+      "nota": "*This is just a truncated list. If something tangential or equally interesting is on your mind, email me."
+    },
+    "email": {
+      "title": "EMAIL",
+      "text": "juanko6@gmail.com"
+    },
+    "focus": {
+      "title": "FOCUS",
+      "items": [
+        "Full Stack",
+        "Next.js / React",
+        "FastAPI / Node",
+        "PostgreSQL",
+        "Docker / Cloud",
+        "LLM & Local inference",
+        "TDD & SDD",
+        "AI in product"
+      ]
+    },
+    "extra": {
+      "title": "EXTRA",
+      "items": [
+        "Spanish (native)",
+        "English (B2, accredited U. of Alicante)",
+        "Open to an internship agreement",
+        "B driver's license"
+      ]
+    },
+    "resumen": {
+      "title": "RESUMÉ",
+      "items": [
+        "FULL STACK DEV · 2026 – PRESENT · menuunfolded.com",
+        "FREELANCE FULL STACK · MAR 23 – DEC 24 · US",
+        "WEB & DIGITAL MARKETING · 2021 – 2023 · BOGOTÁ"
+      ]
+    },
+    "onTheWeb": {
+      "title": "ON THE WEB",
+      "links": ["Mail", "GitHub", "LinkedIn", "menuunfolded.com"]
+    },
+    "colofon": {
+      "title": "COLOPHON",
+      "desarrollo": "DEVELOPMENT: Juan C. Gutiérrez",
+      "tipografia": "TYPOGRAPHY: [TBD]",
+      "bonus": "Music, film and their intersection with product inspire me. If you have a new track that works, send it my way."
+    }
+  },
+  "work": {
+    "title": "SELECTED WORK {count}",
+    "years": "2025—26",
+    "sub": "Complete end-to-end systems, built as a one-man band: spec, tests and deploy.",
+    "letsTalk": {
+      "title": "LET'S TALK",
+      "intro": "To discuss collaborations or projects, send an email to",
+      "email": "juanko6@gmail.com"
+    }
+  },
+  "project": {
+    "about": "ABOUT",
+    "rol": "ROLE",
+    "extra": "EXTRA",
+    "repo": "Repo",
+    "site": "Live site",
+    "expand": "Expand",
+    "collapse": "Collapse"
+  },
+  "notfound": {
+    "title": "ERROR (404)",
+    "body": "Something went wrong — the page you requested is not available.",
+    "back": "Back to /Lobby"
+  }
+}

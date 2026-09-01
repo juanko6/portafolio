@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PROJECTS } from "../src/js/data/projects.js";
+import { PROJECTS, getProjectContent } from "../src/js/data/projects.js";
 
 describe("data/projects (integridad)", () => {
   it("contiene 4 proyectos", () => {
@@ -14,20 +14,38 @@ describe("data/projects (integridad)", () => {
     }
   });
 
-  it("cada proyecto tiene los campos obligatorios", () => {
+  it("cada proyecto tiene los campos universales obligatorios", () => {
     for (const p of PROJECTS) {
       expect(p.name).toBeTruthy();
-      expect(p.timeline).toBeTruthy();
-      expect(p.place).toBeTruthy();
-      expect(typeof p.about).toBe("string");
-      expect(p.about.length).toBeGreaterThan(10);
       expect(Array.isArray(p.rol)).toBe(true);
       expect(p.rol.length).toBeGreaterThan(0);
       for (const r of p.rol) expect(typeof r).toBe("string");
       expect(Array.isArray(p.images)).toBe(true);
       expect(p.images.length).toBeGreaterThan(0);
       expect(p.repo).toMatch(/^https:\/\//);
+      expect(p.content).toBeTypeOf("object");
     }
+  });
+
+  it("content es bilingüe (es + en) con los mismos campos", () => {
+    for (const p of PROJECTS) {
+      for (const lang of ["es", "en"]) {
+        const c = p.content[lang];
+        expect(c).toBeTruthy();
+        expect(c.timeline).toBeTruthy();
+        expect(c.place).toBeTruthy();
+        expect(typeof c.about).toBe("string");
+        expect(c.about.length).toBeGreaterThan(10);
+        expect(c.extra === null || typeof c.extra === "string").toBe(true);
+      }
+    }
+  });
+
+  it("getProjectContent devuelve el idioma pedido y cae a es si no existe", () => {
+    const p = PROJECTS[0];
+    expect(getProjectContent(p, "es")).toBe(p.content.es);
+    expect(getProjectContent(p, "en")).toBe(p.content.en);
+    expect(getProjectContent(p, "fr")).toBe(p.content.es);
   });
 
   it("solo MenuUnfolded expone Site vivo (resto → site null)", () => {
