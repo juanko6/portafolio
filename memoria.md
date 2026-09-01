@@ -3,8 +3,8 @@
 Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 
 ## Estado actual
-- **Fase:** 3 — Info (aboutme) **completa** (T3.1–T3.5 ✅). Siguiente: **Fase 4 — Work**.
-- **Última actualización:** 31/08/2026.
+- **Fase:** 4 — Work + detail **completa** (T4.1–T4.6 ✅). Siguiente: **Fase 5 — 404 + i18n (EN)**.
+- **Última actualización:** 01/09/2026.
 - **Cómo actualizar:** editar "Estado actual" + añadir fila en "Log" al terminar cada tarea (1 commit = 1 tarea, `T#.# desc`).
 
 ## Decisiones tomadas (no reabrir sin motivo)
@@ -70,3 +70,9 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 31/08/2026 | T3.3 | Bloques RESUMEN (split "·" → título bold + sub mono " / ") + ON THE WEB (enlaces inline " , " reutilizando `LINKS` exportado de `footer.js`). |
 | 31/08/2026 | T3.4 | Bloque COLOFÓN (desarrollo + tipografía split ": " + retrato + bonus) + retrato placeholder Unsplash → `public/img/retrato.jpg` (1400×2100). |
 | 31/08/2026 | T3.5 | Responsive info (media 48em: gap/padding + retrato 100%). Footer ya inyectado por Page (verificado: 3 enlaces + back-to-top OK). CI verde. |
+| 31/08/2026 | T4.1 | `data/projects.js` (4 proyectos: MenuUnfolded, Loomcast, NuxoAsist, MindCheck) + `tests/projects.test.js` (5 tests de integridad: campos, urls, imágenes). |
+| 31/08/2026 | T4.2 | `ProjectList` (head: título + count + años + sub) + `project-card.js` head + `work.css` base + `@import` en `app.css`. |
+| 31/08/2026 | T4.3 | `ProjectCard` acciones: `Repo` / `Site vivo` (solo MenuUnfolded) / `Expand` (chevron). `es.json` `project.collapse`. Fix tokens CSS heredados de T4.2. |
+| 31/08/2026 | T4.4 | Detail expandido (ABOUT/ROL/EXTRA) + toggle `hidden` + `carousel.js` (fila flex) + 12 capturas Unsplash → `public/img/work/`. CSS detail. |
+| 01/09/2026 | T4.5 | Carrusel horizontal: scroll-snap + flechas prev/next (`.is-disabled`). Fixes: re-sync al cargar imgs + resize; `width` en vez de `flex-basis` (bug: resolvía a 1280px). Verificado: 560px, scrollable, flechas OK. |
+| 01/09/2026 | T4.6 | Bloque `LET'S TALK` (chip + display + email inline `mailto`) + responsive work. Fix: `.work-card__detail[hidden]{display:none}` (el `display:flex` del detail anula el atributo `hidden` → todos los details salían visibles). Verificado desktop+mobile (collapse/expand, carousel full-bleed, flechas ocultas en touch). |

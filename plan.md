@@ -106,12 +106,12 @@ Reglas:
 - [x] T3.5 Footer + responsive info
 
 ### Fase 4 — Work + detail
-- [ ] T4.1 `data/projects.js` (4 proyectos) + test de integridad
-- [ ] T4.2 `ProjectList` (título + items) + CSS
-- [ ] T4.3 `ProjectCard`: botones `Repo` / `Site vivo` (solo MenuUnfolded) / `Expand`
-- [ ] T4.4 Detail expandido: `ABOUT` `ROL` `EXTRA` + `Carousel`
-- [ ] T4.5 Carrusel horizontal (scroll snap) con imágenes Unsplash
-- [ ] T4.6 Bloque `LET'S TALK` + email + footer + responsive work
+- [x] T4.1 `data/projects.js` (4 proyectos) + test de integridad
+- [x] T4.2 `ProjectList` (título + items) + CSS
+- [x] T4.3 `ProjectCard`: botones `Repo` / `Site vivo` (solo MenuUnfolded) / `Expand`
+- [x] T4.4 Detail expandido: `ABOUT` `ROL` `EXTRA` + `Carousel`
+- [x] T4.5 Carrusel horizontal (scroll snap) con imágenes Unsplash
+- [x] T4.6 Bloque `LET'S TALK` + email + footer + responsive work
 
 ### Fase 5 — 404 + i18n
 - [ ] T5.1 Página 404 (glitch `ERROR 404` + `Volver a /Lobby`) + `nginx.conf`
