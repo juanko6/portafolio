@@ -117,7 +117,7 @@ Reglas:
 - [ ] T5.1 Página 404 (glitch `ERROR 404` + `Volver a /Lobby`) + `nginx.conf`
 - [ ] T5.2 `en.json` completo
 - [ ] T5.3 `LangToggle` ES/EN + localStorage + test i18n
-- [ ] T5.4 Meta tags SEO + OG image + favicon
+- [x] T5.4 Meta tags SEO + OG image + favicon
 
 ### Fase 6 — Deploy Oracle + cierre
 - [ ] T6.1 `vite build` verificado + `deploy/oracle.md`
