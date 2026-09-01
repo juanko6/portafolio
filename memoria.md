@@ -3,7 +3,7 @@
 Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 
 ## Estado actual
-- **Fase:** 4 — Work + detail **completa** (T4.1–T4.6 ✅). Siguiente: **Fase 5 — 404 + i18n (EN)**.
+- **Fase:** 5 — 404 + i18n (EN) **completa** (T5.1–T5.4 ✅). Siguiente: **Fase 6 — Deploy Oracle + cierre**.
 - **Última actualización:** 01/09/2026.
 - **Cómo actualizar:** editar "Estado actual" + añadir fila en "Log" al terminar cada tarea (1 commit = 1 tarea, `T#.# desc`).
 
@@ -27,6 +27,8 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 15 | Paleta base ya fijada en `tokens.css`: bg `#080808`, glow `#90ff21`, texto `#cccfca`, panel `#202020`, superficie `#484b45` | Extraída del CSS de la ref (fayemi.design) |
 | 16 | Hero: **sin imagen Unsplash** de base; glow radial CSS como sustituto | Una cara genérica no encaja con el grid abstracto; el glow mantiene la estética de la ref |
 | 17 | i18n: `data-i18n` = texto único (`textContent`); **`data-list`** = array (renderiza `<li>` en `apply()`) | Listas planas (FOCUS/EXTRA) sin hardcode ni render manual; los bloques estructurados (RESUMEN/COLOFÓN) se construyen en `info.js` |
+| 18 | SEO: **base canonical/OG placeholder** = `https://juanko6.github.io/portafolio` (URL real del repo, no inventada) marcada `TODO(T6)` | No hay dominio Oracle aún (T6.2); se necesita URL absoluta válida → sustituir en T6. `twitter:site` omitido (sin handle X confirmado) |
+| 19 | OG image: **SVG fuente** (`og.svg`) → raster `og-image.png` 1200×630 vía `sips` (macOS nativa) | No hay rsvg/imagemagick/sharp/PIL; `sips` convierte SVG a tamaño nativo sin padding (a diferencia de `qlmanage`, que lo hace cuadrado) |
 
 ## Fuentes del proyecto
 - `referencia/` — HTML guardado + 4 screenshots de fayemi.design (estilo objetivo)
@@ -76,3 +78,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 31/08/2026 | T4.4 | Detail expandido (ABOUT/ROL/EXTRA) + toggle `hidden` + `carousel.js` (fila flex) + 12 capturas Unsplash → `public/img/work/`. CSS detail. |
 | 01/09/2026 | T4.5 | Carrusel horizontal: scroll-snap + flechas prev/next (`.is-disabled`). Fixes: re-sync al cargar imgs + resize; `width` en vez de `flex-basis` (bug: resolvía a 1280px). Verificado: 560px, scrollable, flechas OK. |
 | 01/09/2026 | T4.6 | Bloque `LET'S TALK` (chip + display + email inline `mailto`) + responsive work. Fix: `.work-card__detail[hidden]{display:none}` (el `display:flex` del detail anula el atributo `hidden` → todos los details salían visibles). Verificado desktop+mobile (collapse/expand, carousel full-bleed, flechas ocultas en touch). |
+| 01/09/2026 | T5.1 | Página 404: glitch `ERROR 404` + `Volver a /Lobby`. `deploy/nginx.conf` (gzip, cabeceras seguridad, caché assets/imagen, URLs limpias `/info` `/work`, `error_page 404`). |
+| 01/09/2026 | T5.2 | i18n EN: `en.json` completo + proyectos bilingües (`projects.js`) + re-render por idioma (`apply()` con `data-i18n`/`data-list`). |
+| 01/09/2026 | T5.3 | `LangToggle` ES/EN: segmented control montado en nav tras el reloj, `aria-pressed`, sync vía `getLang()` + listener `i18n:change`, expone `stop()`. `tests/lang-toggle.test.js` (5 tests). |
+| 01/09/2026 | T5.4 | SEO: meta por página (description/author/robots/theme-color/canonical + OG + Twitter, `summary_large_image`, locale es_ES/en_US) en `index`/`info`/`work`; `404` = `noindex`. OG image: `public/og.svg` (1200×630) → `og-image.png` vía `sips`. Favicon: `apple-touch-icon.png` 180×180 (iOS no usa SVG). **TODO(T6):** base canonical/og = `juanko6.github.io/portafolio` (placeholder) → sustituir por dominio Oracle. |
