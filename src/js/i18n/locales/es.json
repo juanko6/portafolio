@@ -93,7 +93,8 @@
     "sub": "Sistemas completos de extremo a extremo, construidos como one-man band: especificación, tests y deploy.",
     "letsTalk": {
       "title": "LET'S TALK",
-      "body": "Para hablar de colaboraciones o proyectos, envía un email a juanko6@gmail.com"
+      "intro": "Para hablar de colaboraciones o proyectos, envía un email a",
+      "email": "juanko6@gmail.com"
     }
   },
   "project": {

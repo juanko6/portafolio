@@ -23,4 +23,22 @@ main.appendChild(head);
 /* T4.2 — Listado de proyectos */
 mountList(main, { projects: PROJECTS });
 
+/* T4.6 — Bloque LET'S TALK */
+const letsTalk = document.createElement("section");
+letsTalk.className = "work__letstalk";
+const chip = document.createElement("span");
+chip.className = "work__letstalk-chip";
+chip.dataset.i18n = "work.letsTalk.title";
+const text = document.createElement("p");
+text.className = "work__letstalk-text";
+const intro = document.createElement("span");
+intro.dataset.i18n = "work.letsTalk.intro";
+const email = document.createElement("a");
+email.className = "work__letstalk-email";
+email.dataset.i18n = "work.letsTalk.email";
+email.href = `mailto:${t("work.letsTalk.email")}`;
+text.append(intro, " ", email);
+letsTalk.append(chip, text);
+main.appendChild(letsTalk);
+
 refresh();
