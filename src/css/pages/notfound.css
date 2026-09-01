@@ -1,0 +1,131 @@
+/* 404 — página de error con glitch */
+
+.notfound {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-9) var(--content-pad);
+  gap: var(--space-6);
+}
+
+.notfound__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 14vw, 9rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-shadow: var(--glow-text);
+}
+
+/* Glitch: separación RGB + jitter + recorte, todo sobre el elemento
+   (compatible con data-i18n / textContent). */
+.notfound__glitch {
+  position: relative;
+  display: inline-block;
+  animation: notfound-glitch 4.2s steps(1, end) infinite;
+}
+
+.notfound__glitch::before,
+.notfound__glitch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.notfound__glitch::before {
+  background: linear-gradient(90deg, rgba(255, 0, 60, 0.35), transparent 40%)
+    no-repeat;
+  mix-blend-mode: screen;
+  animation: notfound-shift-a 4.2s steps(1, end) infinite;
+}
+
+.notfound__glitch::after {
+  background: linear-gradient(90deg, transparent 60%, rgba(0, 180, 255, 0.35));
+  mix-blend-mode: screen;
+  animation: notfound-shift-b 4.2s steps(1, end) infinite;
+}
+
+@keyframes notfound-glitch {
+  0%,
+  92%,
+  100% {
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+  93% {
+    transform: translateX(-4px);
+    clip-path: inset(15% 0 45% 0);
+  }
+  94% {
+    transform: translateX(3px);
+    clip-path: inset(60% 0 10% 0);
+  }
+  95% {
+    transform: translateX(-2px);
+    clip-path: inset(30% 0 40% 0);
+  }
+  96% {
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes notfound-shift-a {
+  0%,
+  92%,
+  100% {
+    opacity: 0;
+  }
+  93%,
+  96% {
+    opacity: 1;
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes notfound-shift-b {
+  0%,
+  92%,
+  100% {
+    opacity: 0;
+  }
+  93%,
+  96% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+.notfound__body {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  max-width: 52ch;
+}
+
+.notfound__back {
+  margin-top: var(--space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notfound__glitch,
+  .notfound__glitch::before,
+  .notfound__glitch::after {
+    animation: none;
+  }
+  .notfound__glitch::before,
+  .notfound__glitch::after {
+    opacity: 0;
+  }
+}
