@@ -3,9 +3,11 @@
 Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 
 ## Estado actual
-- **Fase:** 5 **completa** (T5.1–T5.4 ✅) + **pasada de rediseño** (R1–R9 ✅, commits `542e602` y `e0d1a16`). Siguiente: **Fase 6 — Deploy Oracle + cierre**.
+- **Fase:** 5 **completa** (T5.1–T5.4 ✅) + **pasada de rediseño** (R1–R9 ✅, commits `542e602` y `e0d1a16`). Siguiente: **Fase 6 — Deploy en `juanko.com` + cierre** (replanteada el 02/09 con el servidor ya inventariado; ver `plan.md` §7).
 - **Última actualización:** 02/09/2026.
-- **Bloqueante de T6.2:** los `canonical`/`og:*` siguen con la base placeholder `https://juanko6.github.io/portafolio`.
+- **Destino fijado:** `https://juanko.com` en la raíz de la instancia Oracle `ssh mindcheck` (168.75.106.115), que ya sirve MindCheck y el portafolio antiguo. DNS y certificado TLS de `juanko.com`+`www` ya existen: no hace falta tocar el registrador para publicar.
+- **Bloqueante del despliegue:** los `canonical`/`og:*` siguen con la base placeholder `https://juanko6.github.io/portafolio` → se cierra en **T6.2**.
+- **Ojo con los IDs:** la Fase 6 se renumeró el 02/09/2026 en orden de ejecución (T6.1–T6.11). El commit `941adbf` habla de «T6.3» refiriéndose al README, que ahora es **T6.1**. Tabla de equivalencias al final de la Fase 6 en `plan.md`.
 - **Cómo actualizar:** editar "Estado actual" + añadir fila en "Log" al terminar cada tarea (1 commit = 1 tarea, `T#.# desc`).
 
 ## Decisiones tomadas (no reabrir sin motivo)
@@ -22,15 +24,19 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 9 | Git: **GitHub público** | Petición del usuario |
 | 10 | QA: ESLint + Prettier + Vitest (tests clave) | Buenas prácticas sin sobrecargar |
 | 11 | Deploy: **instancia Oracle Cloud** (nginx + build estático) | Infra del usuario |
+| 25 | El portafolio nuevo vive en la **raíz de `juanko.com`**; el antiguo (un solo HTML) se **versiona en el repo** como `public/v1/index.html` y se sirve en `/v1/`, enlazado desde el **colofón** | Petición del usuario. Meterlo en `public/` lo deja en git y lo despliega el mismo rsync, sin regla extra de nginx. El colofón es la nota de cierre de la página (créditos de autoría, tipografía, herramientas): el sitio de un portafolio para decir «esta es la versión anterior» |
+| 26 | Publicación: **build en local + `rsync`** con `deploy/publish.sh`; sin GitHub Actions de deploy | El servidor no tiene Node y solo quedan ~300 MB de RAM libres sin swap: compilar allí no es viable. Manual = sin secretos ni claves de deploy en GitHub |
+| 27 | **memearena se borra entero** del servidor (contenedor, datos, dos configs de nginx y su certificado) | Proyecto de la universidad ya terminado. Su `memearena.juanko.com` además apuntaba por error a `:3000`, que es el frontend de MindCheck. Rompe `memearena-ionic.vercel.app`: impacto aceptado |
+| 28 | El despliegue va a `/var/www/portafolio` y **`/var/www/juanko.com/` se conserva** hasta pasar el smoke test | Rollback en un paso: devolver el `root` anterior y recargar nginx |
 | 12 | `cv/`, `brand/`, `referencia/` **fuera del repo público** (`.gitignore`) | CV = datos personales; referencia = material de un sitio de terceros |
 | 13 | Vite **8.x**: entradas MPA en `input` de primer nivel de `vite.config.js` | Así documenta Vite 8 (`build.rollupOptions` quedó proxy de `rolldownOptions`) |
 | 14 | Google Fonts: **Playfair Display** (display serif) + **Inter** (body) + **JetBrains Mono** (mono) | Equivalencias de Suisse Works/Intl/Mono de la ref (T1.2 adelantado a tokens.css) |
 | 15 | ~~Paleta verde de la ref: bg `#080808`, glow `#90ff21`~~ → **sustituida en `542e602` por paleta espresso cálida**: bg `#20150e`, panel `#2c1c12`, superficie `#4f382a`, glow `#ff6a3c`, texto `#f3ece1`, crema `#f0ebe4` | La verde era calco de fayemi.design; la cálida es identidad propia. La crema define los bloques de acento (About Me, Let's Talk, footer) |
 | 16 | Hero: **sin imagen Unsplash** de base; glow radial CSS como sustituto | Una cara genérica no encaja con el grid abstracto; el glow mantiene la estética de la ref |
 | 17 | i18n: `data-i18n` = texto único (`textContent`); **`data-list`** = array (renderiza `<li>` en `apply()`) | Listas planas (FOCUS/EXTRA) sin hardcode ni render manual; los bloques estructurados (RESUMEN/COLOFÓN) se construyen en `info.js` |
-| 18 | SEO: **base canonical/OG placeholder** = `https://juanko6.github.io/portafolio` (URL real del repo, no inventada) marcada `TODO(T6)` | No hay dominio Oracle aún (T6.2); se necesita URL absoluta válida → sustituir en T6. `twitter:site` omitido (sin handle X confirmado) |
+| 18 | SEO: **base canonical/OG placeholder** = `https://juanko6.github.io/portafolio` (URL real del repo, no inventada) marcada `TODO(T6)` | No había dominio decidido aún; se necesita URL absoluta válida → se sustituye en T6.2. `twitter:site` omitido (sin handle X confirmado) |
 | 19 | OG image: **SVG fuente** (`og.svg`) → raster `og-image.png` 1200×630 vía `sips` (macOS nativa) | No hay rsvg/imagemagick/sharp/PIL; `sips` convierte SVG a tamaño nativo sin padding (a diferencia de `qlmanage`, que lo hace cuadrado) |
-| 20 | Reloj CET **retirado** del header (R6). `clock.js` y `clock.test.js` siguen en el repo sin usarse | Petición del usuario; la limpieza queda en T6.5 |
+| 20 | Reloj CET **retirado** del header (R6). `clock.js` y `clock.test.js` siguen en el repo sin usarse | Petición del usuario; la limpieza queda en T6.10 |
 | 21 | Bloque **crema** (`.cream-section` en `layout.css`) como recurso de acento compartido: About Me en `/info`, Let's Talk en `/work` | Rompe el muro oscuro sin inventar un componente por página |
 | 22 | Carrusel: **bucle circular continuo** derecha→izquierda, arranca al expandir la tarjeta. Sin pausa al pasar el ratón | La pausa por hover lo congelaba: al desplegar, el carrusel aparece bajo el cursor y `mouseenter` lo paraba |
 | 23 | La posición del carrusel se acumula en una variable JS, no releyendo `scrollLeft` | El navegador cuantiza `scrollLeft` al escribirlo; realimentar ese valor desvía la velocidad |
@@ -42,10 +48,17 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - `brand/*.ai` — ficheros de marca (Adobe Illustrator, aún no extraídos)
 
 ## Pendiente / abierto
-- **T6.1** `deploy/oracle.md` (el `vite build` ya está verificado).
-- **T6.2** Despliegue en Oracle + smoke test. **Antes:** sustituir la base canonical/OG placeholder por el dominio real en los 4 HTML.
-- **T6.4** Imágenes reales (bust 3D, retrato, capturas de producto) — opcional.
-- **T6.5** Limpieza del reloj: borrar `clock.js`, `tests/clock.test.js` y las claves `clock.*` de `es.json`/`en.json`.
+Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hecha: **T6.1** README.
+- **T6.2** Dominio definitivo en los 4 HTML (`canonical`/`og:url` → `https://juanko.com`) + cerrar `TIPOGRAFÍA: [TBD]` del colofón.
+- **T6.3** Archivar el portafolio v1 en `public/v1/index.html` (+ `noindex`) y enlazarlo desde el colofón (i18n ES/EN + test).
+- **T6.4** `deploy/nginx.conf` de producción (TLS, `www` → apex, HTTP/2, `root /var/www/portafolio`).
+- **T6.5** `deploy/publish.sh` (lint + test + build + `rsync --delete`).
+- **T6.6** `deploy/oracle.md` (runbook: alta, publicación, rollback, TLS, troubleshooting).
+- **T6.7** Retirar memearena del servidor + `docker builder prune` (~2,8 GB) + borrar sus DNS en el registrador (manual).
+- **T6.8** Despliegue + smoke test (`/`, `/info`, `/work`, `/v1/`, 404, `www`, HTTP→HTTPS, móvil real).
+- **T6.9** README, segunda pasada: sección de deploy con el flujo real.
+- **T6.10** Limpieza del reloj: borrar `clock.js`, `tests/clock.test.js` y las claves `clock.*` de `es.json`/`en.json`.
+- **T6.11** Imágenes reales (bust 3D, retrato, capturas de producto) — opcional.
 - **URL de Loomcast** (si aparece) → actualizar `projects.js`.
 - Verificación pendiente en dispositivo real: ritmo del carrusel y del hero en móvil (el panel del navegador del entorno de desarrollo congela `rAF` y los observers, así que ahí no se puede comprobar visualmente).
 
@@ -95,3 +108,5 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 02/09/2026 | R1 | Paleta espresso cálida (`542e602`): tokens marrón/naranja/crema + arreglos de layout en nav y footer. |
 | 02/09/2026 | R2–R9 | Rediseño (`e0d1a16`). **Bug raíz:** `nav.js` y `lang-toggle.js` no añadían `c-nav`/`c-lang` → todo su CSS estaba muerto (header sin padding, ES/EN sin control segmentado). Work: tarjetas como paneles, fuera el botón circular, detalle bajo los botones, carrusel circular. Info: crema solo en About Me (el resto quedaba oscuro sobre oscuro). Footer: márgenes + sangre inferior. Header: una línea en iPhone 12 (el salto forzado estaba en 26em = 416px, por eso se partía). Hero: autopiloto + toque. Textos: «visión de producto», nota nueva, correo `juanko.dev@gmail.com`. |
 | 02/09/2026 | Docs | `plan.md` y `memoria.md` puestos al día (Fase 5 estaba sin marcar; paleta, textos y componentes desfasados). README commiteado (T6.3). |
+| 02/09/2026 | Fase 6 | Replanteada con el servidor inventariado por SSH (ver `plan.md` §7). Decisiones nuevas: raíz de `juanko.com`, v1 archivado en `public/v1/` + enlace en el colofón, publicación por `rsync` desde local, memearena se borra. Hallazgo: `memearena.juanko.com` proxeaba a `:3000` = frontend de MindCheck, no memearena. |
+| 02/09/2026 | Fase 6 | Renumerada en orden de ejecución (T6.1–T6.11). El README pasa de T6.3 a **T6.1**; el despliegue, de T6.2 a **T6.8**; `oracle.md`, de T6.1 a **T6.6**; la limpieza del reloj, de T6.5 a **T6.10**; las imágenes, de T6.4 a **T6.11**. Tabla de equivalencias al final de la fase en `plan.md`. |

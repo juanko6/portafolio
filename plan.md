@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **Fase 5 completa + pasada de rediseño → Fase 6 — Deploy Oracle** · Actualizado: 02/09/2026
+Estado: **Fase 5 completa + pasada de rediseño → Fase 6 — Deploy en juanko.com** · Actualizado: 02/09/2026
 
 ## 0. Decisiones fijadas
 
@@ -13,7 +13,9 @@ Estado: **Fase 5 completa + pasada de rediseño → Fase 6 — Deploy Oracle** �
 | Imágenes | Unsplash (descargadas y versionadas en `public/img/`) |
 | Git | Repo **GitHub público**, 1 commit = 1 tarea, commits solo a nombre del autor |
 | QA | ESLint + Prettier + Vitest (tests clave: i18n, hero, datos, navegación) |
-| Deploy | Instancia **Oracle Cloud** (build estático + nginx) |
+| Deploy | Instancia **Oracle Cloud** ya en uso (`ssh mindcheck`) · build estático + nginx |
+| Dominio | **`juanko.com`** en la raíz · `www` → apex · portafolio antiguo archivado en `/v1/` |
+| Publicación | `npm run build` en local + `rsync` vía `deploy/publish.sh` (el servidor no tiene Node) |
 | Sin | Página secreta `/256` (descartada) |
 
 ## 1. Arquitectura
@@ -28,7 +30,10 @@ portafolio/
 ├── plan.md  memoria.md  README.md
 ├── deploy/
 │   ├── nginx.conf
+│   ├── publish.sh          # build + rsync a la instancia (Fase 6)
 │   └── oracle.md
+├── public/
+│   └── v1/index.html       # portafolio antiguo archivado (Fase 6)
 ├── public/
 │   ├── img/
 │   └── favicon.svg
@@ -129,15 +134,79 @@ Reglas:
 - [x] R8 Arreglo de clases muertas: `nav.js` y `lang-toggle.js` no añadían `c-nav`/`c-lang`
 - [x] R9 Textos: «visión de producto», nota de `SOBRE MÍ` y correo `juanko.dev@gmail.com`
 
-### Fase 6 — Deploy Oracle + cierre
-- [ ] T6.1 `deploy/oracle.md` (el `vite build` ya está verificado)
-- [ ] T6.2 Despliegue en instancia Oracle + smoke test
-  - Bloqueante: sustituir la base placeholder `https://juanko6.github.io/portafolio`
-    de los `canonical`/`og:*` de los 4 HTML por el dominio definitivo
-- [x] T6.3 README (setup, scripts, deploy)
-- [ ] T6.4 (Opcional) Swap placeholders → imágenes reales (bust 3D, retrato, capturas)
-- [ ] T6.5 Limpieza: borrar `clock.js` + `tests/clock.test.js` y las claves `clock.*`
-      de los locales (el reloj ya no se monta)
+### Fase 6 — Deploy en juanko.com (Oracle) + cierre
+
+Numeración **en orden de ejecución** (renumerada el 02/09/2026; equivalencias con los IDs viejos al final
+de la fase). Contexto verificado del servidor: §7.
+
+- [x] T6.1 README (setup, scripts, deploy) — commit `941adbf`
+
+**A. Preparación en el repo (1 commit por tarea)**
+
+- [ ] T6.2 Dominio definitivo: `canonical` + `og:url` → `https://juanko.com/`, `/info`, `/work` en los 4 HTML;
+      fuera el `TODO(T6)`. De paso, cerrar `TIPOGRAFÍA: Playfair Display · Inter · JetBrains Mono` del colofón →
+      `Playfair Display · Inter · JetBrains Mono` (ES/EN).
+- [ ] T6.3 Archivo del portafolio v1:
+  - `public/v1/index.html` = copia del `index.html` que hoy sirve juanko.com (queda versionado en git y
+    Vite lo copia tal cual a `dist/v1/`, sin regla extra de nginx ni de rsync).
+  - Dos retoques mínimos en esa copia: `<meta name="robots" content="noindex">` y su `og:url`/`canonical`
+    → `https://juanko.com/v1/`, para que no compita en SEO con el portafolio nuevo.
+  - Colofón: campo nuevo `VERSIÓN ANTERIOR: v1 · 2025` enlazando a `/v1/`. Requiere que `colofonField()`
+    acepte un valor enlazable (hoy solo pinta texto plano con `split(": ")`) → firma `colofonField(key, href)`.
+  - Claves `info.colofon.v1` en `es.json` y `en.json` + test de que el enlace se renderiza con `href="/v1/"`.
+- [ ] T6.4 `deploy/nginx.conf` de producción para `juanko.com`:
+      80 → 301 a HTTPS · `www` → 301 al apex · TLS con el cert existente `juanko.com` (incluye `www`) ·
+      `http2 on` · `root /var/www/portafolio` · se conserva todo lo de T5.1 (gzip, cabeceras de seguridad,
+      caché de `/assets/` y de imágenes, URLs limpias `/info` y `/work`, `error_page 404`).
+- [ ] T6.5 `deploy/publish.sh`: `set -euo pipefail`, `npm run lint && npm test && npm run build`,
+      `rsync -az --delete dist/ mindcheck:/var/www/portafolio/`, flag `--dry-run`. Sin sudo: el directorio
+      se crea una vez como `ubuntu:www-data` (ver oracle.md). No hace falta recargar nginx para estáticos.
+- [ ] T6.6 `deploy/oracle.md`: inventario del servidor, alta inicial (directorio + config + certbot),
+      publicación posterior (`./deploy/publish.sh`), rollback (`/var/www/juanko.com` se conserva como copia),
+      renovación TLS y troubleshooting.
+
+**B. Trabajo en el servidor (no genera commit; se documenta en `oracle.md`)**
+
+- [ ] T6.7 Retirar memearena:
+  - `docker rm -f memearena-pb`, borrar su imagen y el volumen de PocketBase, borrar `~/memearena` (27 MB).
+  - Desenlazar y borrar `memearena.juanko.com` y `api-memearena.juanko.com` de nginx + `certbot delete`
+    del certificado `api-memearena.juanko.com`.
+  - `docker builder prune` → libera ~2,8 GB de caché de build.
+  - Manual del usuario: borrar los registros DNS `memearena` y `api-memearena` en el registrador.
+  - Nota: `memearena.juanko.com` proxeaba a `127.0.0.1:3000`, que **no** es memearena sino el frontend de
+    MindCheck (config errónea heredada); borrarla también elimina esa exposición accidental.
+  - Impacto aceptado: `memearena-ionic.vercel.app` deja de funcionar (usaba esa API).
+- [ ] T6.8 Despliegue + smoke test:
+  - `sudo mkdir -p /var/www/portafolio && sudo chown ubuntu:www-data /var/www/portafolio`.
+  - `./deploy/publish.sh` (primer envío).
+  - Instalar el `nginx.conf` nuevo como `/etc/nginx/sites-available/juanko.com`, `nginx -t`, `reload`.
+    Se conserva `/var/www/juanko.com/` intacto: rollback = devolver el `root` anterior y recargar.
+  - Smoke test: `/`, `/info`, `/work`, `/v1/`, un 404 cualquiera, `www` → apex, HTTP → HTTPS,
+    hero y carrusel en móvil real, ES/EN, cabeceras de caché en `/assets/`, `curl -I` con TLS válido.
+  - Cuando pase: borrar `/var/www/juanko.com/index.html.save` y la copia antigua.
+
+**C. Cierre**
+
+- [ ] T6.9 README, segunda pasada: sección de deploy con el flujo real (`publish.sh` + `oracle.md`) y el dominio
+- [ ] T6.10 Limpieza: borrar `clock.js` + `tests/clock.test.js` y las claves `clock.*` de los locales
+      (el reloj ya no se monta desde R6)
+- [ ] T6.11 (Opcional) Swap placeholders → imágenes reales (bust 3D, retrato, capturas)
+
+Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID viejo `T6.3`):
+
+| Antes | Ahora | Tarea |
+|---|---|---|
+| T6.3 | **T6.1** | README (hecho) |
+| — | **T6.2** | Dominio definitivo *(era el bloqueante de T6.2 vieja)* |
+| — | **T6.3** | Archivo v1 + enlace en el colofón |
+| — | **T6.4** | nginx de producción |
+| — | **T6.5** | `publish.sh` |
+| T6.1 | **T6.6** | `oracle.md` |
+| — | **T6.7** | Retirar memearena |
+| T6.2 | **T6.8** | Despliegue + smoke test |
+| — | **T6.9** | README, segunda pasada |
+| T6.5 | **T6.10** | Limpieza del reloj |
+| T6.4 | **T6.11** | Imágenes reales (opcional) |
 
 ## 4. Mapa de textos ES (cerrado)
 
@@ -163,7 +232,7 @@ Reglas:
   - `FREELANCE FULL STACK · MAR 23 – DIC 24 · EE. UU.`
   - `WEB & MARKETING DIGITAL · 2021 – 2023 · BOGOTÁ`
 - On the web: `Mail, GitHub, LinkedIn, menuunfolded.com`
-- Colofón: `DESARROLLO: Juan C. Gutiérrez` · `TIPOGRAFÍA: [TBD]` · Bonus: `Me inspira la música, el cine y la intersección con el producto. Si tienes un track nuevo que funcione, mándamelo.`
+- Colofón: `DESARROLLO: Juan C. Gutiérrez` · `TIPOGRAFÍA: Playfair Display · Inter · JetBrains Mono` · Bonus: `Me inspira la música, el cine y la intersección con el producto. Si tienes un track nuevo que funcione, mándamelo.`
 
 ### Work
 - Título: `TRABAJO SELECCIONADO (4)` / `2025—26`
@@ -192,7 +261,36 @@ Reglas:
 
 ## 6. Riesgos / abierto
 - Fuentes: ref usa "Suisse" (comercial) → equivalentes Google Fonts en T1.2.
-- Imágenes reales → T6.4 opcional.
-- Base canonical/OG en placeholder hasta tener dominio (T6.2).
+- Imágenes reales → T6.11 opcional.
+- Base canonical/OG en placeholder hasta T6.2 (dominio ya decidido: `juanko.com`).
 - URL pública de Loomcast: si aparece, actualizar `projects.js`.
-- `clock.js` y su test quedan sin uso tras R6 → T6.5.
+- `clock.js` y su test quedan sin uso tras R6 → T6.10.
+- La instancia es `micro`: 956 MB de RAM sin swap y ~300 MB libres. El sitio es estático (coste ~0), pero
+  no se puede compilar allí: el build va siempre en local.
+- Los certificados TLS de la instancia caducan escalonadamente (el de `juanko.com`, el 19/10/2026).
+  Confirmar en T6.8 que el timer de `certbot` renueva y que la config nueva no lo rompe.
+- Borrar memearena rompe `memearena-ionic.vercel.app` (impacto aceptado, era proyecto de la universidad).
+
+## 7. Inventario del servidor (verificado 02/09/2026)
+
+Acceso: `ssh mindcheck` → `ubuntu@168.75.106.115` (Oracle Cloud, Ubuntu 22.04, x86_64, 2 vCPU,
+956 MB RAM sin swap, disco 45 GB al 34 %). Todos los dominios de abajo resuelven a esa IP.
+
+| Sitio nginx | Destino actual | Fase 6 |
+|---|---|---|
+| `juanko.com` + `www` | estático `/var/www/juanko.com/index.html` (portafolio v1, un solo HTML) | **root → `/var/www/portafolio`**; el v1 pasa a `/v1/` dentro del build |
+| `mindcheck.juanko.com` | proxy a `:3000` (frontend) y `:8000` (API) | se queda igual |
+| `mindcheck.qzz.io` | mismo MindCheck | se queda igual |
+| `memearena.juanko.com` | proxy a `:3000` → **es el frontend de MindCheck, no memearena** (config errónea) | **se borra** |
+| `api-memearena.juanko.com` | proxy a `:8090` (PocketBase) | **se borra** |
+| `default-block.conf` | `return 444` en el `:80` por defecto | se queda igual |
+
+Contenedores: `mindcheck-frontend` (:3000), `mindcheck-backend` (:8000), `mindcheck-db`
+(postgres:16-alpine, :5432), `memearena-pb` (pocketbase, :8090 → **se borra**).
+
+Certificados Let's Encrypt: `juanko.com` (+`www`, caduca 19/10/2026) · `mindcheck.juanko.com`
+(05/10) · `www.mindcheck.juanko.com` (19/10, redundante con el anterior) · `mindcheck.qzz.io` (17/10) ·
+`api-memearena.juanko.com` (+`memearena`, **se borra**).
+
+Sin Node ni npm instalados → el build es siempre local. Caché de build de Docker: 4,5 GB, de los que
+2,8 GB son reclamables con `docker builder prune`.
