@@ -1,6 +1,7 @@
 import { mount } from "../components/page.js";
 import { t } from "../i18n/index.js";
 import { LINKS } from "../components/footer.js";
+import { buildColofon } from "../components/colofon.js";
 
 const { main, refresh } = mount(document.querySelector("#app"), {
   page: "info",
@@ -68,40 +69,6 @@ function buildWeb() {
     if (i < webLinks.length - 1) webEl.append(",\u00a0");
   });
   return webEl;
-}
-
-/* T3.4 — COLOFÓN (desarrollo + tipografía + retrato + bonus) */
-function colofonField(key) {
-  const [label, value] = t(key).split(": ");
-  const field = document.createElement("div");
-  field.className = "info__colofon-field";
-  const labelEl = document.createElement("span");
-  labelEl.className = "info__colofon-label";
-  labelEl.textContent = label;
-  const valueEl = document.createElement("span");
-  valueEl.className = "info__colofon-value";
-  valueEl.textContent = value;
-  field.appendChild(labelEl);
-  field.appendChild(valueEl);
-  return field;
-}
-
-function buildColofon() {
-  const colofonEl = document.createElement("div");
-  colofonEl.className = "info__colofon";
-  colofonEl.appendChild(colofonField("info.colofon.desarrollo"));
-  colofonEl.appendChild(colofonField("info.colofon.tipografia"));
-  const portrait = document.createElement("img");
-  portrait.className = "info__portrait";
-  portrait.src = "/img/retrato.jpg";
-  portrait.alt = "";
-  portrait.loading = "lazy";
-  colofonEl.appendChild(portrait);
-  const bonus = document.createElement("p");
-  bonus.className = "info__bonus";
-  bonus.setAttribute("data-i18n", "info.colofon.bonus");
-  colofonEl.appendChild(bonus);
-  return colofonEl;
 }
 
 /* T3.1 + T3.2 + T3.3 + T3.4 + T5.2 — Construye toda la página. Se reconstruye

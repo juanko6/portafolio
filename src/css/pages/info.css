@@ -231,6 +231,19 @@
   color: var(--color-text);
 }
 
+.info__colofon-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-muted);
+  transition: color var(--duration) var(--ease-out);
+}
+
+.info__colofon-link:hover {
+  color: var(--color-glow);
+  text-decoration-color: currentColor;
+}
+
 .info__portrait {
   width: 100%;
   max-width: 480px;

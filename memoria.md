@@ -24,10 +24,6 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 9 | Git: **GitHub público** | Petición del usuario |
 | 10 | QA: ESLint + Prettier + Vitest (tests clave) | Buenas prácticas sin sobrecargar |
 | 11 | Deploy: **instancia Oracle Cloud** (nginx + build estático) | Infra del usuario |
-| 25 | El portafolio nuevo vive en la **raíz de `juanko.com`**; el antiguo (un solo HTML) se **versiona en el repo** como `public/v1/index.html` y se sirve en `/v1/`, enlazado desde el **colofón** | Petición del usuario. Meterlo en `public/` lo deja en git y lo despliega el mismo rsync, sin regla extra de nginx. El colofón es la nota de cierre de la página (créditos de autoría, tipografía, herramientas): el sitio de un portafolio para decir «esta es la versión anterior» |
-| 26 | Publicación: **build en local + `rsync`** con `deploy/publish.sh`; sin GitHub Actions de deploy | El servidor no tiene Node y solo quedan ~300 MB de RAM libres sin swap: compilar allí no es viable. Manual = sin secretos ni claves de deploy en GitHub |
-| 27 | **memearena se borra entero** del servidor (contenedor, datos, dos configs de nginx y su certificado) | Proyecto de la universidad ya terminado. Su `memearena.juanko.com` además apuntaba por error a `:3000`, que es el frontend de MindCheck. Rompe `memearena-ionic.vercel.app`: impacto aceptado |
-| 28 | El despliegue va a `/var/www/portafolio` y **`/var/www/juanko.com/` se conserva** hasta pasar el smoke test | Rollback en un paso: devolver el `root` anterior y recargar nginx |
 | 12 | `cv/`, `brand/`, `referencia/` **fuera del repo público** (`.gitignore`) | CV = datos personales; referencia = material de un sitio de terceros |
 | 13 | Vite **8.x**: entradas MPA en `input` de primer nivel de `vite.config.js` | Así documenta Vite 8 (`build.rollupOptions` quedó proxy de `rolldownOptions`) |
 | 14 | Google Fonts: **Playfair Display** (display serif) + **Inter** (body) + **JetBrains Mono** (mono) | Equivalencias de Suisse Works/Intl/Mono de la ref (T1.2 adelantado a tokens.css) |
@@ -41,6 +37,13 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 22 | Carrusel: **bucle circular continuo** derecha→izquierda, arranca al expandir la tarjeta. Sin pausa al pasar el ratón | La pausa por hover lo congelaba: al desplegar, el carrusel aparece bajo el cursor y `mouseenter` lo paraba |
 | 23 | La posición del carrusel se acumula en una variable JS, no releyendo `scrollLeft` | El navegador cuantiza `scrollLeft` al escribirlo; realimentar ese valor desvía la velocidad |
 | 24 | Commits **solo a nombre del autor** (sin `Co-Authored-By`) y directos a `main`, sin ramas intermedias | Petición del usuario |
+| 25 | El portafolio nuevo vive en la **raíz de `juanko.com`**; el antiguo (un solo HTML) se **versiona en el repo** como `public/v1/index.html` y se sirve en `/v1/`, enlazado desde el **colofón** | Petición del usuario. Meterlo en `public/` lo deja en git y lo despliega el mismo rsync, sin regla extra de nginx. El colofón es la nota de cierre de la página (créditos de autoría, tipografía, herramientas): el sitio de un portafolio para decir «esta es la versión anterior» |
+| 26 | Publicación: **build en local + `rsync`** con `deploy/publish.sh`; sin GitHub Actions de deploy | El servidor no tiene Node y solo quedan ~300 MB de RAM libres sin swap: compilar allí no es viable. Manual = sin secretos ni claves de deploy en GitHub |
+| 27 | **memearena se borra entero** del servidor (contenedor, datos, dos configs de nginx y su certificado) | Proyecto de la universidad ya terminado. Su `memearena.juanko.com` además apuntaba por error a `:3000`, que es el frontend de MindCheck. Rompe `memearena-ionic.vercel.app`: impacto aceptado |
+| 28 | El despliegue va a `/var/www/portafolio` y **`/var/www/juanko.com/` se conserva** hasta pasar el smoke test | Rollback en un paso: devolver el `root` anterior y recargar nginx |
+| 29 | El colofón se extrae a `components/colofon.js` (antes eran funciones locales de `info.js`) | `info.js` es una entrada de página: monta y construye al importarse, así que no se puede importar en un test. El componente sí |
+| 30 | El enlace al v1 apunta a **`/v1/index.html`**, no a `/v1/` | El dev server de Vite resuelve `/v1/` al lobby nuevo (fallback al `index.html` raíz), así que en desarrollo el enlace quedaba roto. En nginx funcionarían las dos formas. Además el resto del sitio ya enlaza `/info.html` y `/work.html` |
+| 31 | `public/v1/` en `.prettierignore` | Es un archivo histórico: se conserva byte a byte como salió del servidor, salvo los dos metadatos de SEO |
 
 ## Fuentes del proyecto
 - `referencia/` — HTML guardado + 4 screenshots de fayemi.design (estilo objetivo)
@@ -48,8 +51,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - `brand/*.ai` — ficheros de marca (Adobe Illustrator, aún no extraídos)
 
 ## Pendiente / abierto
-Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hechas: **T6.1** README, **T6.2** dominio.
-- **T6.3** Archivar el portafolio v1 en `public/v1/index.html` (+ `noindex`) y enlazarlo desde el colofón (i18n ES/EN + test).
+Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hechas: **T6.1** README, **T6.2** dominio, **T6.3** archivo v1.
 - **T6.4** `deploy/nginx.conf` de producción (TLS, `www` → apex, HTTP/2, `root /var/www/portafolio`).
 - **T6.5** `deploy/publish.sh` (lint + test + build + `rsync --delete`).
 - **T6.6** `deploy/oracle.md` (runbook: alta, publicación, rollback, TLS, troubleshooting).
@@ -110,3 +112,4 @@ Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hec
 | 02/09/2026 | Fase 6 | Replanteada con el servidor inventariado por SSH (ver `plan.md` §7). Decisiones nuevas: raíz de `juanko.com`, v1 archivado en `public/v1/` + enlace en el colofón, publicación por `rsync` desde local, memearena se borra. Hallazgo: `memearena.juanko.com` proxeaba a `:3000` = frontend de MindCheck, no memearena. |
 | 02/09/2026 | Fase 6 | Renumerada en orden de ejecución (T6.1–T6.11). El README pasa de T6.3 a **T6.1**; el despliegue, de T6.2 a **T6.8**; `oracle.md`, de T6.1 a **T6.6**; la limpieza del reloj, de T6.5 a **T6.10**; las imágenes, de T6.4 a **T6.11**. Tabla de equivalencias al final de la fase en `plan.md`. |
 | 02/09/2026 | T6.2 | Dominio definitivo: `canonical`, `og:url`, `og:image` y `twitter:image` → `https://juanko.com` en `index`/`info`/`work` (12 URLs) y fuera los `TODO(T6)`. `404.html` no llevaba ninguna (es `noindex`). Cerrado `TIPOGRAFÍA: [TBD]` del colofón → `Playfair Display · Inter · JetBrains Mono` en ES y EN. Verificado en el navegador: el colofón parte bien por `": "` en los dos idiomas. |
+| 02/09/2026 | T6.3 | Portafolio v1 traído del servidor por `scp` (md5 verificado) a `public/v1/index.html`, con dos únicos retoques: `noindex, follow` y `canonical`/`og:url` → `/v1/`. Colofón extraído a `components/colofon.js` con `colofonField(key, href)`; campo nuevo `VERSIÓN ANTERIOR: v1 · 2025` en ES/EN + `.info__colofon-link` en CSS. `tests/colofon.test.js` (6 tests, 36 en total). Verificado en el navegador: el clic en el colofón lleva a `/v1/index.html` y la página archivada carga con `noindex`. |

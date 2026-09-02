@@ -41,7 +41,7 @@ portafolio/
     ├── js/
     │   ├── pages/            # index.js · info.js · work.js · 404.js
     │   ├── components/       # page.js · nav.js · footer.js · lang-toggle.js
-    │   │                     # hero-canvas.js · carousel.js
+    │   │                     # hero-canvas.js · carousel.js · colofon.js
     │   │                     # project-list.js · project-card.js
     │   │                     # clock.js (sin uso, ver Fase 6)
     │   ├── i18n/
@@ -74,6 +74,7 @@ Reglas:
 | `Carousel` | carrusel horizontal de imágenes por proyecto |
 | `ProjectList` / `ProjectCard` | listado + items de work desde `projects.js` |
 | `LangToggle` | ES/EN, persistido en localStorage |
+| `Colofon` | campos `ETIQUETA: valor` del colofón, con valor enlazable (versión anterior) |
 
 ## 3. Tareas (1 commit c/u)
 
@@ -146,14 +147,16 @@ de la fase). Contexto verificado del servidor: §7.
 - [x] T6.2 Dominio definitivo: `canonical` + `og:url` → `https://juanko.com/`, `/info`, `/work` en los 4 HTML;
       fuera el `TODO(T6)`. De paso, cerrar `TIPOGRAFÍA: Playfair Display · Inter · JetBrains Mono` del colofón →
       `Playfair Display · Inter · JetBrains Mono` (ES/EN).
-- [ ] T6.3 Archivo del portafolio v1:
+- [x] T6.3 Archivo del portafolio v1:
   - `public/v1/index.html` = copia del `index.html` que hoy sirve juanko.com (queda versionado en git y
     Vite lo copia tal cual a `dist/v1/`, sin regla extra de nginx ni de rsync).
   - Dos retoques mínimos en esa copia: `<meta name="robots" content="noindex">` y su `og:url`/`canonical`
     → `https://juanko.com/v1/`, para que no compita en SEO con el portafolio nuevo.
-  - Colofón: campo nuevo `VERSIÓN ANTERIOR: v1 · 2025` enlazando a `/v1/`. Requiere que `colofonField()`
-    acepte un valor enlazable (hoy solo pinta texto plano con `split(": ")`) → firma `colofonField(key, href)`.
-  - Claves `info.colofon.v1` en `es.json` y `en.json` + test de que el enlace se renderiza con `href="/v1/"`.
+  - Colofón: campo nuevo `VERSIÓN ANTERIOR: v1 · 2025` enlazando a `/v1/index.html` (no a `/v1/`: el dev
+    server de Vite resuelve el directorio al lobby nuevo; además los enlaces del sitio ya apuntan al `.html`).
+    Requiere que `colofonField()` acepte un valor enlazable (hoy solo pinta texto plano con `split(": ")`)
+    → firma `colofonField(key, href)`, extraída a `components/colofon.js` para poder testearla.
+  - Claves `info.colofon.v1` en `es.json` y `en.json` + tests del enlace en ES y EN.
 - [ ] T6.4 `deploy/nginx.conf` de producción para `juanko.com`:
       80 → 301 a HTTPS · `www` → 301 al apex · TLS con el cert existente `juanko.com` (incluye `www`) ·
       `http2 on` · `root /var/www/portafolio` · se conserva todo lo de T5.1 (gzip, cabeceras de seguridad,

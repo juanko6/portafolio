@@ -4,5 +4,8 @@ referencia/
 package-lock.json
 downloads/
 .playwright-mcp/
+
+# archivo historico: se conserva tal cual salio del servidor
+public/v1/
 *.md
 
