@@ -161,9 +161,10 @@ de la fase). Contexto verificado del servidor: §7.
       80 → 301 a HTTPS · `www` → 301 al apex · TLS con el cert existente `juanko.com` (incluye `www`) ·
       `root /var/www/portafolio` · se conserva todo lo de T5.1 (gzip, cabeceras de seguridad, caché de
       `/assets/` y de imágenes, URLs limpias `/info` y `/work`, `error_page 404`).
-      **Sin `http2`**: la instancia lleva nginx 1.18, donde `http2 on;` no existe y la opción `http2` del
-      `listen` es del socket :443 — ya la declara `mindcheck.juanko.com` y duplicarla tumbaría toda la
-      config. Verificado que `juanko.com` ya sirve HTTP/2 heredándola.
+      **`http2` en el `listen`, no `http2 on;`**: la instancia lleva nginx 1.18, donde esa directiva no
+      existe. Y es opción **del socket :443**: declararla dos veces da `duplicate listen options` y tumba
+      toda la config, así que va solo en el server de `juanko.com`. Se añadió al retirar MindCheck (T6.7):
+      su bloque era el único que la declaraba y al borrarlo el sitio cayó a HTTP/1.1.
       Arreglos sobre T5.1: `try_files … =404` (antes devolvía la página 404 con estado **200**), `^~` en
       `/assets/` (el regex de imágenes le robaba las rutas) y cabeceras de seguridad repetidas en los
       bloques de caché (un `location` con `add_header` propio descarta los heredados).
@@ -177,15 +178,21 @@ de la fase). Contexto verificado del servidor: §7.
 
 **B. Trabajo en el servidor (no genera commit; se documenta en `oracle.md`)**
 
-- [ ] T6.7 Retirar memearena:
-  - `docker rm -f memearena-pb`, borrar su imagen y el volumen de PocketBase, borrar `~/memearena` (27 MB).
-  - Desenlazar y borrar `memearena.juanko.com` y `api-memearena.juanko.com` de nginx + `certbot delete`
-    del certificado `api-memearena.juanko.com`.
-  - `docker builder prune` → libera ~2,8 GB de caché de build.
-  - Manual del usuario: borrar los registros DNS `memearena` y `api-memearena` en el registrador.
-  - Nota: `memearena.juanko.com` proxeaba a `127.0.0.1:3000`, que **no** es memearena sino el frontend de
-    MindCheck (config errónea heredada); borrarla también elimina esa exposición accidental.
-  - Impacto aceptado: `memearena-ionic.vercel.app` deja de funcionar (usaba esa API).
+- [x] T6.7 Vaciar el servidor: retirar **memearena y MindCheck** (02/09/2026)
+  - Motivo del cambio de alcance: MindCheck apenas se usaba y se decidió tumbarlo hoy y redesplegarlo
+    más adelante con calma. El código vive en `github.com/juanko6/MindCheck`; se rescató solo el `.env`
+    (27 variables, fuera del repo). La base de datos y los 51 MB de PDFs subidos se dieron por perdidos.
+  - `docker compose down -v` + `docker image prune -af` + `docker builder prune -af`: Docker a cero.
+  - Borrados `~/MindCheck` y `~/memearena` (con `sudo`: los contenedores dejaron ficheros de root).
+  - Retiradas 4 configs de nginx (`mindcheck.juanko.com`, `mindcheck.qzz.io`, `memearena.juanko.com`,
+    `api-memearena.juanko.com`) y sus 4 certificados. Queda solo `juanko.com` + `default-block.conf`.
+  - Resultado: disco 16 GB → **8,8 GB**, RAM disponible 303 → **524 MB**, y los puertos 3000/8000/5432/8090
+    dejan de responder desde internet.
+  - **Hallazgo:** las reglas `DENY` de UFW para 3000 y 8000 nunca sirvieron de nada. Docker publica puertos
+    con DNAT en `nat/PREROUTING`, así que el tráfico va por `FORWARD` y no pasa por `INPUT`, que es donde
+    vive UFW. Lo que de verdad filtraba 5432 y 8090 era la *security list* de la VCN de Oracle.
+  - Manual del usuario: borrar en el registrador los DNS de `mindcheck`, `memearena` y `api-memearena`,
+    y quitar 3000/8000 de la security list de Oracle.
 - [ ] T6.8 Despliegue + smoke test:
   - `sudo mkdir -p /var/www/portafolio && sudo chown ubuntu:www-data /var/www/portafolio`.
   - `./deploy/publish.sh` (primer envío).
@@ -212,7 +219,7 @@ Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID vi
 | — | **T6.4** | nginx de producción |
 | — | **T6.5** | `publish.sh` |
 | T6.1 | **T6.6** | `oracle.md` |
-| — | **T6.7** | Retirar memearena |
+| — | **T6.7** | Vaciar el servidor (memearena + MindCheck) |
 | T6.2 | **T6.8** | Despliegue + smoke test |
 | — | **T6.9** | README, segunda pasada |
 | T6.5 | **T6.10** | Limpieza del reloj |
@@ -281,26 +288,28 @@ Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID vi
   Confirmar en T6.8 que el timer de `certbot` renueva y que la config nueva no lo rompe.
 - Borrar memearena rompe `memearena-ionic.vercel.app` (impacto aceptado, era proyecto de la universidad).
 
-## 7. Inventario del servidor (verificado 02/09/2026)
+## 7. Inventario del servidor (tras el vaciado de T6.7, 02/09/2026)
 
 Acceso: `ssh mindcheck` → `ubuntu@168.75.106.115` (Oracle Cloud, Ubuntu 22.04, x86_64, 2 vCPU,
-956 MB RAM sin swap, disco 45 GB al 34 %). Todos los dominios de abajo resuelven a esa IP.
+956 MB RAM **sin swap**, disco 45 GB al 20 %). `ubuntu` es un usuario normal con `sudo`; SSH solo por
+clave pública, sin contraseñas.
 
-| Sitio nginx | Destino actual | Fase 6 |
+Tras T6.7 la máquina está prácticamente vacía: **cero contenedores, cero imágenes, cero volúmenes**.
+Docker sigue instalado por si vuelve MindCheck.
+
+| Sitio nginx | Destino | Estado |
 |---|---|---|
-| `juanko.com` + `www` | estático `/var/www/juanko.com/index.html` (portafolio v1, un solo HTML) | **root → `/var/www/portafolio`**; el v1 pasa a `/v1/` dentro del build |
-| `mindcheck.juanko.com` | proxy a `:3000` (frontend) y `:8000` (API) | se queda igual |
-| `mindcheck.qzz.io` | mismo MindCheck | se queda igual |
-| `memearena.juanko.com` | proxy a `:3000` → **es el frontend de MindCheck, no memearena** (config errónea) | **se borra** |
-| `api-memearena.juanko.com` | proxy a `:8090` (PocketBase) | **se borra** |
-| `default-block.conf` | `return 444` en el `:80` por defecto | se queda igual |
+| `juanko.com` + `www` | estático en `/var/www/juanko.com` (portafolio v1) | **root → `/var/www/portafolio`** en T6.8 |
+| `default-block.conf` | `return 444` en el `:80` por defecto | se queda |
 
-Contenedores: `mindcheck-frontend` (:3000), `mindcheck-backend` (:8000), `mindcheck-db`
-(postgres:16-alpine, :5432), `memearena-pb` (pocketbase, :8090 → **se borra**).
+Certificados Let's Encrypt: solo queda **`juanko.com`** (+`www`), caduca el 19/10/2026.
 
-Certificados Let's Encrypt: `juanko.com` (+`www`, caduca 19/10/2026) · `mindcheck.juanko.com`
-(05/10) · `www.mindcheck.juanko.com` (19/10, redundante con el anterior) · `mindcheck.qzz.io` (17/10) ·
-`api-memearena.juanko.com` (+`memearena`, **se borra**).
+Pendiente de hardening (Fase 7):
+- **Sin swap** con 956 MB de RAM.
+- 24 paquetes actualizables y **reinicio pendiente** por kernel.
+- `rpcbind` escuchando en el puerto 111 sin que nada lo use.
+- `permitrootlogin without-password` → debería ser `no`.
+- DNS huérfanos en el registrador (`mindcheck`, `memearena`, `api-memearena`) y los puertos 3000/8000
+  todavía abiertos en la security list de Oracle, aunque ya no escuche nadie detrás.
 
-Sin Node ni npm instalados → el build es siempre local. Caché de build de Docker: 4,5 GB, de los que
-2,8 GB son reclamables con `docker builder prune`.
+Sin Node ni npm instalados → el build es siempre local.
