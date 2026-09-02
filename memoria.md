@@ -6,7 +6,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - **Fase:** 5 **completa** (T5.1–T5.4 ✅) + **pasada de rediseño** (R1–R9 ✅, commits `542e602` y `e0d1a16`). Siguiente: **Fase 6 — Deploy en `juanko.com` + cierre** (replanteada el 02/09 con el servidor ya inventariado; ver `plan.md` §7).
 - **Última actualización:** 02/09/2026.
 - **Destino fijado:** `https://juanko.com` en la raíz de la instancia Oracle `ssh mindcheck` (168.75.106.115), que ya sirve MindCheck y el portafolio antiguo. DNS y certificado TLS de `juanko.com`+`www` ya existen: no hace falta tocar el registrador para publicar.
-- **Bloqueante del despliegue:** los `canonical`/`og:*` siguen con la base placeholder `https://juanko6.github.io/portafolio` → se cierra en **T6.2**.
+- **T6.2 ✅:** `canonical`/`og:*`/`twitter:image` ya apuntan a `https://juanko.com`. El despliegue ya no tiene bloqueantes de contenido.
 - **Ojo con los IDs:** la Fase 6 se renumeró el 02/09/2026 en orden de ejecución (T6.1–T6.11). El commit `941adbf` habla de «T6.3» refiriéndose al README, que ahora es **T6.1**. Tabla de equivalencias al final de la Fase 6 en `plan.md`.
 - **Cómo actualizar:** editar "Estado actual" + añadir fila en "Log" al terminar cada tarea (1 commit = 1 tarea, `T#.# desc`).
 
@@ -34,7 +34,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 15 | ~~Paleta verde de la ref: bg `#080808`, glow `#90ff21`~~ → **sustituida en `542e602` por paleta espresso cálida**: bg `#20150e`, panel `#2c1c12`, superficie `#4f382a`, glow `#ff6a3c`, texto `#f3ece1`, crema `#f0ebe4` | La verde era calco de fayemi.design; la cálida es identidad propia. La crema define los bloques de acento (About Me, Let's Talk, footer) |
 | 16 | Hero: **sin imagen Unsplash** de base; glow radial CSS como sustituto | Una cara genérica no encaja con el grid abstracto; el glow mantiene la estética de la ref |
 | 17 | i18n: `data-i18n` = texto único (`textContent`); **`data-list`** = array (renderiza `<li>` en `apply()`) | Listas planas (FOCUS/EXTRA) sin hardcode ni render manual; los bloques estructurados (RESUMEN/COLOFÓN) se construyen en `info.js` |
-| 18 | SEO: **base canonical/OG placeholder** = `https://juanko6.github.io/portafolio` (URL real del repo, no inventada) marcada `TODO(T6)` | No había dominio decidido aún; se necesita URL absoluta válida → se sustituye en T6.2. `twitter:site` omitido (sin handle X confirmado) |
+| 18 | SEO: base canonical/OG = **`https://juanko.com`** (fijada en T6.2; antes placeholder `juanko6.github.io/portafolio`) | `twitter:site` omitido (sin handle X confirmado) |
 | 19 | OG image: **SVG fuente** (`og.svg`) → raster `og-image.png` 1200×630 vía `sips` (macOS nativa) | No hay rsvg/imagemagick/sharp/PIL; `sips` convierte SVG a tamaño nativo sin padding (a diferencia de `qlmanage`, que lo hace cuadrado) |
 | 20 | Reloj CET **retirado** del header (R6). `clock.js` y `clock.test.js` siguen en el repo sin usarse | Petición del usuario; la limpieza queda en T6.10 |
 | 21 | Bloque **crema** (`.cream-section` en `layout.css`) como recurso de acento compartido: About Me en `/info`, Let's Talk en `/work` | Rompe el muro oscuro sin inventar un componente por página |
@@ -48,8 +48,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - `brand/*.ai` — ficheros de marca (Adobe Illustrator, aún no extraídos)
 
 ## Pendiente / abierto
-Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hecha: **T6.1** README.
-- **T6.2** Dominio definitivo en los 4 HTML (`canonical`/`og:url` → `https://juanko.com`) + cerrar `TIPOGRAFÍA: [TBD]` del colofón.
+Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hechas: **T6.1** README, **T6.2** dominio.
 - **T6.3** Archivar el portafolio v1 en `public/v1/index.html` (+ `noindex`) y enlazarlo desde el colofón (i18n ES/EN + test).
 - **T6.4** `deploy/nginx.conf` de producción (TLS, `www` → apex, HTTP/2, `root /var/www/portafolio`).
 - **T6.5** `deploy/publish.sh` (lint + test + build + `rsync --delete`).
@@ -110,3 +109,4 @@ Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hec
 | 02/09/2026 | Docs | `plan.md` y `memoria.md` puestos al día (Fase 5 estaba sin marcar; paleta, textos y componentes desfasados). README commiteado (T6.3). |
 | 02/09/2026 | Fase 6 | Replanteada con el servidor inventariado por SSH (ver `plan.md` §7). Decisiones nuevas: raíz de `juanko.com`, v1 archivado en `public/v1/` + enlace en el colofón, publicación por `rsync` desde local, memearena se borra. Hallazgo: `memearena.juanko.com` proxeaba a `:3000` = frontend de MindCheck, no memearena. |
 | 02/09/2026 | Fase 6 | Renumerada en orden de ejecución (T6.1–T6.11). El README pasa de T6.3 a **T6.1**; el despliegue, de T6.2 a **T6.8**; `oracle.md`, de T6.1 a **T6.6**; la limpieza del reloj, de T6.5 a **T6.10**; las imágenes, de T6.4 a **T6.11**. Tabla de equivalencias al final de la fase en `plan.md`. |
+| 02/09/2026 | T6.2 | Dominio definitivo: `canonical`, `og:url`, `og:image` y `twitter:image` → `https://juanko.com` en `index`/`info`/`work` (12 URLs) y fuera los `TODO(T6)`. `404.html` no llevaba ninguna (es `noindex`). Cerrado `TIPOGRAFÍA: [TBD]` del colofón → `Playfair Display · Inter · JetBrains Mono` en ES y EN. Verificado en el navegador: el colofón parte bien por `": "` en los dos idiomas. |

@@ -143,7 +143,7 @@ de la fase). Contexto verificado del servidor: §7.
 
 **A. Preparación en el repo (1 commit por tarea)**
 
-- [ ] T6.2 Dominio definitivo: `canonical` + `og:url` → `https://juanko.com/`, `/info`, `/work` en los 4 HTML;
+- [x] T6.2 Dominio definitivo: `canonical` + `og:url` → `https://juanko.com/`, `/info`, `/work` en los 4 HTML;
       fuera el `TODO(T6)`. De paso, cerrar `TIPOGRAFÍA: Playfair Display · Inter · JetBrains Mono` del colofón →
       `Playfair Display · Inter · JetBrains Mono` (ES/EN).
 - [ ] T6.3 Archivo del portafolio v1:
