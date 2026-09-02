@@ -1,24 +1,23 @@
 /* Design tokens — T1.1 (base creada en T0.5)
-   Paleta extraída de referencia fayemi.design:
-   negro + glow verde ácido + texto gris con halo. */
+   Paleta cálida de referencia: espresso oscuro + glow naranja + texto crema. */
 
 :root {
   /* Color */
-  --color-bg: #080808;
-  --color-panel: #202020;
-  --color-surface: #484b45;
-  --color-text: #cccfca;
-  --color-muted: #6b6e68;
-  --color-glow: #90ff21;
-  --color-glow-soft: rgba(144, 255, 33, 0.5);
-  --color-glow-faint: rgba(144, 255, 33, 0.15);
+  --color-bg: #20150e;
+  --color-panel: #2c1c12;
+  --color-surface: #4f382a;
+  --color-text: #f3ece1;
+  --color-muted: #9d8875;
+  --color-glow: #ff6a3c;
+  --color-glow-soft: rgba(255, 106, 60, 0.5);
+  --color-glow-faint: rgba(255, 106, 60, 0.15);
 
   /* Glow / halos */
-  --glow-text: 0 0 8px rgba(204, 207, 202, 0.75);
-  --glow-accent: 0 0 8px rgba(144, 255, 33, 0.5);
+  --glow-text: 0 0 8px rgba(243, 236, 225, 0.7);
+  --glow-accent: 0 0 8px rgba(255, 106, 60, 0.5);
 
   /* Bordes */
-  --border-subtle: 1px solid rgba(204, 207, 202, 0.18);
+  --border-subtle: 1px solid rgba(243, 236, 225, 0.16);
   --border-glow: 1px solid var(--color-glow);
   --radius-chip: 4px;
 

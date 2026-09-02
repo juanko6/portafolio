@@ -4,7 +4,7 @@ const STRENGTH = 26;
 const SMOOTH = 0.22;
 const BASE_R = 1.1;
 const ACTIVE_BUMP = 2.2;
-const BASE_COLOR = "204, 207, 202";
+const BASE_COLOR = "243, 236, 225";
 
 export function createGrid(width, height, gap = GAP) {
   const cols = Math.max(1, Math.floor(width / gap));
@@ -101,16 +101,16 @@ export function mount(el, opts = {}) {
         Math.hypot(p.x - p.baseX, p.y - p.baseY) / STRENGTH
       );
       const r = BASE_R + energy * ACTIVE_BUMP;
-      const cr = mix(204, 144, energy);
-      const cg = mix(207, 255, energy);
-      const cb = mix(202, 33, energy);
+      const cr = mix(243, 255, energy);
+      const cg = mix(236, 106, energy);
+      const cb = mix(225, 60, energy);
       ctx.beginPath();
       ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.12 + energy * 0.88})`;
       ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
       ctx.fill();
       if (energy > 0.5) {
         ctx.beginPath();
-        ctx.fillStyle = `rgba(144, 255, 33, ${(energy - 0.5) * 0.25})`;
+        ctx.fillStyle = `rgba(255, 106, 60, ${(energy - 0.5) * 0.25})`;
         ctx.arc(p.x, p.y, r * 2.4, 0, Math.PI * 2);
         ctx.fill();
       }

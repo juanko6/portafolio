@@ -168,7 +168,7 @@
   height: 2.5rem;
   border: var(--border-subtle);
   border-radius: 999px;
-  background: rgba(8, 8, 8, 0.55);
+  background: rgba(32, 21, 14, 0.55);
   backdrop-filter: blur(4px);
   color: var(--color-text);
   cursor: pointer;

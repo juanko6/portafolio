@@ -8,6 +8,7 @@ const STAR =
   "M6 0a7.815 7.815 0 0 0 6 6 7.815 7.815 0 0 0-6 6 7.815 7.815 0 0 0-6-6 7.815 7.815 0 0 0 6-6Z";
 
 export function mount(el, { onBackToTop = null } = {}) {
+  el.classList.add("c-footer");
   const year = String(new Date().getFullYear()).slice(-2);
 
   el.innerHTML = `

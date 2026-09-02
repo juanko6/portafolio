@@ -6,6 +6,8 @@ const { main, refresh } = mount(document.querySelector("#app"), {
   page: "info",
 });
 
+let infoRoot = null;
+
 const WEB_URLS = [
   { href: LINKS.mail, external: false },
   { href: LINKS.github, external: true },
@@ -23,7 +25,7 @@ function section(labelKey, content) {
   s.appendChild(label);
   if (typeof content === "string") s.insertAdjacentHTML("beforeend", content);
   else s.appendChild(content);
-  main.appendChild(s);
+  infoRoot.appendChild(s);
   return s;
 }
 
@@ -107,6 +109,9 @@ function buildColofon() {
    COLOFÓN se generan con t() dinámicamente y apply() no los refresca. */
 function build() {
   main.innerHTML = "";
+  infoRoot = document.createElement("div");
+  infoRoot.className = "info";
+  main.appendChild(infoRoot);
 
   /* T3.1 — Head: badge + título + sub */
   const head = document.createElement("header");
@@ -116,7 +121,7 @@ function build() {
     <h1 class="info__title" data-i18n="info.title"></h1>
     <p class="info__sub" data-i18n="info.sub"></p>
   `;
-  main.appendChild(head);
+  infoRoot.appendChild(head);
 
   /* T3.2 — SOBRE MÍ */
   section(

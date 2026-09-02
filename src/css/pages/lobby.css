@@ -88,7 +88,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.25em 0.7em;
-  border: 1px solid rgba(204, 207, 202, 0.18);
+  border: var(--border-subtle);
   border-radius: 2px;
   color: var(--color-muted);
   line-height: 1.4;

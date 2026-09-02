@@ -5,17 +5,21 @@ const { main, refresh } = mountPage(document.querySelector("#app"), {
   page: "lobby",
 });
 
+const lobby = document.createElement("div");
+lobby.className = "lobby";
+main.appendChild(lobby);
+
 const cta = document.createElement("nav");
 cta.className = "lobby__cta";
 cta.innerHTML = `
   <a class="c-btn c-btn--lg" href="/info.html" data-i18n="lobby.cta.info"></a>
   <a class="c-btn c-btn--lg" href="/work.html" data-i18n="lobby.cta.work"></a>
 `;
-main.appendChild(cta);
+lobby.appendChild(cta);
 
 const hero = document.createElement("div");
 hero.className = "lobby__hero";
-main.appendChild(hero);
+lobby.appendChild(hero);
 mountHero(hero, {});
 
 const meta = document.createElement("section");
@@ -32,5 +36,5 @@ meta.innerHTML = `
     <span class="lobby__status__text" data-i18n="lobby.status"></span>
   </div>
 `;
-main.appendChild(meta);
+lobby.appendChild(meta);
 refresh();

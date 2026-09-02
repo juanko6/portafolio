@@ -4,6 +4,7 @@ const TIME_FRAME =
   "M7.237 23.5.5 16.764V7.237L7.237.5h71.526L85.5 7.237v9.527L78.763 23.5H7.237Z";
 
 export function mount(el, { page = "lobby", onBack = null } = {}) {
+  el.classList.add("c-nav");
   const backMarkup = onBack
     ? '<button class="c-nav__back" type="button" data-back data-i18n="nav.back">Back</button>'
     : "";

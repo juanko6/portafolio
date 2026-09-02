@@ -1,33 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <radialGradient id="glow" cx="82%" cy="12%" r="70%">
-      <stop offset="0%" stop-color="#90ff21" stop-opacity="0.32" />
-      <stop offset="42%" stop-color="#90ff21" stop-opacity="0.10" />
-      <stop offset="100%" stop-color="#90ff21" stop-opacity="0" />
+      <stop offset="0%" stop-color="#ff6a3c" stop-opacity="0.32" />
+      <stop offset="42%" stop-color="#ff6a3c" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#ff6a3c" stop-opacity="0" />
     </radialGradient>
     <radialGradient id="glow2" cx="8%" cy="96%" r="45%">
-      <stop offset="0%" stop-color="#90ff21" stop-opacity="0.10" />
-      <stop offset="100%" stop-color="#90ff21" stop-opacity="0" />
+      <stop offset="0%" stop-color="#ff6a3c" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#ff6a3c" stop-opacity="0" />
     </radialGradient>
   </defs>
 
-  <rect width="1200" height="630" fill="#080808" />
+  <rect width="1200" height="630" fill="#20150e" />
   <rect width="1200" height="630" fill="url(#glow)" />
   <rect width="1200" height="630" fill="url(#glow2)" />
 
-  <rect x="40" y="40" width="1120" height="550" rx="4" fill="none" stroke="#cccfca" stroke-opacity="0.16" stroke-width="1.5" />
+  <rect x="40" y="40" width="1120" height="550" rx="4" fill="none" stroke="#f3ece1" stroke-opacity="0.16" stroke-width="1.5" />
 
-  <rect x="64" y="64" width="76" height="76" rx="10" fill="#161616" stroke="#90ff21" stroke-width="2" />
-  <text x="102" y="120" text-anchor="middle" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="46" font-weight="700" fill="#90ff21">JG</text>
+  <rect x="64" y="64" width="76" height="76" rx="10" fill="#2c1c12" stroke="#ff6a3c" stroke-width="2" />
+  <text x="102" y="120" text-anchor="middle" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="46" font-weight="700" fill="#ff6a3c">JG</text>
 
-  <text x="1136" y="112" text-anchor="end" font-family="Menlo, monospace" font-size="26" fill="#6b6e68" letter-spacing="3">ALICANTE, ESPAÑA</text>
+  <text x="1136" y="112" text-anchor="end" font-family="Menlo, monospace" font-size="26" fill="#9d8875" letter-spacing="3">ALICANTE, ESPAÑA</text>
 
-  <text x="64" y="330" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="104" font-weight="700" fill="#e8ebe6" letter-spacing="1">JUAN</text>
-  <text x="64" y="446" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="104" font-weight="700" fill="#e8ebe6" letter-spacing="1">GUTIÉRREZ</text>
+  <text x="64" y="330" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="104" font-weight="700" fill="#f3ece1" letter-spacing="1">JUAN</text>
+  <text x="64" y="446" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="104" font-weight="700" fill="#f3ece1" letter-spacing="1">GUTIÉRREZ</text>
 
-  <rect x="66" y="486" width="92" height="6" rx="3" fill="#90ff21" />
-  <text x="176" y="500" font-family="Menlo, monospace" font-size="30" fill="#90ff21" letter-spacing="4">FULL STACK DEVELOPER</text>
+  <rect x="66" y="486" width="92" height="6" rx="3" fill="#ff6a3c" />
+  <text x="176" y="500" font-family="Menlo, monospace" font-size="30" fill="#ff6a3c" letter-spacing="4">FULL STACK DEVELOPER</text>
 
-  <text x="64" y="566" font-family="Menlo, monospace" font-size="24" fill="#6b6e68" letter-spacing="2">©JG/26</text>
-  <text x="1136" y="566" text-anchor="end" font-family="Menlo, monospace" font-size="24" fill="#6b6e68" letter-spacing="2">GITHUB · LINKEDIN · MAIL</text>
+  <text x="64" y="566" font-family="Menlo, monospace" font-size="24" fill="#9d8875" letter-spacing="2">©JG/26</text>
+  <text x="1136" y="566" text-anchor="end" font-family="Menlo, monospace" font-size="24" fill="#9d8875" letter-spacing="2">GITHUB · LINKEDIN · MAIL</text>
 </svg>
