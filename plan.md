@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **Fase 3 completa → Fase 4 — Work** · Actualizado: 31/08/2026
+Estado: **Fase 5 completa + pasada de rediseño → Fase 6 — Deploy Oracle** · Actualizado: 02/09/2026
 
 ## 0. Decisiones fijadas
 
@@ -9,10 +9,10 @@ Estado: **Fase 3 completa → Fase 4 — Work** · Actualizado: 31/08/2026
 | Framework | Vite **vanilla** (HTML/CSS/JS ESM), **multi-página** |
 | Vistas | `/` Lobby · `/info` Aboutme · `/work` Work+detail · `404` |
 | Idiomas | `es` (default) + `en`, JSON por idioma en `src/i18n/locales/` |
-| Hero | Canvas generativo que reacciona al mouse (sin Three.js) |
+| Hero | Canvas generativo: ratón en escritorio, autopiloto + toque en móvil (sin Three.js) |
 | Imágenes | Unsplash (descargadas y versionadas en `public/img/`) |
-| Git | Repo **GitHub público**, 1 commit = 1 tarea |
-| QA | ESLint + Prettier + Vitest (tests clave: i18n, reloj, datos, navegación) |
+| Git | Repo **GitHub público**, 1 commit = 1 tarea, commits solo a nombre del autor |
+| QA | ESLint + Prettier + Vitest (tests clave: i18n, hero, datos, navegación) |
 | Deploy | Instancia **Oracle Cloud** (build estático + nginx) |
 | Sin | Página secreta `/256` (descartada) |
 
@@ -35,20 +35,20 @@ portafolio/
 └── src/
     ├── js/
     │   ├── pages/            # index.js · info.js · work.js · 404.js
-    │   ├── components/       # page.js · nav.js · footer.js · clock.js
-    │   │                     # hero-canvas.js · carousel.js · project-list.js
-    │   │                     # lang-toggle.js
+    │   ├── components/       # page.js · nav.js · footer.js · lang-toggle.js
+    │   │                     # hero-canvas.js · carousel.js
+    │   │                     # project-list.js · project-card.js
+    │   │                     # clock.js (sin uso, ver Fase 6)
     │   ├── i18n/
     │   │   ├── index.js
     │   │   └── locales/      # es.json · en.json
     │   └── data/
-    │       ├── projects.js   # fuente única de Work
-    │       └── profile.js    # contacto, focus, extra, resumé, colofón
+    │       └── projects.js   # fuente única de Work
     └── css/
         ├── base/             # reset.css · tokens.css · typography.css
-        ├── components/       # nav.css · footer.css · buttons.css · labels.css
-        │                     # carousel.css · hero.css
-        └── pages/            # lobby.css · info.css · work.css · 404.css
+        ├── components/       # layout.css · nav.css · footer.css
+        │                     # lang-toggle.css · hero.css
+        └── pages/            # lobby.css · info.css · work.css · notfound.css
 ```
 
 Reglas:
@@ -62,11 +62,10 @@ Reglas:
 
 | Componente | Uso |
 |---|---|
-| `Page` | shell: inyecta Nav + Footer + Clock en cualquier HTML |
+| `Page` | shell: inyecta Nav + Footer en cualquier HTML |
 | `Nav` | `JUAN GUTIÉRREZ / <Lobby\|Info\|Work>` + LangToggle + `Back` |
-| `Footer` | `⊕ Alicante, ESPAÑA` + `Back to top` + `Mail, GitHub, LinkedIn` + `©JG/26` |
-| `Clock` | hora CET en vivo |
-| `HeroCanvas` | canvas generativo reactivo al mouse (lobby) |
+| `Footer` | bloque crema a sangre: `⊕ Alicante, ESPAÑA` + `Back to top` + `Mail, GitHub, LinkedIn` + `©JG/26` |
+| `HeroCanvas` | canvas generativo: sigue al ratón y, sin él, autopiloto + toque (lobby) |
 | `Carousel` | carrusel horizontal de imágenes por proyecto |
 | `ProjectList` / `ProjectCard` | listado + items de work desde `projects.js` |
 | `LangToggle` | ES/EN, persistido en localStorage |
@@ -114,21 +113,36 @@ Reglas:
 - [x] T4.6 Bloque `LET'S TALK` + email + footer + responsive work
 
 ### Fase 5 — 404 + i18n
-- [ ] T5.1 Página 404 (glitch `ERROR 404` + `Volver a /Lobby`) + `nginx.conf`
-- [ ] T5.2 `en.json` completo
-- [ ] T5.3 `LangToggle` ES/EN + localStorage + test i18n
+- [x] T5.1 Página 404 (glitch `ERROR 404` + `Volver a /Lobby`) + `nginx.conf`
+- [x] T5.2 `en.json` completo
+- [x] T5.3 `LangToggle` ES/EN + localStorage + test i18n
 - [x] T5.4 Meta tags SEO + OG image + favicon
 
+### Rediseño (fuera de numeración, commits `542e602` y `e0d1a16`)
+- [x] R1 Paleta espresso cálida (marrón/naranja/crema) — sustituye a la verde inicial
+- [x] R2 Work: tarjetas como paneles redondeados; detalle debajo de los botones
+- [x] R3 Carrusel: bucle circular continuo derecha→izquierda al expandir
+- [x] R4 Info: bloque crema acotado a `SOBRE MÍ`; resto en paleta oscura
+- [x] R5 Footer: márgenes laterales + borde inferior a sangre
+- [x] R6 Header compacto (una línea en iPhone 12) y reloj retirado
+- [x] R7 Hero en móvil: autopiloto (Lissajous) + respuesta al toque
+- [x] R8 Arreglo de clases muertas: `nav.js` y `lang-toggle.js` no añadían `c-nav`/`c-lang`
+- [x] R9 Textos: «visión de producto», nota de `SOBRE MÍ` y correo `juanko.dev@gmail.com`
+
 ### Fase 6 — Deploy Oracle + cierre
-- [ ] T6.1 `vite build` verificado + `deploy/oracle.md`
+- [ ] T6.1 `deploy/oracle.md` (el `vite build` ya está verificado)
 - [ ] T6.2 Despliegue en instancia Oracle + smoke test
-- [ ] T6.3 README (setup, scripts, deploy) + commit final
+  - Bloqueante: sustituir la base placeholder `https://juanko6.github.io/portafolio`
+    de los `canonical`/`og:*` de los 4 HTML por el dominio definitivo
+- [x] T6.3 README (setup, scripts, deploy)
 - [ ] T6.4 (Opcional) Swap placeholders → imágenes reales (bust 3D, retrato, capturas)
+- [ ] T6.5 Limpieza: borrar `clock.js` + `tests/clock.test.js` y las claves `clock.*`
+      de los locales (el reloj ya no se monta)
 
 ## 4. Mapa de textos ES (cerrado)
 
 ### Lobby
-- Nav: `JUAN GUTIÉRREZ / Lobby` · Reloj: `CET` en vivo
+- Nav: `JUAN GUTIÉRREZ / Lobby` (sin reloj desde R6)
 - Botones: `Info` · `Work`
 - Badges: `FS` `26`
 - Desc: `DESARROLLADOR FULL STACK EN ÚLTIMO CURSO DE INGENIERÍA INFORMÁTICA. DISEÑO Y CONSTRUYO SISTEMAS COMPLETOS DE EXTREMO A EXTREMO, DEL DOMINIO AL DESPLIEGUE EN CLOUD. TENGO PRODUCTO PROPIO EN PRODUCCIÓN CON CLIENTE REAL Y SUSCRIPCIÓN.`
@@ -137,11 +151,11 @@ Reglas:
 
 ### Info
 - Badge: `¡HOLA!`
-- Título: `¡HOLA! SOY JUAN GUTIÉRREZ, DESARROLLADOR FULL STACK Y MENTE DE PRODUCTO.`
+- Título: `¡HOLA! SOY JUAN GUTIÉRREZ, DESARROLLADOR FULL STACK CON VISIÓN DE PRODUCTO.`
 - Sub: `Último curso de Ingeniería Informática. Siempre buscando colaborar con equipos y productos con criterio.`
 - Sobre mí: `Trabajo de extremo a extremo: especificación escrita, dominio, contrato de API, backend y frontend con TDD. Integro IA en producto real, incluida inferencia local. Mi formación en Marketing y 10 años en entornos digitales aportan criterio de producto y conversión.*`
-- Nota: `*Esto es solo una lista truncada. Si tienes algo tangencial o igual de interesante en mente, escríbeme.`
-- Email: `juanko6@gmail.com`
+- Nota: `*Aquí no cabe todo. Si tienes algo parecido entre manos, o algo distinto que merezca la pena, escríbeme.`
+- Email: `juanko.dev@gmail.com`
 - Focus: `Full Stack` · `Next.js / React` · `FastAPI / Node` · `PostgreSQL` · `Docker / Cloud` · `LLM & Inferencia local` · `TDD & SDD` · `IA en producto`
 - Extra: `Español (nativo)` · `Inglés (B2, acreditado U. de Alicante)` · `Convenio de prácticas disponible` · `Carné B`
 - Resumé:
@@ -154,7 +168,7 @@ Reglas:
 ### Work
 - Título: `TRABAJO SELECCIONADO (4)` / `2025—26`
 - Sub: `Sistemas completos de extremo a extremo, construidos como one-man band: especificación, tests y deploy.`
-- LET'S TALK: `Para hablar de colaboraciones o proyectos, envía un email a juanko6@gmail.com`
+- LET'S TALK: `Para hablar de colaboraciones o proyectos, envía un email a juanko.dev@gmail.com`
 
 | Proyecto | Timeline | Lugar | Botones |
 |---|---|---|---|
@@ -172,10 +186,13 @@ Reglas:
 - `ERROR (404)` glitch · `Algo salió mal, la página que solicitas no está disponible.` · `Volver a /Lobby`
 
 ## 5. Criterio de done (global)
-- `npm run dev` → 4 vistas navegables, i18n ES/EN, reloj vivo, hero reactivo.
+- `npm run dev` → 4 vistas navegables, i18n ES/EN, hero reactivo (ratón y móvil).
 - `npm run lint && npm run test && npm run build` → verde.
 - CI verde en GitHub; build servido por nginx en Oracle.
 
 ## 6. Riesgos / abierto
 - Fuentes: ref usa "Suisse" (comercial) → equivalentes Google Fonts en T1.2.
 - Imágenes reales → T6.4 opcional.
+- Base canonical/OG en placeholder hasta tener dominio (T6.2).
+- URL pública de Loomcast: si aparece, actualizar `projects.js`.
+- `clock.js` y su test quedan sin uso tras R6 → T6.5.
