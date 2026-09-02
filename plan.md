@@ -157,10 +157,17 @@ de la fase). Contexto verificado del servidor: §7.
     Requiere que `colofonField()` acepte un valor enlazable (hoy solo pinta texto plano con `split(": ")`)
     → firma `colofonField(key, href)`, extraída a `components/colofon.js` para poder testearla.
   - Claves `info.colofon.v1` en `es.json` y `en.json` + tests del enlace en ES y EN.
-- [ ] T6.4 `deploy/nginx.conf` de producción para `juanko.com`:
+- [x] T6.4 `deploy/nginx.conf` de producción para `juanko.com`:
       80 → 301 a HTTPS · `www` → 301 al apex · TLS con el cert existente `juanko.com` (incluye `www`) ·
-      `http2 on` · `root /var/www/portafolio` · se conserva todo lo de T5.1 (gzip, cabeceras de seguridad,
-      caché de `/assets/` y de imágenes, URLs limpias `/info` y `/work`, `error_page 404`).
+      `root /var/www/portafolio` · se conserva todo lo de T5.1 (gzip, cabeceras de seguridad, caché de
+      `/assets/` y de imágenes, URLs limpias `/info` y `/work`, `error_page 404`).
+      **Sin `http2`**: la instancia lleva nginx 1.18, donde `http2 on;` no existe y la opción `http2` del
+      `listen` es del socket :443 — ya la declara `mindcheck.juanko.com` y duplicarla tumbaría toda la
+      config. Verificado que `juanko.com` ya sirve HTTP/2 heredándola.
+      Arreglos sobre T5.1: `try_files … =404` (antes devolvía la página 404 con estado **200**), `^~` en
+      `/assets/` (el regex de imágenes le robaba las rutas) y cabeceras de seguridad repetidas en los
+      bloques de caché (un `location` con `add_header` propio descarta los heredados).
+      Sintaxis validada con `nginx -t` en el servidor contra una config de prueba, sin tocar la viva.
 - [ ] T6.5 `deploy/publish.sh`: `set -euo pipefail`, `npm run lint && npm test && npm run build`,
       `rsync -az --delete dist/ mindcheck:/var/www/portafolio/`, flag `--dry-run`. Sin sudo: el directorio
       se crea una vez como `ubuntu:www-data` (ver oracle.md). No hace falta recargar nginx para estáticos.

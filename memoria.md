@@ -44,6 +44,8 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 | 29 | El colofón se extrae a `components/colofon.js` (antes eran funciones locales de `info.js`) | `info.js` es una entrada de página: monta y construye al importarse, así que no se puede importar en un test. El componente sí |
 | 30 | El enlace al v1 apunta a **`/v1/index.html`**, no a `/v1/` | El dev server de Vite resuelve `/v1/` al lobby nuevo (fallback al `index.html` raíz), así que en desarrollo el enlace quedaba roto. En nginx funcionarían las dos formas. Además el resto del sitio ya enlaza `/info.html` y `/work.html` |
 | 31 | `public/v1/` en `.prettierignore` | Es un archivo histórico: se conserva byte a byte como salió del servidor, salvo los dos metadatos de SEO |
+| 32 | nginx de producción **sin `http2`** en su `listen` | La instancia lleva nginx **1.18**: `http2 on;` no existe (es 1.25.1+) y la opción `http2` del `listen` es del socket :443, no del `server`. Ya la declara `mindcheck.juanko.com`; repetirla da `duplicate listen options` y tumba toda la config del servidor, MindCheck incluido. Verificado que `juanko.com` ya responde HTTP/2 por herencia |
+| 33 | **HSTS desactivado** (queda comentado en `nginx.conf`) | El navegador lo cachea meses: es difícil de revertir si algo va mal en el estreno. Se activa cuando el sitio lleve tiempo estable, y sin `includeSubDomains` para no arrastrar a `mindcheck.juanko.com` |
 
 ## Fuentes del proyecto
 - `referencia/` — HTML guardado + 4 screenshots de fayemi.design (estilo objetivo)
@@ -51,8 +53,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - `brand/*.ai` — ficheros de marca (Adobe Illustrator, aún no extraídos)
 
 ## Pendiente / abierto
-Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hechas: **T6.1** README, **T6.2** dominio, **T6.3** archivo v1.
-- **T6.4** `deploy/nginx.conf` de producción (TLS, `www` → apex, HTTP/2, `root /var/www/portafolio`).
+Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hechas: **T6.1** README, **T6.2** dominio, **T6.3** archivo v1, **T6.4** nginx.
 - **T6.5** `deploy/publish.sh` (lint + test + build + `rsync --delete`).
 - **T6.6** `deploy/oracle.md` (runbook: alta, publicación, rollback, TLS, troubleshooting).
 - **T6.7** Retirar memearena del servidor + `docker builder prune` (~2,8 GB) + borrar sus DNS en el registrador (manual).
@@ -113,3 +114,4 @@ Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hec
 | 02/09/2026 | Fase 6 | Renumerada en orden de ejecución (T6.1–T6.11). El README pasa de T6.3 a **T6.1**; el despliegue, de T6.2 a **T6.8**; `oracle.md`, de T6.1 a **T6.6**; la limpieza del reloj, de T6.5 a **T6.10**; las imágenes, de T6.4 a **T6.11**. Tabla de equivalencias al final de la fase en `plan.md`. |
 | 02/09/2026 | T6.2 | Dominio definitivo: `canonical`, `og:url`, `og:image` y `twitter:image` → `https://juanko.com` en `index`/`info`/`work` (12 URLs) y fuera los `TODO(T6)`. `404.html` no llevaba ninguna (es `noindex`). Cerrado `TIPOGRAFÍA: [TBD]` del colofón → `Playfair Display · Inter · JetBrains Mono` en ES y EN. Verificado en el navegador: el colofón parte bien por `": "` en los dos idiomas. |
 | 02/09/2026 | T6.3 | Portafolio v1 traído del servidor por `scp` (md5 verificado) a `public/v1/index.html`, con dos únicos retoques: `noindex, follow` y `canonical`/`og:url` → `/v1/`. Colofón extraído a `components/colofon.js` con `colofonField(key, href)`; campo nuevo `VERSIÓN ANTERIOR: v1 · 2025` en ES/EN + `.info__colofon-link` en CSS. `tests/colofon.test.js` (6 tests, 36 en total). Verificado en el navegador: el clic en el colofón lleva a `/v1/index.html` y la página archivada carga con `noindex`. |
+| 02/09/2026 | T6.4 | `deploy/nginx.conf` reescrito para producción: redirección 80→443, bloque `www`→apex, TLS del cert existente y `root /var/www/portafolio`. Tres arreglos sobre la versión de T5.1: `try_files … =404` (la página 404 se servía con estado **200**), `^~ /assets/` (el regex de imágenes le ganaba a las rutas con hash) y las cabeceras de seguridad repetidas en los bloques de caché, porque un `location` con `add_header` propio descarta los heredados. Sintaxis validada con `nginx -t -c` sobre una config de prueba en `/tmp` del servidor, sin tocar la viva. El enrutado (`/v1/`, `/info`, estado 404 real) queda por verificar en el smoke test de T6.8: no hay nginx en el Mac. |
