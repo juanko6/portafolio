@@ -5,7 +5,6 @@
 @import "./base/tokens.css";
 @import "./base/typography.css";
 @import "./components/layout.css";
-@import "./components/clock.css";
 @import "./components/nav.css";
 @import "./components/lang-toggle.css";
 @import "./components/footer.css";

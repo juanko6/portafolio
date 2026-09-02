@@ -35,16 +35,16 @@
   },
   "info": {
     "badge": "¡HOLA!",
-    "title": "¡HOLA! SOY JUAN GUTIÉRREZ, DESARROLLADOR FULL STACK Y MENTE DE PRODUCTO.",
+    "title": "¡HOLA! SOY JUAN GUTIÉRREZ, DESARROLLADOR FULL STACK CON VISIÓN DE PRODUCTO.",
     "sub": "Último curso de Ingeniería Informática. Siempre buscando colaborar con equipos y productos con criterio.",
     "sobreMi": {
       "title": "SOBRE MÍ",
       "text": "Trabajo de extremo a extremo: especificación escrita, dominio, contrato de API, backend y frontend con TDD. Integro IA en producto real, incluida inferencia local. Mi formación en Marketing y 10 años en entornos digitales aportan criterio de producto y conversión.*",
-      "nota": "*Esto es solo una lista truncada. Si tienes algo tangencial o igual de interesante en mente, escríbeme."
+      "nota": "*Aquí no cabe todo. Si tienes algo parecido entre manos, o algo distinto que merezca la pena, escríbeme."
     },
     "email": {
       "title": "EMAIL",
-      "text": "juanko6@gmail.com"
+      "text": "juanko.dev@gmail.com"
     },
     "focus": {
       "title": "FOCUS",
@@ -94,7 +94,7 @@
     "letsTalk": {
       "title": "LET'S TALK",
       "intro": "Para hablar de colaboraciones o proyectos, envía un email a",
-      "email": "juanko6@gmail.com"
+      "email": "juanko.dev@gmail.com"
     }
   },
   "project": {

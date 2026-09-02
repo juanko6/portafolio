@@ -11,17 +11,19 @@
   gap: var(--space-6);
 }
 
-/* CTA: botones grandes Info / Work */
+/* CTA: botones grandes Info / Work a extremos */
 
 .lobby__cta {
   display: flex;
-  gap: var(--space-4);
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
   padding-top: var(--space-4);
+  flex-wrap: nowrap;
 }
 
 .c-btn {
-  display: inline-block;
+  display: inline-flex;
+  white-space: nowrap;
   font-family: var(--font-display);
   text-decoration: none;
   color: var(--color-text);
@@ -170,11 +172,6 @@
 }
 
 @media (max-width: 30em) {
-  .lobby__cta {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .c-btn--lg {
     font-size: clamp(1.5rem, 12vw, 2.5rem);
   }

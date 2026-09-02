@@ -9,29 +9,10 @@ export function mount(el, { project }) {
   el.className = "work-card";
   const content = getProjectContent(project, getLang());
 
-  const head = document.createElement("div");
-  head.className = "work-card__head";
-
-  const title = document.createElement("h3");
-  title.className = "work-card__title";
-  title.textContent = project.name;
-
-  const meta = document.createElement("div");
-  meta.className = "work-card__meta";
-  const timeline = document.createElement("span");
-  timeline.className = "work-card__timeline";
-  timeline.textContent = content.timeline;
-  const place = document.createElement("span");
-  place.className = "work-card__place";
-  place.textContent = content.place;
-  meta.append(timeline, place);
-
-  head.append(title, meta);
-
   const detail = document.createElement("div");
   detail.className = "work-card__detail";
   detail.hidden = true;
-  buildDetail(detail, project, content);
+  const carousel = buildDetail(detail, project, content);
 
   const actions = document.createElement("div");
   actions.className = "work-card__actions";
@@ -58,10 +39,32 @@ export function mount(el, { project }) {
       ? t("project.collapse")
       : t("project.expand");
     detail.hidden = !open;
+    /* El carrusel solo puede medirse (y animarse) con el detalle visible. */
+    if (open) requestAnimationFrame(() => carousel.start());
+    else carousel.stop();
   });
   actions.appendChild(expand);
 
-  el.append(head, detail, actions);
+  const head = document.createElement("div");
+  head.className = "work-card__head";
+
+  const title = document.createElement("h3");
+  title.className = "work-card__title";
+  title.textContent = project.name;
+
+  const meta = document.createElement("div");
+  meta.className = "work-card__meta";
+  const timeline = document.createElement("span");
+  timeline.className = "work-card__timeline";
+  timeline.textContent = content.timeline;
+  const place = document.createElement("span");
+  place.className = "work-card__place";
+  place.textContent = content.place;
+  meta.append(timeline, place);
+
+  head.append(title, meta);
+
+  el.append(head, actions, detail);
 }
 
 function makeLink(label, href) {
@@ -76,7 +79,7 @@ function makeLink(label, href) {
 
 function buildDetail(detail, project, content) {
   const carouselWrap = document.createElement("div");
-  mountCarousel(carouselWrap, { images: project.images });
+  const carousel = mountCarousel(carouselWrap, { images: project.images });
   detail.appendChild(carouselWrap);
 
   detail.appendChild(makeSection("project.about", content.about));
@@ -85,6 +88,8 @@ function buildDetail(detail, project, content) {
   if (content.extra) {
     detail.appendChild(makeSection("project.extra", content.extra));
   }
+
+  return carousel;
 }
 
 function makeSection(labelKey, content) {

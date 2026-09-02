@@ -6,6 +6,28 @@ const BASE_R = 1.1;
 const ACTIVE_BUMP = 2.2;
 const BASE_COLOR = "243, 236, 225";
 
+/* Autopiloto: sin ratón (móvil) el foco recorre el lienzo por su cuenta.
+   Los dos periodos no son múltiplos entre sí, así que la curva de Lissajous
+   resultante tarda mucho en cerrarse y el recorrido no se lee como un bucle. */
+const AUTO_X_MS = 13700;
+const AUTO_Y_MS = 8300;
+/* Amplitud sobre el centro: deja aire en los bordes para que el foco no se
+   quede pegado a una esquina. */
+const AUTO_AMP_X = 0.4;
+const AUTO_AMP_Y = 0.32;
+
+/* Tras un toque, cuánto manda el dedo antes de devolver el mando al autopiloto. */
+const TOUCH_HOLD_MS = 1800;
+
+export function autoFocus(time, width, height) {
+  const ax = (time / AUTO_X_MS) * Math.PI * 2;
+  const ay = (time / AUTO_Y_MS) * Math.PI * 2 + 1.1;
+  return {
+    x: width * (0.5 + AUTO_AMP_X * Math.sin(ax)),
+    y: height * (0.5 + AUTO_AMP_Y * Math.sin(ay)),
+  };
+}
+
 export function createGrid(width, height, gap = GAP) {
   const cols = Math.max(1, Math.floor(width / gap));
   const rows = Math.max(1, Math.floor(height / gap));
@@ -62,7 +84,12 @@ export function mount(el, opts = {}) {
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let points = [];
-  let mouse = null;
+  /* Foco impuesto por ratón o dedo. Si es null manda el autopiloto. */
+  let pointer = null;
+  /* Momento en que un toque deja de mandar (0 = no hay toque activo). */
+  let pointerUntil = 0;
+  /* Refuerzo momentáneo al tocar, se apaga solo. */
+  let pulse = 0;
   let width = 0;
   let height = 0;
   let raf = 0;
@@ -90,10 +117,25 @@ export function mount(el, opts = {}) {
     }
   }
 
-  function drawFrame() {
+  /* El radio se recorta en lienzos pequeños (el hero en móvil mide ~160px de
+     alto): con el radio de escritorio el efecto cubriría todo a la vez. */
+  function focusRadius() {
+    return Math.max(70, Math.min(RADIUS, Math.min(width, height) * 0.62));
+  }
+
+  function drawFrame(now) {
+    if (pointerUntil && now > pointerUntil) {
+      pointer = null;
+      pointerUntil = 0;
+    }
+    const focus = pointer ?? autoFocus(now, width, height);
+    pulse *= 0.94;
+    const radius = focusRadius() * (1 + pulse * 0.35);
+    const strength = STRENGTH * (1 + pulse * 0.9);
+
     ctx.clearRect(0, 0, width, height);
     for (const p of points) {
-      const d = displacement(p, mouse, RADIUS, STRENGTH);
+      const d = displacement(p, focus, radius, strength);
       p.x += (p.baseX + d.x - p.x) * SMOOTH;
       p.y += (p.baseY + d.y - p.y) * SMOOTH;
       const energy = Math.min(
@@ -118,12 +160,28 @@ export function mount(el, opts = {}) {
     raf = requestAnimationFrame(drawFrame);
   }
 
-  function onPointerMove(event) {
+  function track(event) {
     const rect = canvas.getBoundingClientRect();
-    mouse = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    /* El ratón manda hasta que sale del hero; el dedo solo un rato, para que
+       el autopiloto retome el movimiento al soltar. */
+    pointerUntil =
+      event.pointerType === "mouse" ? 0 : performance.now() + TOUCH_HOLD_MS;
   }
-  function onPointerLeave() {
-    mouse = null;
+
+  function onPointerMove(event) {
+    track(event);
+  }
+
+  /* Un toque lleva el foco a ese punto y suelta un pulso de intensidad.
+     No se llama a preventDefault: el gesto debe seguir haciendo scroll. */
+  function onPointerDown(event) {
+    track(event);
+    pulse = 1;
+  }
+
+  function onPointerLeave(event) {
+    if (event.pointerType === "mouse") pointer = null;
   }
 
   resize();
@@ -132,7 +190,26 @@ export function mount(el, opts = {}) {
   } else {
     raf = requestAnimationFrame(drawFrame);
     el.addEventListener("pointermove", onPointerMove);
+    el.addEventListener("pointerdown", onPointerDown);
     el.addEventListener("pointerleave", onPointerLeave);
+  }
+
+  /* Con autopiloto el lienzo anima siempre, así que se apaga al salir de
+     pantalla: en móvil evita gastar batería dibujando lo que no se ve. */
+  let io = null;
+  if (!reduceMotion && typeof IntersectionObserver !== "undefined") {
+    io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !raf) {
+          raf = requestAnimationFrame(drawFrame);
+        } else if (!entry.isIntersecting && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      },
+      { threshold: 0 }
+    );
+    io.observe(el);
   }
 
   let ro = null;
@@ -156,7 +233,9 @@ export function mount(el, opts = {}) {
     stop() {
       cancelAnimationFrame(raf);
       el.removeEventListener("pointermove", onPointerMove);
+      el.removeEventListener("pointerdown", onPointerDown);
       el.removeEventListener("pointerleave", onPointerLeave);
+      if (io) io.disconnect();
       if (ro) ro.disconnect();
       if (glitchTimer) clearInterval(glitchTimer);
     },

@@ -1,4 +1,4 @@
-/* Nav — marca + label de página + reloj + Back */
+/* Nav — marca + label de página + Back */
 
 .c-nav {
   display: flex;
@@ -17,6 +17,17 @@
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
+}
+
+/* El grupo derecho (idioma + Back) nunca se comprime: el nombre completo del
+   header manda, y si no cabe todo la fila se parte en dos. */
+.c-nav__right {
+  flex: none;
+}
+
+.c-nav__lang {
+  display: inline-flex;
+  flex: none;
 }
 
 .c-nav__link,
@@ -40,24 +51,6 @@
 .c-nav__label {
   color: var(--color-muted);
   white-space: nowrap;
-}
-
-.c-nav__time {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex: none;
-}
-
-.c-nav__time-frame {
-  width: 86px;
-  height: 24px;
-  color: var(--color-surface);
-}
-
-.c-nav__time-frame path {
-  fill: none;
-  stroke: currentColor;
 }
 
 .c-nav__back {
@@ -84,15 +77,48 @@
 
 @media (max-width: 640px) {
   .c-nav {
-    padding: var(--space-4) var(--content-pad);
-    gap: var(--space-3);
+    flex-wrap: wrap;
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
   }
 
-  .c-nav__time-frame {
-    display: none;
+  .c-nav__left {
+    flex: 1 1 auto;
+    gap: var(--space-1);
+  }
+
+  .c-nav__right {
+    gap: var(--space-2);
+  }
+
+  .c-nav__back {
+    padding: var(--space-1) var(--space-2);
   }
 
   .c-nav__link {
-    display: none;
+    font-size: var(--text-sm);
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  .c-nav__label {
+    font-size: var(--text-sm);
+  }
+}
+
+/* Móvil estrecho: se encoge la tipografía para que quepa todo en una fila
+   (un iPhone 12, 390px, entra de sobra). */
+@media (max-width: 30em) {
+  .c-nav__link,
+  .c-nav__label {
+    font-size: var(--text-xs);
+  }
+}
+
+/* Solo por debajo de ~360px el nombre completo deja de caber: ahí sí se parte
+   en dos filas en vez de comprimirse. */
+@media (max-width: 22.5em) {
+  .c-nav__left {
+    flex: 1 0 100%;
   }
 }

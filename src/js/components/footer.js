@@ -1,5 +1,5 @@
 export const LINKS = {
-  mail: "mailto:juanko6@gmail.com",
+  mail: "mailto:juanko.dev@gmail.com",
   github: "https://github.com/juanko6",
   linkedin: "https://www.linkedin.com/in/juanko6",
 };
@@ -12,11 +12,13 @@ export function mount(el, { onBackToTop = null } = {}) {
   const year = String(new Date().getFullYear()).slice(-2);
 
   el.innerHTML = `
-    <div class="c-footer__left">
+    <div class="c-footer__toprow">
+      <span class="c-footer__name" data-i18n="nav.name">Juan Gutiérrez</span>
+      <span class="c-footer__separator">&nbsp;/&nbsp;</span>
       <span class="c-footer__loc"><span aria-hidden="true">⊕</span>&nbsp;<span data-i18n="footer.location">Alicante, ESPAÑA</span></span>
       <button class="c-footer__top" type="button" data-to-top><span data-i18n="footer.backToTop">Back to top</span>&nbsp;<span aria-hidden="true">↑</span></button>
     </div>
-    <div class="c-footer__linkarea">
+    <div class="c-footer__bottomrow">
       <div class="c-footer__links">
         <a class="c-footer__link" href="${LINKS.mail}" data-i18n="footer.links.mail">Mail</a><span class="c-footer__sep">,&nbsp;</span>
         <a class="c-footer__link" href="${LINKS.github}" target="_blank" rel="noopener" data-i18n="footer.links.github">GitHub</a><span class="c-footer__sep">,&nbsp;</span>

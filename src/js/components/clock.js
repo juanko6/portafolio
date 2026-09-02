@@ -24,7 +24,6 @@ export function mount(el, _opts = {}) {
     `<span data-hour>${initial.hour}</span>`,
     '<span class="c-clock__colon">:</span>',
     `<span data-minute>${initial.minute}</span>`,
-    '<span class="c-clock__tz" data-i18n="clock.tz">CET</span>',
     "</span>",
   ].join("");
 

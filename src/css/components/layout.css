@@ -19,3 +19,23 @@
 .c-footer-slot {
   flex: none;
 }
+
+/* Bloque crema — sección de acento clara sobre el fondo espresso.
+   Se usa en About Me (/info) y Let's Talk (/work). */
+
+.cream-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  background: var(--color-cream);
+  color: var(--color-cream-text);
+  border-radius: var(--radius-panel);
+  padding: var(--space-8) var(--space-7);
+}
+
+@media (max-width: 48em) {
+  .cream-section {
+    gap: var(--space-5);
+    padding: var(--space-6) var(--space-5);
+  }
+}

@@ -12,6 +12,11 @@
   --color-glow-soft: rgba(255, 106, 60, 0.5);
   --color-glow-faint: rgba(255, 106, 60, 0.15);
 
+  /* Cream / light sections */
+  --color-cream: #f0ebe4;
+  --color-cream-text: #1a100b;
+  --color-cream-muted: #6b5d50;
+
   /* Glow / halos */
   --glow-text: 0 0 8px rgba(243, 236, 225, 0.7);
   --glow-accent: 0 0 8px rgba(255, 106, 60, 0.5);
@@ -20,6 +25,7 @@
   --border-subtle: 1px solid rgba(243, 236, 225, 0.16);
   --border-glow: 1px solid var(--color-glow);
   --radius-chip: 4px;
+  --radius-panel: 14px;
 
   /* Espaciado (escala 4) */
   --space-1: 0.25rem;

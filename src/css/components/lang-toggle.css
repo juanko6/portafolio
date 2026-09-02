@@ -41,3 +41,9 @@
   outline: none;
   box-shadow: var(--glow-accent);
 }
+
+@media (max-width: 640px) {
+  .c-lang__btn {
+    padding: var(--space-1) var(--space-2);
+  }
+}

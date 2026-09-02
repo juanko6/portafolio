@@ -1,22 +1,35 @@
-/* Footer — ubicación + Back to top + links + copyright */
+/* Footer — bloque crema separado de los laterales por el mismo margen que el
+   contenido, y a sangre por abajo: esquinas superiores redondeadas, inferiores
+   rectas contra el borde de la pantalla. */
 
 .c-footer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-5);
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: var(--content-max);
-  margin: 0 auto;
-  padding: var(--space-5) var(--content-pad) var(--space-6);
+  background: var(--color-cream);
+  padding: var(--space-8) 0 var(--space-7);
+  border-radius: var(--radius-chip) var(--radius-chip) 0 0;
+  margin: 0 var(--content-pad);
 }
 
-.c-footer__left {
+.c-footer__toprow {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--content-pad);
   display: flex;
   align-items: center;
-  gap: var(--space-5);
   flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.c-footer__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  color: var(--color-cream-text);
+  letter-spacing: -0.01em;
+}
+
+.c-footer__separator {
+  font-family: var(--font-mono);
+  color: var(--color-cream-muted);
 }
 
 .c-footer__loc {
@@ -24,27 +37,38 @@
   font-size: var(--text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--color-cream-muted);
 }
 
 .c-footer__top {
+  margin-left: auto;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1;
-  color: var(--color-text);
+  color: var(--color-cream-text);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--duration) var(--ease-out);
 }
 
 .c-footer__top:hover {
   color: var(--color-glow);
 }
 
-.c-footer__linkarea {
+.c-footer__bottomrow {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--content-pad);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--space-6);
   flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
 }
 
 .c-footer__links {
@@ -54,7 +78,7 @@
 }
 
 .c-footer__link {
-  color: var(--color-text);
+  color: var(--color-cream-text);
 }
 
 .c-footer__link:hover {
@@ -62,7 +86,7 @@
 }
 
 .c-footer__sep {
-  color: var(--color-muted);
+  color: var(--color-cream-muted);
 }
 
 .c-footer__copyrightarea {
@@ -74,7 +98,7 @@
 .c-footer__star {
   width: 12px;
   height: 12px;
-  color: var(--color-text);
+  color: var(--color-cream-text);
 }
 
 .c-footer__star path {
@@ -85,5 +109,5 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: 0.05em;
-  color: var(--color-muted);
+  color: var(--color-cream-muted);
 }

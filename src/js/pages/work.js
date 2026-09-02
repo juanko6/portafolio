@@ -13,6 +13,9 @@ const { main, refresh } = mount(document.querySelector("#app"), {
    bilingüe de projects.js que apply() no toca. */
 function build() {
   main.innerHTML = "";
+  const work = document.createElement("div");
+  work.className = "work";
+  main.appendChild(work);
 
   /* T4.2 — Head: título (con count) + años + sub */
   const head = document.createElement("header");
@@ -25,14 +28,18 @@ function build() {
   head.querySelector(".work__title").textContent = t("work.title", {
     count: `(${PROJECTS.length})`,
   });
-  main.appendChild(head);
+  work.appendChild(head);
 
   /* T4.2 — Listado de proyectos */
-  mountList(main, { projects: PROJECTS });
+  mountList(work, { projects: PROJECTS });
 
   /* T4.6 — Bloque LET'S TALK */
   const letsTalk = document.createElement("section");
   letsTalk.className = "work__letstalk";
+
+  const cream = document.createElement("div");
+  cream.className = "cream-section";
+
   const chip = document.createElement("span");
   chip.className = "work__letstalk-chip";
   chip.dataset.i18n = "work.letsTalk.title";
@@ -45,8 +52,9 @@ function build() {
   email.dataset.i18n = "work.letsTalk.email";
   email.href = `mailto:${t("work.letsTalk.email")}`;
   text.append(intro, " ", email);
-  letsTalk.append(chip, text);
-  main.appendChild(letsTalk);
+  cream.append(chip, text);
+  letsTalk.appendChild(cream);
+  work.appendChild(letsTalk);
 
   refresh();
 }

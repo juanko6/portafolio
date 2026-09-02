@@ -12,6 +12,12 @@ function makeEl(tag = "div") {
     _listeners: {},
     classList: {
       _s: new Set(),
+      add(...names) {
+        names.forEach((n) => this._s.add(n));
+      },
+      remove(...names) {
+        names.forEach((n) => this._s.delete(n));
+      },
       toggle(name, force) {
         const want = force === undefined ? !this._s.has(name) : Boolean(force);
         if (want) this._s.add(name);

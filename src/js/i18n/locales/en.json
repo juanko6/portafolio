@@ -40,11 +40,11 @@
     "sobreMi": {
       "title": "ABOUT ME",
       "text": "I work end to end: written spec, domain, API contract, backend and frontend with TDD. I integrate AI into real products, including local inference. My marketing background and 10 years in digital environments bring product and conversion judgment.*",
-      "nota": "*This is just a truncated list. If something tangential or equally interesting is on your mind, email me."
+      "nota": "*This doesn't cover everything. If you're working on something close to it, or something different that's worth doing, email me."
     },
     "email": {
       "title": "EMAIL",
-      "text": "juanko6@gmail.com"
+      "text": "juanko.dev@gmail.com"
     },
     "focus": {
       "title": "FOCUS",
@@ -94,7 +94,7 @@
     "letsTalk": {
       "title": "LET'S TALK",
       "intro": "To discuss collaborations or projects, send an email to",
-      "email": "juanko6@gmail.com"
+      "email": "juanko.dev@gmail.com"
     }
   },
   "project": {

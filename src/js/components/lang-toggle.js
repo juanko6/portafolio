@@ -5,6 +5,8 @@ const LANGS = ["es", "en"];
 export function mount(el) {
   if (!el) return { stop() {} };
 
+  el.classList.add("c-lang");
+
   const buttons = LANGS.map((lang) => {
     const btn = document.createElement("button");
     btn.type = "button";
