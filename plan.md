@@ -226,7 +226,7 @@ de la fase). Contexto verificado del servidor: §7.
     | Colofón → v1 | resuelve a `https://juanko.com/v1/index.html` |
 
   - Verificado en navegador a 1280×900 y en móvil emulado 375×812: nav en una línea, hero pintando,
-    CTA, footer crema. **No** probado en un teléfono físico.
+    CTA, footer crema. **Confirmado además en un teléfono real por el usuario el 03/09/2026.**
   - `/var/www/juanko.com/index.html` **se conserva** como rollback (ver `deploy/oracle.md`); borrado
     solo el `index.html.save` vacío. El v1 se sirve además desde `/v1/`.
 **C. Cierre**
@@ -279,16 +279,24 @@ Surge al vaciar el servidor en T6.7: con la máquina casi vacía era la ventana 
       OCID que aparecía al intentar borrarla. Borrada la huérfana (antes hubo que vaciar su route table y
       borrar su internet gateway) y retiradas las reglas de 3000 y 8000 de la que queda.
       Verificado desde fuera: 22/80/443 abiertos, 3000/8000/5432/8090 filtrados.
-- [ ] T7.6b Añadir a la security list viva las dos reglas ICMP que Oracle pone por defecto y que se fueron
-      con la VCN borrada: `ICMP 3/4` desde `0.0.0.0/0` (Path MTU Discovery) e `ICMP 3` desde `10.0.0.0/16`.
-- [ ] T7.6c **(manual del usuario)** Borrar en el registrador los DNS de `mindcheck`, `memearena` y
-      `api-memearena`.
-- [ ] T7.7 **(manual del usuario)** Rotar la `OPENAI_API_KEY`: estuvo en un servidor con la API publicada
-      sin TLS. La copia de los secretos está en `~/Documents/mindcheck-env-backup-2026-09-02.env`.
+- [x] T7.6b Reglas ICMP añadidas por el usuario (03/09/2026). No verificable desde fuera; sí verificado
+      que el sitio siguió sano tras el cambio: 5 rutas OK, 404 real, 3000/8000 cerrados.
+- [ ] T7.6c **(manual del usuario)** Borrar los DNS huérfanos. Comprobado el 03/09/2026 contra el
+      nameserver autoritativo (`ns2.dns-parking.com`, no es caché): siguen apuntando a `168.75.106.115`
+      **cuatro** registros — `mindcheck.juanko.com`, `memearena.juanko.com`, `api-memearena.juanko.com`
+      y `mindcheck.qzz.io` (este último en otro dominio, y es al que enlaza el archivo `/v1/`).
+      Efecto: nginx no tiene bloque para esos nombres, así que sirve el certificado de `juanko.com` y el
+      navegador muestra un error de certificado a pantalla completa (`curl` sale con código 60).
+      No es un riesgo, pero es la peor cara posible para quien pinche un enlace antiguo.
+- [x] T7.7 `OPENAI_API_KEY` rotada por el usuario (03/09/2026). No verificable desde aquí.
+      La copia de los secretos sigue en `~/Documents/mindcheck-env-backup-2026-09-02.env`: contiene
+      además `SECRET_KEY`, `POSTGRES_PASSWORD` y `MAIL_PASSWORD`, que **no** se han rotado. Si MindCheck
+      no vuelve, ese fichero se puede borrar.
 - [ ] T7.8 Si vuelve MindCheck: publicar los puertos como `127.0.0.1:puerto:puerto` en el compose. UFW **no**
       protege los puertos de Docker (ver T6.7), así que el binding a loopback es la única defensa del host.
 
 Resultado: RAM disponible **303 → 618 MB**, disco **16 → 8,8 GB**, superficie de red de 7 puertos a 3.
+Fase cerrada salvo T7.6c, que queda abierta a criterio del usuario.
 
 
 ## 4. Mapa de textos ES (cerrado)
