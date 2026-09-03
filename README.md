@@ -107,6 +107,7 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 .
 ├── index.html info.html work.html 404.html   # entradas MPA
 ├── vite.config.js                            # build MPA (4 entradas) → dist/
+│                                             # + plugin `work-images` (ver abajo)
 ├── deploy/
 │   ├── nginx.conf                            # config de producción (Oracle)
 │   ├── publish.sh                            # build + rsync (`npm run deploy`)
@@ -114,7 +115,8 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 ├── public/                                   # assets estáticos (copiados a dist/)
 │   ├── favicon.svg apple-touch-icon.png
 │   ├── og.svg og-image.png                   # Open Graph
-│   ├── img/ (retrato.jpg, work/*)            # placeholders (Unsplash)
+│   ├── img/retrato.jpg                       # placeholder (Unsplash)
+│   ├── img/work/<slug>/                      # capturas de cada proyecto
 │   └── v1/index.html                         # portafolio anterior, archivado
 ├── src/
 │   ├── css/
@@ -130,6 +132,48 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 ├── tests/                                    # Vitest
 └── .github/workflows/ci.yml                  # CI: lint + test + build
 ```
+
+## Capturas de los proyectos
+
+El carrusel de cada proyecto se llena solo con lo que haya en su carpeta. Para añadir una
+captura a Loomcast basta con dejar el fichero aquí:
+
+```
+public/img/work/loomcast/06.jpg
+```
+
+No hay que tocar `projects.js` ni ninguna lista: el plugin `work-images` de `vite.config.js`
+lee `public/img/work/<slug>/` y expone el módulo virtual `virtual:work-images`. Se hace en el
+build porque el sitio es estático y el navegador no puede listar un directorio; en desarrollo,
+añadir o borrar un fichero recarga la página.
+
+- La carpeta debe llamarse igual que el `slug` del proyecto en `projects.js`.
+- Formatos: `jpg`, `jpeg`, `png`, `webp`, `avif`.
+- **El orden del carrusel es el del nombre del fichero**, en orden natural (`2.jpg` va antes
+  que `10.jpg`). Renombrar es la forma de reordenar.
+- Si una carpeta está vacía o no existe, ese proyecto simplemente no monta carrusel.
+
+### Dimensiones
+
+**Manda la altura, no el ancho**, así que puedes mezclar proporciones en el mismo carrusel: cada
+imagen conserva la suya y todas quedan alineadas arriba y abajo. La diapositiva mide **350 px de
+alto** en escritorio y **156 px** en móvil, y a 2× (pantallas retina) eso pide **700 px de alto**
+en el fichero. Anchos resultantes en escritorio:
+
+| Proporción | Fichero recomendado | Ocupa en pantalla |
+|---|---|---|
+| 16:10 | 1600×1000 | 560×350 |
+| 3:2 (los placeholders) | 1600×1067 | 525×350 |
+| 1:1 (cuadrada) | 1000×1000 | 350×350 |
+| 9:16 (captura de móvil) | 700×1244 | 197×350 |
+
+Con **700 px de alto** vas sobrado en cualquier caso; más allá solo pesa. Dos avisos:
+
+- Las capturas de móvil salen como una tira estrecha (197 px de ancho): se ven, pero pierden
+  fuerza al lado de una apaisada.
+- El reset aplica `max-width: 100%` a las imágenes, así que algo más ancho que la pista se
+  recorta (`object-fit: cover`) en lugar de deformarse. En móvil la pista mide ~292 px, lo que
+  admite hasta 16:9 sin recorte.
 
 ## Despliegue en producción
 

@@ -26,6 +26,11 @@ const MIN_SLIDES = 8;
 export function mount(el, { images }) {
   el.className = "work-carousel";
 
+  /* Sin imágenes no hay carrusel. Importa protegerlo: la lista viene de leer
+     `public/img/work/<slug>/`, así que una carpeta vacía es un caso real, y
+     `MIN_SLIDES / 0` daría Infinity y colgaría el bucle que crea las slides. */
+  if (!images.length) return { start() {}, stop() {} };
+
   const reps = Math.max(2, Math.ceil(MIN_SLIDES / images.length));
 
   const track = document.createElement("div");
@@ -52,12 +57,18 @@ export function mount(el, { images }) {
     return (track.scrollWidth + gap) / reps;
   }
 
-  /* Avance de una diapositiva. */
+  /* Avance de una diapositiva: la que está asomando por el borde izquierdo, no
+     siempre la primera. Las imágenes ya no miden todas lo mismo —mandan por
+     altura y cada proporción da un ancho distinto—, así que tomar la primera
+     haría que la flecha saltara de más o de menos según qué se esté viendo. */
   function step() {
-    const first = track.querySelector(".work-carousel__img");
-    if (!first) return 0;
     const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-    return first.getBoundingClientRect().width + gap;
+    const slides = track.querySelectorAll(".work-carousel__img");
+    if (!slides.length) return 0;
+    const actual =
+      [...slides].find((s) => s.offsetLeft + s.offsetWidth > pos + 1) ??
+      slides[0];
+    return actual.getBoundingClientRect().width + gap;
   }
 
   /* Posición real del bucle, en px. No se acumula leyendo track.scrollLeft: el

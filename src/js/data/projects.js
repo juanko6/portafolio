@@ -5,13 +5,17 @@
 // `slug` son universales (términos técnicos / URLs) y no se traducen.
 // `repo` apunta a la cuenta GitHub como placeholder hasta tener las URLs reales
 // de cada repo (pendiente, ver memoria.md → "Pendiente / abierto").
+// Las capturas NO se listan aquí: salen de `public/img/work/<slug>/`, que lee
+// el plugin `work-images` de vite.config.js. Añadir o quitar un fichero de esa
+// carpeta cambia el carrusel; el orden lo marca el nombre (orden natural).
+import WORK_IMAGES from "virtual:work-images";
 
 export function getProjectContent(project, lang) {
   const c = project.content;
   return (lang && c[lang]) || c.es;
 }
 
-export const PROJECTS = [
+const PROYECTOS = [
   {
     slug: "menuunfolded",
     name: "MenuUnfolded",
@@ -24,11 +28,6 @@ export const PROJECTS = [
     ],
     site: "https://menuunfolded.com",
     repo: "https://github.com/juanko6",
-    images: [
-      "/img/work/menuunfolded-1.jpg",
-      "/img/work/menuunfolded-2.jpg",
-      "/img/work/menuunfolded-3.jpg",
-    ],
     content: {
       es: {
         timeline: "2026 – PRESENTE",
@@ -58,11 +57,6 @@ export const PROJECTS = [
     ],
     site: null,
     repo: "https://github.com/juanko6",
-    images: [
-      "/img/work/loomcast-1.jpg",
-      "/img/work/loomcast-2.jpg",
-      "/img/work/loomcast-3.jpg",
-    ],
     content: {
       es: {
         timeline: "JUL 2026 – PRESENTE",
@@ -94,11 +88,6 @@ export const PROJECTS = [
     ],
     site: null,
     repo: "https://github.com/juanko6",
-    images: [
-      "/img/work/nuxoasist-1.jpg",
-      "/img/work/nuxoasist-2.jpg",
-      "/img/work/nuxoasist-3.jpg",
-    ],
     content: {
       es: {
         timeline: "ENE – JUN 2026",
@@ -127,11 +116,6 @@ export const PROJECTS = [
     ],
     site: null,
     repo: "https://github.com/juanko6",
-    images: [
-      "/img/work/mindcheck-1.jpg",
-      "/img/work/mindcheck-2.jpg",
-      "/img/work/mindcheck-3.jpg",
-    ],
     content: {
       es: {
         timeline: "2025",
@@ -150,3 +134,10 @@ export const PROJECTS = [
     },
   },
 ];
+
+/* Cada proyecto recibe las capturas de su carpeta. Si la carpeta no existe o
+   está vacía, `images` queda como array vacío y la tarjeta no monta carrusel. */
+export const PROJECTS = PROYECTOS.map((p) => ({
+  ...p,
+  images: WORK_IMAGES[p.slug] ?? [],
+}));

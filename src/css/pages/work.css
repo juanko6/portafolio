@@ -178,10 +178,17 @@
   display: none;
 }
 
+/* Manda la altura, no el ancho: así conviven proporciones distintas en la misma
+   pista (una captura 16:10 y una cuadrada se alinean por arriba y por abajo, y
+   cada una ocupa el ancho que le toca). Antes iba al revés —ancho fijo más
+   `aspect-ratio: 16/10`— y eso recortaba a 16:10 todo lo que no lo fuera. */
 .work-carousel__img {
   flex: 0 0 auto;
-  width: 86%;
-  aspect-ratio: 16 / 10;
+  height: 156px;
+  width: auto;
+  /* Red de seguridad: `max-width: 100%` del reset recorta el ancho de las
+     imágenes muy apaisadas, y sin `object-fit` eso las aplastaría en vez de
+     recortarlas. Con ancho automático no hace nada; solo actúa en ese caso. */
   object-fit: cover;
   border-radius: var(--radius-chip);
 }
@@ -224,9 +231,11 @@
   cursor: default;
 }
 
+/* 350 px de alto es lo que medía la diapositiva de escritorio antes del cambio
+   (560 px de ancho a 16:10), así que el carrusel conserva su tamaño. */
 @media (min-width: 640px) {
   .work-carousel__img {
-    width: min(560px, 68%);
+    height: 350px;
   }
 }
 

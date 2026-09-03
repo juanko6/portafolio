@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **En producción en https://juanko.com desde el 03/09/2026** · Quedan T6.9–T6.11 (cierre) · Actualizado: 03/09/2026
+Estado: **En producción en https://juanko.com desde el 03/09/2026** · Fase 6 cerrada · Actualizado: 03/09/2026
 
 ## 0. Decisiones fijadas
 
@@ -241,7 +241,24 @@ de la fase). Contexto verificado del servidor: §7.
       `t("clock.tz")` para cubrir la resolución de una clave de dos niveles; se sustituyó por
       `t("work.years")` para no perder esa cobertura. 33 tests en verde (eran 36; el reloj aportaba 3).
       Sin efecto en producción: al no importarlo nadie, Vite nunca lo incluyó en el bundle.
-- [ ] T6.11 (Opcional) Swap placeholders → imágenes reales (bust 3D, retrato, capturas)
+- [x] T6.11 Capturas reales — **35 imágenes compuestas por el usuario, en producción el 03/09/2026**
+  - **El carrusel ya no lleva rutas escritas a mano.** Cada proyecto lee `public/img/work/<slug>/`
+    y monta cuantas imágenes haya: 8 MenuUnfolded, 7 Loomcast, 11 NuxoAsist, 9 MindCheck.
+    Lo resuelve el plugin `work-images` de `vite.config.js`, que expone el módulo virtual
+    `virtual:work-images`. Se hace en el build porque el sitio es estático y el navegador no
+    puede listar un directorio. El orden lo marca el nombre del fichero.
+  - **El carrusel pasa a mandar por altura** (`work.css`): antes era ancho fijo + `aspect-ratio:
+    16/10`, que recortaba a 16:10 todo lo que no lo fuera. Ahora la altura es 350 px en
+    escritorio y 156 px en móvil, y cada imagen conserva su proporción, así que conviven 16:10 y
+    cuadradas alineadas arriba y abajo. Los 350 px son exactamente lo que medía antes.
+  - **Peso:** llegaron a 1001 px de alto y 26,6 MB. Escaladas a 700 px (el 2× de 350) con calidad
+    JPEG 82 → **5,7 MB, un 79 % menos**. Los originales quedan en `downloads/compuestas-originales/`.
+  - Verificado en navegador a 1440 y 390 px: 35 imágenes cargadas, **cero deformadas**, alturas
+    uniformes y ninguna se sale de la pista de 292 px del móvil.
+  - **Dos fallos encontrados al hacerlo** (ver memoria.md): el cuelgue con carpeta vacía y el
+    aplastamiento por `max-width: 100%` del reset.
+  - Fuera de alcance: el retrato del colofón sigue siendo el placeholder de Unsplash, y el
+    «bust 3D» del enunciado ya no aplica (el hero acabó siendo un canvas de partículas).
 
 Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID viejo `T6.3`):
 
@@ -257,7 +274,7 @@ Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID vi
 | T6.2 | **T6.8** | Despliegue + smoke test |
 | — | **T6.9** | README, segunda pasada |
 | T6.5 | **T6.10** | Limpieza del reloj |
-| T6.4 | **T6.11** | Imágenes reales (opcional) |
+| T6.4 | **T6.11** | Capturas reales (hecho) |
 
 ### Fase 7 — Hardening de la instancia (02/09/2026)
 
@@ -352,7 +369,7 @@ Fase cerrada salvo T7.6c, que queda abierta a criterio del usuario.
 
 ## 6. Riesgos / abierto
 - Fuentes: ref usa "Suisse" (comercial) → equivalentes Google Fonts en T1.2.
-- Imágenes reales → T6.11 opcional.
+- ~~Imágenes reales~~ → hechas en T6.11 (03/09/2026). El retrato del colofón sigue en placeholder.
 - Base canonical/OG en placeholder hasta T6.2 (dominio ya decidido: `juanko.com`).
 - URL pública de Loomcast: si aparece, actualizar `projects.js`.
 - La instancia es `micro`: 956 MB de RAM sin swap y ~300 MB libres. El sitio es estático (coste ~0), pero

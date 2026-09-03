@@ -58,11 +58,22 @@ describe("data/projects (integridad)", () => {
     }
   });
 
-  it("imágenes siguen la convención /img/work/<slug>-N.jpg", () => {
+  it("imágenes salen de la carpeta /img/work/<slug>/", () => {
     for (const p of PROJECTS) {
       for (const src of p.images) {
-        expect(src).toMatch(new RegExp(`^/img/work/${p.slug}-\\d+\\.jpg$`));
+        expect(src).toMatch(
+          new RegExp(`^/img/work/${p.slug}/[^/]+\\.(?:jpe?g|png|webp|avif)$`)
+        );
       }
+    }
+  });
+
+  it("las capturas de cada proyecto van en orden natural", () => {
+    for (const p of PROJECTS) {
+      const ordenadas = [...p.images].sort((a, b) =>
+        a.localeCompare(b, "es", { numeric: true })
+      );
+      expect(p.images).toEqual(ordenadas);
     }
   });
 });

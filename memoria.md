@@ -62,10 +62,35 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - `brand/*.ai` — ficheros de marca (Adobe Illustrator, aún no extraídos)
 
 ## Pendiente / abierto
-Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hechas: **T6.1** README, **T6.2** dominio, **T6.3** archivo v1, **T6.4** nginx, **T6.5** publish.sh, **T6.6** oracle.md, **T6.7** vaciado del servidor, **T6.8** despliegue, **T6.9** README, **T6.10** limpieza del reloj.
-- **T6.11** Imágenes reales (bust 3D, retrato, capturas de producto) — opcional.
+**Fase 6 cerrada el 03/09/2026** (detalle completo en `plan.md` §3 y §7): **T6.1** README, **T6.2** dominio, **T6.3** archivo v1, **T6.4** nginx, **T6.5** publish.sh, **T6.6** oracle.md, **T6.7** vaciado del servidor, **T6.8** despliegue, **T6.9** README, **T6.10** limpieza del reloj, **T6.11** capturas reales.
+- **Retrato del colofón**: sigue siendo el placeholder de Unsplash. Es lo único que queda de T6.11, y depende de una foto del usuario. El «bust 3D» del enunciado original ya no aplica: el hero acabó siendo un canvas de partículas.
 - **URL de Loomcast** (si aparece) → actualizar `projects.js`.
 - ~~Verificación pendiente en dispositivo real~~ **hecha el 03/09/2026**: el usuario confirmó que el móvil se ve bien en un teléfono físico. Sigue vigente la limitación de fondo: el panel del navegador del entorno de desarrollo congela `rAF` y los observers, así que las animaciones no se pueden dar por verificadas ahí.
+
+### Capturas y carrusel (T6.11, 03/09/2026)
+
+- **El carrusel lee la carpeta, no una lista.** `public/img/work/<slug>/` con cuantas imágenes se
+  quiera; el plugin `work-images` de `vite.config.js` las descubre y las sirve por el módulo
+  virtual `virtual:work-images`. Tuvo que ser en el build: el sitio es estático y el navegador no
+  puede listar un directorio. **No se puede usar `import.meta.glob` sobre `public/`** — Vite lo
+  prohíbe expresamente—, de ahí el plugin. El orden es el del nombre del fichero.
+- **Bug que esto destapó:** `project-card.js` monta el carrusel siempre, y con la lista vacía
+  `Math.ceil(MIN_SLIDES / 0)` da `Infinity`: el bucle que crea las diapositivas colgaba la pestaña.
+  Antes era imposible (las rutas estaban escritas a mano); ahora una carpeta vacía es un caso real.
+  Blindado en `carousel.js` y cubierto por `tests/carousel.test.js`.
+- **El carrusel manda por altura, no por ancho.** Era ancho fijo + `aspect-ratio: 16/10`, que
+  recortaba a 16:10 cualquier proporción distinta. Ahora altura fija (350 px escritorio / 156 móvil)
+  y ancho automático, así conviven cuadradas y apaisadas.
+- **Segundo bug, del mismo cambio:** `reset.css` aplica `max-width: 100%` a las imágenes. Con altura
+  fija y ancho automático, cualquier imagen más ancha que la pista se **aplastaba** en vez de
+  recortarse. Se detectó midiendo: en móvil una 16:10 salía 292×216 en lugar de 250×156. Se arregló
+  devolviendo `object-fit: cover`, que con ancho automático no hace nada y solo actúa en ese caso.
+  **Límite práctico: no pasar de 1,85:1**, que es lo que admite la pista del móvil (292/156).
+- **Dimensiones:** 700 px de alto (el 2× de los 350 de pantalla). Las 35 llegaron a 1001 px y
+  26,6 MB; a 700 px con calidad JPEG 82 quedan en 5,7 MB (**−79 %**). Originales sin tocar en
+  `downloads/compuestas-originales/`.
+- **Las flechas** avanzaban siempre el ancho de la primera imagen. Con anchos variables eso ya no
+  es una diapositiva, así que `step()` mide la que asoma por el borde izquierdo.
 
 ## Convenciones
 - 1 commit = 1 tarea del `plan.md` (mensajes: `T#.# descripción`).
@@ -127,3 +152,4 @@ Fase 6, ya en orden de ejecución (detalle completo en `plan.md` §3 y §7). Hec
 | 03/09/2026 | T6.9 | README al día: sección «Despliegue en producción» con el flujo real (`npm run deploy`, las tres piezas de `deploy/`, rollback), URL de producción en cabecera y `/v1/` en las tablas de rutas. Se cayeron tres cosas caducadas que el README seguía prometiendo: el `TODO(T6)` del dominio placeholder, el «reloj CET en vivo» del checklist manual (retirado en R6) y un árbol de estructura sin `colofon.js`, `publish.sh`, `oracle.md` ni `public/v1/`. Enlaces a ficheros verificados uno a uno. |
 | 03/09/2026 | T6.10 | Limpieza del reloj: fuera `clock.js`, `tests/clock.test.js` y la clave `clock` de los dos locales (`clock.css` ya no existía). **Cabo suelto:** `tests/i18n.test.js` usaba `t("clock.tz")` para cubrir la resolución de claves de dos niveles; sustituido por `t("work.years")` para no perder cobertura. 33 tests en verde (eran 36). Sin efecto en producción: nadie importaba el componente, así que Vite nunca lo incluyó en el bundle. |
 | 03/09/2026 | Fase 7 / cierre | El usuario añadió las reglas ICMP y rotó la `OPENAI_API_KEY`; verificado desde fuera que el sitio siguió sano tras tocar la security list (5 rutas OK, 404 real, 3000/8000 cerrados). **Confirmado en teléfono real: el móvil se ve bien** — cae por fin la advertencia que arrastrábamos desde R7 sobre el hero y el carrusel sin validar en dispositivo físico. **Queda T7.6c:** consultando el nameserver autoritativo (`ns2.dns-parking.com`, descartada la caché) siguen vivos cuatro registros hacia `168.75.106.115` — los tres de `juanko.com` más `mindcheck.qzz.io`. Como nginx no tiene bloque para esos nombres, sirve el certificado de `juanko.com` y el navegador muestra error de certificado (`curl` código 60). |
+| 03/09/2026 | T6.11 | **Capturas reales, 35 imágenes compuestas por el usuario** (8 MenuUnfolded, 7 Loomcast, 11 NuxoAsist, 9 MindCheck). El carrusel pasa a leer `public/img/work/<slug>/` mediante el plugin `work-images` y a mandar por altura en vez de por ancho, para que convivan 16:10 y cuadradas. Dos bugs destapados por el cambio: el cuelgue con carpeta vacía (`MIN_SLIDES / 0` = Infinity) y el aplastamiento por `max-width: 100%` del reset. Peso: 26,6 → 5,7 MB. **Fase 6 cerrada.** |
