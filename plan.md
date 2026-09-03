@@ -180,9 +180,12 @@ de la fase). Contexto verificado del servidor: §7.
       (2) `.DS_Store` se estaba colando en el build, porque Vite copia `public/` entera y macOS los siembra
       → se excluye en el rsync. En el Mac no hay rsync real sino **openrsync**, que no documenta `--delete`
       en su ayuda pero sí lo implementa: verificado con un `--dry-run` que reportó `*deleting`.
-- [ ] T6.6 `deploy/oracle.md`: inventario del servidor, alta inicial (directorio + config + certbot),
-      publicación posterior (`./deploy/publish.sh`), rollback (`/var/www/juanko.com` se conserva como copia),
-      renovación TLS y troubleshooting.
+- [x] T6.6 `deploy/oracle.md`: inventario, publicación diaria, alta inicial reproducible, validación de la
+      config sin tocar la viva, rollback, TLS y troubleshooting. Cierra con dos secciones que valen por el
+      resto: **«Trampas de esta máquina»** (las cinco que nos han mordido: `http2` de socket, UFW ciego a
+      los puertos de Docker, los dos cortafuegos, el 404 servido con estado 200 y `add_header` que no
+      hereda) y **«Qué NO hacer»**. Renovación TLS verificada: `certbot renew --dry-run` → *all simulated
+      renewals succeeded*.
 
 **B. Trabajo en el servidor (no genera commit; se documenta en `oracle.md`)**
 
