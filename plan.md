@@ -239,8 +239,16 @@ Surge al vaciar el servidor en T6.7: con la máquina casi vacía era la ventana 
       `sshd -t` y probado con una conexión nueva **antes** de reiniciar. El acceso siempre es `ubuntu` + sudo.
 - [x] T7.5 **`docker` y `containerd` desactivados** (`systemctl disable --now`). Consumían 136 MB sin un solo
       contenedor. Siguen instalados: `sudo systemctl enable --now docker` los devuelve.
-- [ ] T7.6 **(manual del usuario)** Borrar en el registrador los DNS de `mindcheck`, `memearena` y
-      `api-memearena`, y quitar 3000/8000 de la *security list* de la VCN de Oracle.
+- [x] T7.6 **Red de Oracle saneada** (por el usuario, 02/09/2026). Había **dos VCN duplicadas** con el mismo
+      nombre, CIDR y fecha: una viva y otra vacía desde abril de 2025. Se identificó la viva preguntando al
+      servicio de metadatos de la instancia (`169.254.169.254/opc/v2/vnics/`), cuyo `vnicId` coincidía con el
+      OCID que aparecía al intentar borrarla. Borrada la huérfana (antes hubo que vaciar su route table y
+      borrar su internet gateway) y retiradas las reglas de 3000 y 8000 de la que queda.
+      Verificado desde fuera: 22/80/443 abiertos, 3000/8000/5432/8090 filtrados.
+- [ ] T7.6b Añadir a la security list viva las dos reglas ICMP que Oracle pone por defecto y que se fueron
+      con la VCN borrada: `ICMP 3/4` desde `0.0.0.0/0` (Path MTU Discovery) e `ICMP 3` desde `10.0.0.0/16`.
+- [ ] T7.6c **(manual del usuario)** Borrar en el registrador los DNS de `mindcheck`, `memearena` y
+      `api-memearena`.
 - [ ] T7.7 **(manual del usuario)** Rotar la `OPENAI_API_KEY`: estuvo en un servidor con la API publicada
       sin TLS. La copia de los secretos está en `~/Documents/mindcheck-env-backup-2026-09-02.env`.
 - [ ] T7.8 Si vuelve MindCheck: publicar los puertos como `127.0.0.1:puerto:puerto` en el compose. UFW **no**
