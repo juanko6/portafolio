@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "deploy": "bash deploy/publish.sh"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

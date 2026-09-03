@@ -30,7 +30,7 @@ portafolio/
 ├── plan.md  memoria.md  README.md
 ├── deploy/
 │   ├── nginx.conf
-│   ├── publish.sh          # build + rsync a la instancia (Fase 6)
+│   ├── publish.sh          # build + rsync a la instancia (`npm run deploy`)
 │   └── oracle.md
 ├── public/
 │   └── v1/index.html       # portafolio antiguo archivado (Fase 6)
@@ -169,9 +169,17 @@ de la fase). Contexto verificado del servidor: §7.
       `/assets/` (el regex de imágenes le robaba las rutas) y cabeceras de seguridad repetidas en los
       bloques de caché (un `location` con `add_header` propio descarta los heredados).
       Sintaxis validada con `nginx -t` en el servidor contra una config de prueba, sin tocar la viva.
-- [ ] T6.5 `deploy/publish.sh`: `set -euo pipefail`, `npm run lint && npm test && npm run build`,
-      `rsync -az --delete dist/ mindcheck:/var/www/portafolio/`, flag `--dry-run`. Sin sudo: el directorio
-      se crea una vez como `ubuntu:www-data` (ver oracle.md). No hace falta recargar nginx para estáticos.
+- [x] T6.5 `deploy/publish.sh`: `set -euo pipefail`, lint + test + build, `rsync -az --delete`, flags
+      `--dry-run` y `--skip-checks`, y `DEPLOY_HOST`/`DEPLOY_PATH`/`DEPLOY_URL` por entorno.
+      Atajo: `npm run deploy`. Sin sudo: el directorio se crea una vez como `ubuntu:www-data` (ver oracle.md);
+      no hace falta recargar nginx para estáticos. Tras el rsync comprueba la URL y avisa si responde 200
+      pero sirviendo el sitio antiguo.
+      **Red de seguridad:** antes de tocar nada remoto exige que existan las 5 páginas del build y
+      `dist/assets/`, y que el destino sea escribible. Con `--delete`, un `dist/` vacío vaciaría el servidor.
+      **Dos hallazgos al probarlo:** (1) la instancia **no tenía `rsync`** instalado — se instaló (3.2.7);
+      (2) `.DS_Store` se estaba colando en el build, porque Vite copia `public/` entera y macOS los siembra
+      → se excluye en el rsync. En el Mac no hay rsync real sino **openrsync**, que no documenta `--delete`
+      en su ayuda pero sí lo implementa: verificado con un `--dry-run` que reportó `*deleting`.
 - [ ] T6.6 `deploy/oracle.md`: inventario del servidor, alta inicial (directorio + config + certbot),
       publicación posterior (`./deploy/publish.sh`), rollback (`/var/www/juanko.com` se conserva como copia),
       renovación TLS y troubleshooting.
@@ -194,7 +202,8 @@ de la fase). Contexto verificado del servidor: §7.
   - Manual del usuario: borrar en el registrador los DNS de `mindcheck`, `memearena` y `api-memearena`,
     y quitar 3000/8000 de la security list de Oracle.
 - [ ] T6.8 Despliegue + smoke test:
-  - `sudo mkdir -p /var/www/portafolio && sudo chown ubuntu:www-data /var/www/portafolio`.
+  - ~~`sudo mkdir -p /var/www/portafolio && sudo chown ubuntu:www-data /var/www/portafolio`~~ hecho al
+    probar T6.5: el directorio ya existe como `ubuntu:www-data` con permisos 755.
   - `./deploy/publish.sh` (primer envío).
   - Instalar el `nginx.conf` nuevo como `/etc/nginx/sites-available/juanko.com`, `nginx -t`, `reload`.
     Se conserva `/var/www/juanko.com/` intacto: rollback = devolver el `root` anterior y recargar.
@@ -340,4 +349,5 @@ Estado tras la Fase 7: swap de 2 GB, todo actualizado (kernel `6.8.0-1060-oracle
 `PermitRootLogin no`, y `docker`/`containerd` parados. **Solo escuchan 22, 80 y 443.** Queda pendiente,
 del lado del usuario, limpiar los DNS huérfanos y la *security list* de Oracle (T7.6).
 
-Sin Node ni npm instalados → el build es siempre local.
+Sin Node ni npm instalados → el build es siempre local. `rsync` 3.2.7 instalado en T6.5.
+`/var/www/portafolio` ya creado como `ubuntu:www-data`, listo para el primer despliegue.
