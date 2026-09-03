@@ -1,6 +1,6 @@
 # PLAN — Portafolio JG (estilo fayemi.design)
 
-Estado: **Fase 5 completa + pasada de rediseño → Fase 6 — Deploy en juanko.com** · Actualizado: 02/09/2026
+Estado: **En producción en https://juanko.com desde el 03/09/2026** · Quedan T6.9–T6.11 (cierre) · Actualizado: 03/09/2026
 
 ## 0. Decisiones fijadas
 
@@ -204,16 +204,32 @@ de la fase). Contexto verificado del servidor: §7.
     vive UFW. Lo que de verdad filtraba 5432 y 8090 era la *security list* de la VCN de Oracle.
   - Manual del usuario: borrar en el registrador los DNS de `mindcheck`, `memearena` y `api-memearena`,
     y quitar 3000/8000 de la security list de Oracle.
-- [ ] T6.8 Despliegue + smoke test:
-  - ~~`sudo mkdir -p /var/www/portafolio && sudo chown ubuntu:www-data /var/www/portafolio`~~ hecho al
-    probar T6.5: el directorio ya existe como `ubuntu:www-data` con permisos 755.
-  - `./deploy/publish.sh` (primer envío).
-  - Instalar el `nginx.conf` nuevo como `/etc/nginx/sites-available/juanko.com`, `nginx -t`, `reload`.
-    Se conserva `/var/www/juanko.com/` intacto: rollback = devolver el `root` anterior y recargar.
-  - Smoke test: `/`, `/info`, `/work`, `/v1/`, un 404 cualquiera, `www` → apex, HTTP → HTTPS,
-    hero y carrusel en móvil real, ES/EN, cabeceras de caché en `/assets/`, `curl -I` con TLS válido.
-  - Cuando pase: borrar `/var/www/juanko.com/index.html.save` y la copia antigua.
+- [x] T6.8 Despliegue + smoke test — **`juanko.com` sirve el portafolio nuevo desde el 03/09/2026**
+  - `npm run deploy`: 28 ficheros a `/var/www/portafolio`. El aviso posterior del script saltó como
+    debía («responde 200 pero no parece el portafolio nuevo»): los ficheros ya estaban, nginx aún no.
+  - `nginx.conf` instalado sobre copia de seguridad (`juanko.com.bak-pre-portafolio`), `nginx -t`
+    encadenado con `&&` y `reload`.
+  - Smoke test, todo verde:
 
+    | Comprobación | Resultado |
+    |---|---|
+    | `/` · `/info` · `/work` · `/info.html` · `/work.html` · `/v1/` | `HTTP/2 200` |
+    | `/noexiste` | **`HTTP/2 404`** — el estado real, no el 200 de la versión vieja |
+    | `http://` → `https://` | `301` a `https://juanko.com/` |
+    | `www` → apex | `301` a `https://juanko.com/` |
+    | HTTP/2 | activo |
+    | gzip en HTML | `content-encoding: gzip` |
+    | Cabeceras de seguridad en `/` y en `/assets/` | las tres, en ambos |
+    | `/assets/*.css` | `max-age=31536000, immutable` |
+    | `/img/*.jpg` | `max-age=604800` |
+    | `/v1/` | `noindex, follow` + `canonical` a `/v1/` |
+    | `/` | `index, follow` + `canonical` a `https://juanko.com/` |
+    | Colofón → v1 | resuelve a `https://juanko.com/v1/index.html` |
+
+  - Verificado en navegador a 1280×900 y en móvil emulado 375×812: nav en una línea, hero pintando,
+    CTA, footer crema. **No** probado en un teléfono físico.
+  - `/var/www/juanko.com/index.html` **se conserva** como rollback (ver `deploy/oracle.md`); borrado
+    solo el `index.html.save` vacío. El v1 se sirve además desde `/v1/`.
 **C. Cierre**
 
 - [ ] T6.9 README, segunda pasada: sección de deploy con el flujo real (`publish.sh` + `oracle.md`) y el dominio
@@ -343,7 +359,7 @@ Docker sigue instalado por si vuelve MindCheck.
 
 | Sitio nginx | Destino | Estado |
 |---|---|---|
-| `juanko.com` + `www` | estático en `/var/www/juanko.com` (portafolio v1) | **root → `/var/www/portafolio`** en T6.8 |
+| `juanko.com` + `www` | **el portafolio nuevo**, en `/var/www/portafolio` | desde el 03/09/2026 |
 | `default-block.conf` | `return 444` en el `:80` por defecto | se queda |
 
 Certificados Let's Encrypt: solo queda **`juanko.com`** (+`www`), caduca el 19/10/2026.
