@@ -232,7 +232,11 @@ de la fase). Contexto verificado del servidor: §7.
     solo el `index.html.save` vacío. El v1 se sirve además desde `/v1/`.
 **C. Cierre**
 
-- [ ] T6.9 README, segunda pasada: sección de deploy con el flujo real (`publish.sh` + `oracle.md`) y el dominio
+- [x] T6.9 README, segunda pasada: sección **«Despliegue en producción»** con el flujo real
+      (`npm run deploy`, las tres piezas de `deploy/` y el rollback), URL de producción en cabecera y
+      `/v1/` en las tablas de rutas. De paso, tres cosas que habían caducado: el `TODO(T6)` del dominio
+      placeholder, el «reloj CET en vivo» del checklist manual (R6 lo retiró) y el árbol de estructura
+      (faltaban `colofon.js`, `publish.sh`, `oracle.md` y `public/v1/`).
 - [ ] T6.10 Limpieza: borrar `clock.js` + `tests/clock.test.js` y las claves `clock.*` de los locales
       (el reloj ya no se monta desde R6)
 - [ ] T6.11 (Opcional) Swap placeholders → imágenes reales (bust 3D, retrato, capturas)

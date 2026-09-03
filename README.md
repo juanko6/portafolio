@@ -1,6 +1,9 @@
 # portafolio-jg
 
-Portafolio personal estático — 4 vistas (Lobby, Info, Work, 404) con i18n ES/EN.
+**En producción: https://juanko.com**
+
+Portafolio personal estático — 4 vistas (Lobby, Info, Work, 404) con i18n ES/EN, más el
+portafolio anterior archivado en [`/v1/`](https://juanko.com/v1/).
 
 **Stack:** vanilla JS + [Vite 8](https://vite.dev) (multi-página) + CSS por capas. Sin framework ni dependencias de runtime.
 
@@ -29,6 +32,7 @@ npm install
 | `npm run lint` | ESLint + Prettier (check) |
 | `npm run format` | Prettier (write) sobre todo el repo |
 | `npm test` | Ejecuta los tests de Vitest |
+| `npm run deploy` | Publica en producción (lint + test + build + rsync) |
 
 ## Despliegue local
 
@@ -46,7 +50,7 @@ Abre http://localhost:5173. Recarga automática (HMR) al guardar.
 npm run build
 ```
 
-Genera `dist/` con los 4 HTML y los assets con hash. Es lo que se sube a producción (ver la sección de abajo, *Fase 6 — Deploy Oracle*).
+Genera `dist/` con los 4 HTML, el archivo `v1/` y los assets con hash. Es exactamente lo que se sube a producción (ver *Despliegue en producción*).
 
 ### 3. Preview del build
 
@@ -64,8 +68,11 @@ Sirve `dist/` en http://localhost:4173. Útil para verificar el bundle final ant
 | Info | `/info.html` | `/info.html` |
 | Work | `/work.html` | `/work.html` |
 | 404 | `/404.html` | `/404.html` |
+| Archivo v1 | `/v1/index.html` | `/v1/index.html` |
 
 > Las páginas enlazan a `/info.html` y `/work.html`. Las URLs limpias `/info` y `/work` las resuelve nginx en producción (ver `deploy/nginx.conf`).
+>
+> El archivo v1 se enlaza como `/v1/index.html`, no como `/v1/`: el dev server de Vite resuelve el directorio contra el `index.html` de la raíz y el enlace quedaría roto en desarrollo. En nginx funcionan las dos formas.
 
 ## QA
 
@@ -75,16 +82,16 @@ npm test       # Vitest (tests de componentes, i18n, datos)
 ```
 
 - **ESLint** (`eslint.config.js`): reglas recomendadas + `eqeqeq` (smart) + `prefer-const`; sin `no-unused-vars` para args/vars prefijados con `_`.
-- **Prettier** (`.prettierrc.json`): dobles comillas, punto y coma, tab 2, `printWidth` 80. Ignora `*.md`, `dist/`, `node_modules/`, `referencia/`, `downloads/` (`.prettierignore`).
-- **Vitest** (`tests/`): integridad de datos, i18n, LangToggle, clock, hero-canvas, smoke.
+- **Prettier** (`.prettierrc.json`): dobles comillas, punto y coma, tab 2, `printWidth` 80. Ignora `*.md`, `dist/`, `node_modules/`, `referencia/`, `downloads/`, `.playwright-mcp/` y `public/v1/` (`.prettierignore`). El v1 está ahí porque es un archivo histórico: se conserva byte a byte como salió del servidor.
+- **Vitest** (`tests/`): integridad de datos, i18n, LangToggle, colofón, clock, hero-canvas, smoke.
 - **CI** (`.github/workflows/ci.yml`): en `main`/PR → Node 22 → `npm ci` → `lint` → `test` → `build`.
 
 ## Pruebas manuales
 
 Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 
-- [ ] **Lobby** (`/`): hero canvas reactivo al mouse, reloj CET en vivo, botones Info/Work, badges, footer.
-- [ ] **Info** (`/info.html`): título, badge `¡HOLA!`, bloques SOBRE MÍ / EMAIL / FOCUS / EXTRA / RESUMEN / ON THE WEB / COLOFÓN, retrato.
+- [ ] **Lobby** (`/`): hero canvas reactivo al mouse (y autopiloto + toque en móvil), botones Info/Work, badges, footer.
+- [ ] **Info** (`/info.html`): título, badge `¡HOLA!`, bloques SOBRE MÍ / EMAIL / FOCUS / EXTRA / RESUMEN / ON THE WEB / COLOFÓN, retrato, y el enlace `VERSIÓN ANTERIOR` del colofón hacia `/v1/`.
 - [ ] **Work** (`/work.html`): lista de proyectos, expandir/colapsar detail, carrusel (scroll + flechas), bloque LET'S TALK.
 - [ ] **404**: ruta desconocida muestra glitch `ERROR 404` + botón `Volver a /Lobby`.
 - [ ] **LangToggle ES/EN**: cambia todo el texto, persiste (localStorage), sincronizado en nav.
@@ -100,19 +107,23 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 .
 ├── index.html info.html work.html 404.html   # entradas MPA
 ├── vite.config.js                            # build MPA (4 entradas) → dist/
-├── deploy/nginx.conf                         # config de producción (Oracle)
+├── deploy/
+│   ├── nginx.conf                            # config de producción (Oracle)
+│   ├── publish.sh                            # build + rsync (`npm run deploy`)
+│   └── oracle.md                             # runbook del servidor
 ├── public/                                   # assets estáticos (copiados a dist/)
 │   ├── favicon.svg apple-touch-icon.png
 │   ├── og.svg og-image.png                   # Open Graph
-│   └── img/ (retrato.jpg, work/*)            # placeholders (Unsplash)
+│   ├── img/ (retrato.jpg, work/*)            # placeholders (Unsplash)
+│   └── v1/index.html                         # portafolio anterior, archivado
 ├── src/
 │   ├── css/
 │   │   ├── base/    (tokens, reset, typography)
 │   │   ├── components/ (nav, hero, clock, footer, lang-toggle, carousel, layout)
 │   │   └── pages/   (lobby, info, work, notfound)
 │   └── js/
-│       ├── components/ (page, nav, hero-canvas, clock, footer, lang-toggle,
-│       │               project-list, project-card, carousel)
+│       ├── components/ (page, nav, hero-canvas, footer, lang-toggle, colofon,
+│       │               project-list, project-card, carousel, clock*)
 │       ├── data/projects.js                  # única fuente de datos de Work
 │       ├── i18n/    (index.js + locales es.json / en.json)
 │       └── pages/   (index, info, work, 404)
@@ -120,11 +131,44 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 └── .github/workflows/ci.yml                  # CI: lint + test + build
 ```
 
-## Fase 6 — Deploy Oracle (pendiente)
+`clock*` ya no se monta: el reloj CET se retiró del header en la pasada de rediseño. El fichero y
+su test siguen ahí hasta la limpieza pendiente (`plan.md`, T6.10).
 
-El despliegue en producción (instancia Oracle Cloud + nginx) se documenta en `deploy/` durante la **Fase 6** (`oracle.md`, pendiente). Ya está listo:
+## Despliegue en producción
 
-- `deploy/nginx.conf` — gzip, cabeceras de seguridad, caché de assets/imágenes, URLs limpias `/info` y `/work`, `error_page 404`.
-- Build: `npm run build` → `dist/` se sirve desde `/var/www/portafolio`.
+El sitio vive en una instancia **Oracle Cloud** y lo sirve **nginx** desde `/var/www/portafolio`.
+El build se hace **siempre en local**: el servidor no tiene Node, y con ~950 MB de RAM un
+`vite build` allí acabaría en OOM.
 
-> **TODO(T6):** los `canonical` y `og:*` usan la base placeholder `https://juanko6.github.io/portafolio` (marcada en los 4 HTML). Sustituir por el dominio Oracle definitivo al desplegar.
+```bash
+npm run deploy
+```
+
+Ese comando encadena lint → tests → build → `rsync --delete` → comprobación de la URL. Para
+ensayar sin tocar nada:
+
+```bash
+npm run deploy -- --dry-run
+```
+
+Otras opciones: `--skip-checks`, `--help`, y `DEPLOY_HOST` / `DEPLOY_PATH` / `DEPLOY_URL` por
+entorno. **No hace falta recargar nginx** al publicar: son ficheros estáticos.
+
+El script se niega a publicar si faltan páginas en el build o si el destino no es escribible. No es
+paranoia: va con `--delete`, así que un `dist/` a medias vaciaría el sitio.
+
+### Piezas
+
+| Fichero | Para qué |
+|---|---|
+| [`deploy/publish.sh`](deploy/publish.sh) | El script de publicación |
+| [`deploy/nginx.conf`](deploy/nginx.conf) | Config de producción: TLS, `www` → apex, HTTP/2, gzip, cabeceras de seguridad, caché, URLs limpias y `error_page 404` |
+| [`deploy/oracle.md`](deploy/oracle.md) | **Runbook**: inventario, alta inicial, rollback, TLS, troubleshooting y las trampas de esta máquina |
+
+Si algo falla en producción, empieza por `deploy/oracle.md`. Su sección *Trampas de esta máquina*
+recoge los cinco fallos que ya nos costaron tiempo una vez.
+
+### Rollback
+
+El portafolio anterior sigue en `/var/www/juanko.com/` en el servidor. Volver atrás es cambiar el
+`root` de nginx y recargar; el comando exacto está en el runbook.
