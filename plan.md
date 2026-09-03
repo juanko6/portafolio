@@ -225,6 +225,30 @@ Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID vi
 | T6.5 | **T6.10** | Limpieza del reloj |
 | T6.4 | **T6.11** | Imágenes reales (opcional) |
 
+### Fase 7 — Hardening de la instancia (02/09/2026)
+
+Surge al vaciar el servidor en T6.7: con la máquina casi vacía era la ventana de menor riesgo posible.
+
+- [x] T7.1 **Swap de 2 GB** en `/swapfile`, persistido en `/etc/fstab`, con `vm.swappiness=10`
+      (`/etc/sysctl.d/99-swappiness.conf`). La instancia tenía 956 MB de RAM y **cero** swap.
+- [x] T7.2 **24 paquetes actualizados** + `autoremove --purge` + reinicio (kernel `6.8.0-1060-oracle`).
+      Con `--force-confold` para conservar los ficheros de configuración propios. Volvió en ~40 s.
+- [x] T7.3 **`rpcbind` y `nfs-common` purgados** (no había ningún montaje NFS). La máquina pasa a escuchar
+      únicamente en **22, 80 y 443**.
+- [x] T7.4 **`PermitRootLogin no`** vía drop-in `/etc/ssh/sshd_config.d/99-hardening.conf`, validado con
+      `sshd -t` y probado con una conexión nueva **antes** de reiniciar. El acceso siempre es `ubuntu` + sudo.
+- [x] T7.5 **`docker` y `containerd` desactivados** (`systemctl disable --now`). Consumían 136 MB sin un solo
+      contenedor. Siguen instalados: `sudo systemctl enable --now docker` los devuelve.
+- [ ] T7.6 **(manual del usuario)** Borrar en el registrador los DNS de `mindcheck`, `memearena` y
+      `api-memearena`, y quitar 3000/8000 de la *security list* de la VCN de Oracle.
+- [ ] T7.7 **(manual del usuario)** Rotar la `OPENAI_API_KEY`: estuvo en un servidor con la API publicada
+      sin TLS. La copia de los secretos está en `~/Documents/mindcheck-env-backup-2026-09-02.env`.
+- [ ] T7.8 Si vuelve MindCheck: publicar los puertos como `127.0.0.1:puerto:puerto` en el compose. UFW **no**
+      protege los puertos de Docker (ver T6.7), así que el binding a loopback es la única defensa del host.
+
+Resultado: RAM disponible **303 → 618 MB**, disco **16 → 8,8 GB**, superficie de red de 7 puertos a 3.
+
+
 ## 4. Mapa de textos ES (cerrado)
 
 ### Lobby
@@ -291,7 +315,7 @@ Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID vi
 ## 7. Inventario del servidor (tras el vaciado de T6.7, 02/09/2026)
 
 Acceso: `ssh mindcheck` → `ubuntu@168.75.106.115` (Oracle Cloud, Ubuntu 22.04, x86_64, 2 vCPU,
-956 MB RAM **sin swap**, disco 45 GB al 20 %). `ubuntu` es un usuario normal con `sudo`; SSH solo por
+956 MB RAM + 2 GB de swap, disco 45 GB al 20 %). `ubuntu` es un usuario normal con `sudo`; SSH solo por
 clave pública, sin contraseñas.
 
 Tras T6.7 la máquina está prácticamente vacía: **cero contenedores, cero imágenes, cero volúmenes**.
@@ -304,12 +328,8 @@ Docker sigue instalado por si vuelve MindCheck.
 
 Certificados Let's Encrypt: solo queda **`juanko.com`** (+`www`), caduca el 19/10/2026.
 
-Pendiente de hardening (Fase 7):
-- **Sin swap** con 956 MB de RAM.
-- 24 paquetes actualizables y **reinicio pendiente** por kernel.
-- `rpcbind` escuchando en el puerto 111 sin que nada lo use.
-- `permitrootlogin without-password` → debería ser `no`.
-- DNS huérfanos en el registrador (`mindcheck`, `memearena`, `api-memearena`) y los puertos 3000/8000
-  todavía abiertos en la security list de Oracle, aunque ya no escuche nadie detrás.
+Estado tras la Fase 7: swap de 2 GB, todo actualizado (kernel `6.8.0-1060-oracle`), `rpcbind` fuera,
+`PermitRootLogin no`, y `docker`/`containerd` parados. **Solo escuchan 22, 80 y 443.** Queda pendiente,
+del lado del usuario, limpiar los DNS huérfanos y la *security list* de Oracle (T7.6).
 
 Sin Node ni npm instalados → el build es siempre local.
