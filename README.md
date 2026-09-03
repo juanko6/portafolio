@@ -83,7 +83,7 @@ npm test       # Vitest (tests de componentes, i18n, datos)
 
 - **ESLint** (`eslint.config.js`): reglas recomendadas + `eqeqeq` (smart) + `prefer-const`; sin `no-unused-vars` para args/vars prefijados con `_`.
 - **Prettier** (`.prettierrc.json`): dobles comillas, punto y coma, tab 2, `printWidth` 80. Ignora `*.md`, `dist/`, `node_modules/`, `referencia/`, `downloads/`, `.playwright-mcp/` y `public/v1/` (`.prettierignore`). El v1 está ahí porque es un archivo histórico: se conserva byte a byte como salió del servidor.
-- **Vitest** (`tests/`): integridad de datos, i18n, LangToggle, colofón, clock, hero-canvas, smoke.
+- **Vitest** (`tests/`): integridad de datos, i18n, LangToggle, colofón, hero-canvas, smoke.
 - **CI** (`.github/workflows/ci.yml`): en `main`/PR → Node 22 → `npm ci` → `lint` → `test` → `build`.
 
 ## Pruebas manuales
@@ -119,20 +119,17 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 ├── src/
 │   ├── css/
 │   │   ├── base/    (tokens, reset, typography)
-│   │   ├── components/ (nav, hero, clock, footer, lang-toggle, carousel, layout)
+│   │   ├── components/ (nav, hero, footer, lang-toggle, layout)
 │   │   └── pages/   (lobby, info, work, notfound)
 │   └── js/
 │       ├── components/ (page, nav, hero-canvas, footer, lang-toggle, colofon,
-│       │               project-list, project-card, carousel, clock*)
+│       │               project-list, project-card, carousel)
 │       ├── data/projects.js                  # única fuente de datos de Work
 │       ├── i18n/    (index.js + locales es.json / en.json)
 │       └── pages/   (index, info, work, 404)
 ├── tests/                                    # Vitest
 └── .github/workflows/ci.yml                  # CI: lint + test + build
 ```
-
-`clock*` ya no se monta: el reloj CET se retiró del header en la pasada de rediseño. El fichero y
-su test siguen ahí hasta la limpieza pendiente (`plan.md`, T6.10).
 
 ## Despliegue en producción
 

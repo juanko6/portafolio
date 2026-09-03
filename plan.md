@@ -43,7 +43,6 @@ portafolio/
     │   ├── components/       # page.js · nav.js · footer.js · lang-toggle.js
     │   │                     # hero-canvas.js · carousel.js · colofon.js
     │   │                     # project-list.js · project-card.js
-    │   │                     # clock.js (sin uso, ver Fase 6)
     │   ├── i18n/
     │   │   ├── index.js
     │   │   └── locales/      # es.json · en.json
@@ -237,8 +236,11 @@ de la fase). Contexto verificado del servidor: §7.
       `/v1/` en las tablas de rutas. De paso, tres cosas que habían caducado: el `TODO(T6)` del dominio
       placeholder, el «reloj CET en vivo» del checklist manual (R6 lo retiró) y el árbol de estructura
       (faltaban `colofon.js`, `publish.sh`, `oracle.md` y `public/v1/`).
-- [ ] T6.10 Limpieza: borrar `clock.js` + `tests/clock.test.js` y las claves `clock.*` de los locales
-      (el reloj ya no se monta desde R6)
+- [x] T6.10 Limpieza del reloj: borrados `clock.js` y `tests/clock.test.js`, y la clave `clock` de los dos
+      locales. `clock.css` ya no existía. **Cabo suelto encontrado:** `tests/i18n.test.js` comprobaba
+      `t("clock.tz")` para cubrir la resolución de una clave de dos niveles; se sustituyó por
+      `t("work.years")` para no perder esa cobertura. 33 tests en verde (eran 36; el reloj aportaba 3).
+      Sin efecto en producción: al no importarlo nadie, Vite nunca lo incluyó en el bundle.
 - [ ] T6.11 (Opcional) Swap placeholders → imágenes reales (bust 3D, retrato, capturas)
 
 Equivalencias con la numeración anterior (el commit `941adbf` menciona el ID viejo `T6.3`):
@@ -345,7 +347,6 @@ Resultado: RAM disponible **303 → 618 MB**, disco **16 → 8,8 GB**, superfici
 - Imágenes reales → T6.11 opcional.
 - Base canonical/OG en placeholder hasta T6.2 (dominio ya decidido: `juanko.com`).
 - URL pública de Loomcast: si aparece, actualizar `projects.js`.
-- `clock.js` y su test quedan sin uso tras R6 → T6.10.
 - La instancia es `micro`: 956 MB de RAM sin swap y ~300 MB libres. El sitio es estático (coste ~0), pero
   no se puede compilar allí: el build va siempre en local.
 - Los certificados TLS de la instancia caducan escalonadamente (el de `juanko.com`, el 19/10/2026).

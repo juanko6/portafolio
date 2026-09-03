@@ -10,7 +10,7 @@ describe("i18n (es)", () => {
   it("resuelve claves por ruta con punto", () => {
     expect(t("nav.name")).toBe("JUAN GUTIÉRREZ");
     expect(t("footer.links.mail")).toBe("Mail");
-    expect(t("clock.tz")).toBe("CET");
+    expect(t("work.years")).toBe("2025—26");
   });
 
   it("devuelve la clave si no existe (fallback)", () => {
