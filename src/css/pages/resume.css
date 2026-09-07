@@ -1,0 +1,468 @@
+/* Resume (currículum en web) — T8.2
+
+   Dos columnas: raíl lateral fijo (descarga, contacto, stack) y cuerpo con el
+   contenido. El raíl es `position: sticky` en escritorio y se apila arriba en
+   móvil.
+
+   La sección @media print del final no es un extra: el PDF descargable se
+   genera imprimiendo esta misma página (`npm run cv:pdf`), así que esos
+   estilos SON la maqueta del PDF. Si se toca el diseño de pantalla, hay que
+   regenerar el PDF. */
+
+.resume {
+  display: grid;
+  grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-8);
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-7) var(--content-pad) var(--space-8);
+}
+
+/* Raíl lateral */
+
+.resume__rail {
+  position: sticky;
+  top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.resume__download {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.6em 1em;
+  border: var(--border-subtle);
+  border-radius: var(--radius-chip);
+  color: var(--color-text);
+  text-decoration: none;
+  transition:
+    color var(--duration) var(--ease-out),
+    border-color var(--duration) var(--ease-out);
+}
+
+.resume__download:hover {
+  color: var(--color-glow);
+  border-color: var(--color-glow);
+}
+
+.resume__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.resume__grouptitle {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-glow);
+}
+
+.resume__groupbody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.resume__contactline,
+.resume__contactlink {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: var(--color-muted);
+}
+
+.resume__contactlink {
+  color: var(--color-text);
+  text-decoration: none;
+  width: fit-content;
+  transition: color var(--duration) var(--ease-out);
+}
+
+.resume__contactlink:hover {
+  color: var(--color-glow);
+}
+
+.resume__stacklabel {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-top: var(--space-3);
+}
+
+.resume__stacklabel:first-child {
+  margin-top: 0;
+}
+
+.resume__stacklist {
+  list-style: none;
+  padding: 0;
+  margin: 0.2em 0 0;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+.resume__updated {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+}
+
+/* Cuerpo */
+
+.resume__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+  min-width: 0;
+}
+
+.resume__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.resume__name {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 8vw, 6rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  text-shadow: var(--glow-text);
+}
+
+.resume__role {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.resume__sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.resume__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.resume__blockbody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.resume__lede {
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  max-width: 62ch;
+}
+
+.resume__prose {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--color-muted);
+  max-width: 68ch;
+}
+
+/* Entradas (experiencia, proyectos, educación) */
+
+.resume__entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: var(--border-subtle);
+}
+
+.resume__entry:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.resume__entryrow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.resume__entryname {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.resume__entrydates {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-glow);
+  white-space: nowrap;
+}
+
+.resume__entrysub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+  margin-top: -0.4em;
+}
+
+.resume__entrylink {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-muted);
+  transition: color var(--duration) var(--ease-out);
+}
+
+.resume__entrylink:hover {
+  color: var(--color-glow);
+}
+
+.resume__bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 74ch;
+}
+
+.resume__bullets li {
+  position: relative;
+  padding-left: 1.1em;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.resume__bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--color-glow);
+}
+
+.resume__tech {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  max-width: 70ch;
+}
+
+.resume__extra {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-glow);
+}
+
+/* Responsive: el raíl se apila arriba */
+
+@media (max-width: 60em) {
+  .resume {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  /* Apilado tal cual, el raíl entero (descarga + contacto + stack) deja casi
+     mil píxeles de scroll antes de que se vea de quién es el currículum. El
+     aside se disuelve con `display: contents` y sus hijos se recolocan como
+     items del grid: descarga arriba, cuerpo, y contacto y stack al final. */
+  .resume__rail {
+    display: contents;
+  }
+
+  .resume__download {
+    order: -2;
+    justify-self: start;
+  }
+
+  .resume__body {
+    order: -1;
+  }
+
+  .resume__group {
+    order: 1;
+  }
+
+  .resume__updated {
+    order: 2;
+  }
+
+  .resume__stacklist {
+    columns: 2;
+  }
+}
+
+/* Impresión — la maqueta del PDF descargable.
+   Fondo crema y texto oscuro: imprimir el espresso del sitio sería una losa de
+   tinta. El acento naranja se mantiene porque sigue siendo la marca. */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 13mm;
+  }
+
+  :root {
+    --color-bg: #fff;
+    --color-text: #1a100b;
+    --color-muted: #6b5d50;
+    --border-subtle: 1px solid rgba(26, 16, 11, 0.16);
+    --glow-text: none;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .c-header,
+  .c-footer-slot,
+  .resume__download {
+    display: none;
+  }
+
+  .resume {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: 12mm;
+    padding: 0;
+    max-width: none;
+  }
+
+  /* Una A4 mide ~816 px, así que la media query de móvil (60em = 960 px)
+     TAMBIÉN entra al imprimir: hay que deshacer aquí su `display: contents` y
+     su reordenado, o el raíl se desparrama por el PDF. */
+  .resume__rail {
+    display: flex;
+    position: static;
+    gap: var(--space-5);
+  }
+
+  .resume__body,
+  .resume__group,
+  .resume__updated {
+    order: 0;
+  }
+
+  .resume__stacklist {
+    columns: 1;
+  }
+
+  /* Escala de papel: el objetivo son DOS hojas A4. Si se añade un proyecto o
+     un puesto habrá que reapretar aquí (o aceptar la tercera hoja). */
+  .resume__name {
+    font-size: 2.6rem;
+  }
+
+  .resume__role {
+    font-size: 1.05rem;
+  }
+
+  .resume__lede {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .resume__prose,
+  .resume__bullets li {
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .resume__entryname {
+    font-size: 0.95rem;
+  }
+
+  .resume__stacklist {
+    font-size: 0.7rem;
+    line-height: 1.55;
+  }
+
+  .resume__body {
+    gap: var(--space-5);
+  }
+
+  .resume__block {
+    gap: var(--space-3);
+  }
+
+  .resume__blockbody {
+    gap: var(--space-4);
+  }
+
+  .resume__entry {
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+  }
+
+  .resume__bullets {
+    gap: 0.32em;
+  }
+
+  /* Reparto entre páginas: una entrada larga SÍ puede partirse (si no, deja
+     media hoja en blanco), pero nunca por debajo de su cabecera ni dentro de
+     un punto de la lista. La etiqueta de sección viaja con lo que etiqueta. */
+  .resume__blocklabel,
+  .resume__entryhead {
+    break-after: avoid;
+  }
+
+  .resume__entryhead,
+  .resume__bullets li,
+  .resume__group {
+    break-inside: avoid;
+  }
+
+  .resume__entry {
+    break-inside: auto;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

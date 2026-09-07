@@ -56,6 +56,7 @@ export default defineConfig({
     main: resolve(import.meta.dirname, "index.html"),
     info: resolve(import.meta.dirname, "info.html"),
     work: resolve(import.meta.dirname, "work.html"),
+    resume: resolve(import.meta.dirname, "resume.html"),
     notfound: resolve(import.meta.dirname, "404.html"),
   },
   build: {

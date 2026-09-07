@@ -2,6 +2,9 @@ export const LINKS = {
   mail: "mailto:juanko.dev@gmail.com",
   github: "https://github.com/juanko6",
   linkedin: "https://www.linkedin.com/in/juanko6",
+  /* T8.3 — al `.html` y no a `/resume`: la URL limpia la resuelve nginx en
+     producción, pero el dev server de Vite solo sirve el fichero. */
+  resume: "/resume.html",
 };
 
 const STAR =
@@ -22,7 +25,8 @@ export function mount(el, { onBackToTop = null } = {}) {
       <div class="c-footer__links">
         <a class="c-footer__link" href="${LINKS.mail}" data-i18n="footer.links.mail">Mail</a><span class="c-footer__sep">,&nbsp;</span>
         <a class="c-footer__link" href="${LINKS.github}" target="_blank" rel="noopener" data-i18n="footer.links.github">GitHub</a><span class="c-footer__sep">,&nbsp;</span>
-        <a class="c-footer__link" href="${LINKS.linkedin}" target="_blank" rel="noopener" data-i18n="footer.links.linkedin">LinkedIn</a>
+        <a class="c-footer__link" href="${LINKS.linkedin}" target="_blank" rel="noopener" data-i18n="footer.links.linkedin">LinkedIn</a><span class="c-footer__sep">,&nbsp;</span>
+        <a class="c-footer__link" href="${LINKS.resume}" data-i18n="footer.links.resume">Currículum</a>
       </div>
       <div class="c-footer__copyrightarea">
         <svg class="c-footer__star" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="${STAR}" /></svg>

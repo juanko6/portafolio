@@ -5,7 +5,8 @@
     "info": "Info",
     "work": "Work",
     "notfound": "404",
-    "back": "Back"
+    "back": "Back",
+    "resume": "Resume"
   },
   "footer": {
     "location": "Alicante, SPAIN",
@@ -13,7 +14,8 @@
     "links": {
       "mail": "Mail",
       "github": "GitHub",
-      "linkedin": "LinkedIn"
+      "linkedin": "LinkedIn",
+      "resume": "Resume"
     },
     "copyright": "©JG/"
   },
@@ -108,5 +110,171 @@
     "title": "ERROR (404)",
     "body": "Something went wrong — the page you requested is not available.",
     "back": "Back to /Lobby"
+  },
+  "resume": {
+    "role": "Full Stack Developer",
+    "sub": "BSc in Computer Engineering · University of Alicante",
+    "download": "Download PDF",
+    "updated": "UPDATED: SEP 2026",
+    "contacto": {
+      "title": "CONTACT",
+      "location": "Alicante, Spain"
+    },
+    "perfil": {
+      "title": "PROFILE",
+      "text": "I design and build complete end-to-end systems: from the written spec to the domain model, the API contract, the backend, the frontend and the cloud deployment. I run my own product in production with a real client, and I have built systems under regulatory compliance, with traceability and tamper-proof audit trails.",
+      "text2": "I work spec-first, test-driven, with API contracts as the source of truth, versioned migrations and continuous deployment. I ship AI models in real product, local inference included, and I set up agent systems with control harnesses. My earlier background in Marketing and Advertising adds product and analytics judgement."
+    },
+    "stack": {
+      "title": "STACK",
+      "groups": [
+        {
+          "label": "Languages & frontend",
+          "items": [
+            "TypeScript",
+            "JavaScript",
+            "Python",
+            "Java",
+            "SQL",
+            "React",
+            "Next.js",
+            "Astro",
+            "Svelte",
+            "Tailwind"
+          ]
+        },
+        {
+          "label": "Backend & data",
+          "items": [
+            "FastAPI",
+            "Fastify (Node)",
+            "Spring Boot",
+            "REST / OpenAPI",
+            "JWT",
+            "SSE",
+            "PostgreSQL",
+            "MySQL"
+          ]
+        },
+        {
+          "label": "Cloud & method",
+          "items": [
+            "Docker",
+            "Nginx",
+            "GitHub Actions",
+            "Oracle Cloud",
+            "Linux",
+            "SDD",
+            "TDD",
+            "Vitest",
+            "Pytest",
+            "Git",
+            "Scrum"
+          ]
+        },
+        {
+          "label": "AI & LLM",
+          "items": [
+            "Local quantized LLMs",
+            "Multimodal APIs",
+            "System prompts",
+            "Agents & harnesses",
+            "RAG",
+            "Fine-tuning"
+          ]
+        }
+      ]
+    },
+    "experiencia": {
+      "title": "EXPERIENCE",
+      "items": [
+        {
+          "org": "Right on it",
+          "role": "Full Stack Developer",
+          "dates": "MAR 2023 – DEC 2024",
+          "place": "US · rightonitcorp.com",
+          "bullets": [
+            "Co-developed a real-time inventory control system for a corporate client, with a microservice architecture and a REST API.",
+            "Predictive analysis and custom reporting in the management dashboard."
+          ]
+        }
+      ]
+    },
+    "proyectos": {
+      "title": "PROJECTS",
+      "items": [
+        {
+          "name": "MenuUnfolded",
+          "kind": "QR digital menu SaaS for restaurants",
+          "dates": "2026 – PRESENT",
+          "link": "menuunfolded.com",
+          "bullets": [
+            "Digitises restaurant menus through QR codes: admin panel, scan analytics and a freemium subscription with a payment gateway.",
+            "Multimodal AI menu importer that extracts dishes from photos or PDFs of the physical menu."
+          ],
+          "tech": "Next.js · TypeScript · FastAPI · PostgreSQL + Alembic · JWT · Stripe · SSE",
+          "extra": "In production with a real client · ~100 daily visits"
+        },
+        {
+          "name": "Loomcast",
+          "kind": "Multimedia studio with 100% local generative AI",
+          "dates": "JUL 2026 – PRESENT",
+          "link": "",
+          "bullets": [
+            "Generates video, image and music running the models entirely on-device, with no paid APIs: a pipeline from topic to final 9:16 vertical cut.",
+            "Inference over quantized models on Apple Silicon, with memory orchestration and a job queue with chaining and recovery."
+          ],
+          "tech": "Layered FastAPI · Astro + Svelte · llama.cpp · ComfyUI · Whisper/MLX · ffmpeg",
+          "extra": "Benchmarking that cut rendering from hours to ~1.5 min per video"
+        },
+        {
+          "name": "NuxoAsist",
+          "kind": "Working-time tracking and clock-in system",
+          "dates": "JAN – JUN 2026",
+          "link": "",
+          "bullets": [
+            "Time registry aligned with Spanish labour regulation: clock-ins, breaks, overtime, absences, schedules with validity ranges and export for labour inspection.",
+            "Fixing an entry never destroys the previous one: it is kept in an append-only audit trail with author, date and a mandatory reason."
+          ],
+          "tech": "Node 22 + Fastify 5 · React 19 + Tailwind · PostgreSQL 16 · OpenAPI 3.1 (36 endpoints) · node-cron",
+          "extra": "178 tests with Vitest"
+        },
+        {
+          "name": "MindCheck",
+          "kind": "AI test generator from PDF documents",
+          "dates": "2025",
+          "link": "",
+          "bullets": [
+            "Educational platform that turns PDF documents into interactive multiple-choice tests with AI, with authentication, session control and a modular architecture."
+          ],
+          "tech": "Next.js · TypeScript · FastAPI · PostgreSQL · JWT",
+          "extra": ""
+        }
+      ]
+    },
+    "educacion": {
+      "title": "EDUCATION",
+      "items": [
+        {
+          "title": "BSc in Computer Engineering",
+          "org": "University of Alicante",
+          "dates": "4TH YEAR · GRADUATING 2027"
+        },
+        {
+          "title": "BSc in Marketing and Advertising",
+          "org": "UNIR, Universidad Internacional de La Rioja",
+          "dates": "JUNE 2025"
+        }
+      ]
+    },
+    "extra": {
+      "title": "EXTRA",
+      "items": [
+        "Spanish (native) · English (B2, accredited by the U. of Alicante)",
+        "Open to a curricular or extracurricular internship agreement with the UA",
+        "Ten previous years in digital marketing, eCommerce and project management (Colombia and the US, 2006–2023)",
+        "Immediate availability, geographic mobility and a category B driving licence"
+      ]
+    }
   }
 }

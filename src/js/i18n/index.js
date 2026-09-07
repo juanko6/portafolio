@@ -25,7 +25,22 @@ function writeStored(lang) {
   }
 }
 
+/* T8.2 — `?lang=en` fija el idioma en la carga, por delante de lo guardado.
+   Sirve para compartir un enlace en un idioma concreto, y es lo que usa
+   `npm run cv:pdf` para imprimir el CV en cada idioma sin depender del
+   localStorage del navegador que genera el PDF. */
+function readFromUrl() {
+  try {
+    if (typeof location === "undefined") return null;
+    return new URLSearchParams(location.search).get("lang");
+  } catch {
+    return null;
+  }
+}
+
 let current = (() => {
+  const fromUrl = readFromUrl();
+  if (fromUrl && DICTS[fromUrl]) return fromUrl;
   const stored = readStored();
   return stored && DICTS[stored] ? stored : DEFAULT_LANG;
 })();

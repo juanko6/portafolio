@@ -5,7 +5,8 @@
     "info": "Info",
     "work": "Work",
     "notfound": "404",
-    "back": "Back"
+    "back": "Back",
+    "resume": "Resume"
   },
   "footer": {
     "location": "Alicante, ESPAÑA",
@@ -13,7 +14,8 @@
     "links": {
       "mail": "Mail",
       "github": "GitHub",
-      "linkedin": "LinkedIn"
+      "linkedin": "LinkedIn",
+      "resume": "Currículum"
     },
     "copyright": "©JG/"
   },
@@ -108,5 +110,171 @@
     "title": "ERROR (404)",
     "body": "Algo salió mal, la página que solicitas no está disponible.",
     "back": "Volver a /Lobby"
+  },
+  "resume": {
+    "role": "Desarrollador Full Stack",
+    "sub": "Grado en Ingeniería Informática · Universidad de Alicante",
+    "download": "Descargar PDF",
+    "updated": "ACTUALIZADO: SEP 2026",
+    "contacto": {
+      "title": "CONTACTO",
+      "location": "Alicante, España"
+    },
+    "perfil": {
+      "title": "PERFIL",
+      "text": "Diseño y construyo sistemas completos de extremo a extremo: de la especificación escrita al modelo de dominio, el contrato de la API, el backend, el frontend y el despliegue en cloud. Tengo producto propio en producción con cliente real, y he construido sistemas sujetos a cumplimiento normativo con trazabilidad y auditoría inalterable.",
+      "text2": "Trabajo con especificación previa, desarrollo dirigido por tests, contratos de API como fuente de verdad, migraciones versionadas y despliegue continuo. Integro modelos de IA en producto real, incluida inferencia local, y configuro sistemas de agentes con harnesses de control. Mi formación previa en Marketing y Publicidad aporta criterio de producto y analítica."
+    },
+    "stack": {
+      "title": "STACK",
+      "groups": [
+        {
+          "label": "Lenguajes y frontend",
+          "items": [
+            "TypeScript",
+            "JavaScript",
+            "Python",
+            "Java",
+            "SQL",
+            "React",
+            "Next.js",
+            "Astro",
+            "Svelte",
+            "Tailwind"
+          ]
+        },
+        {
+          "label": "Backend y datos",
+          "items": [
+            "FastAPI",
+            "Fastify (Node)",
+            "Spring Boot",
+            "REST / OpenAPI",
+            "JWT",
+            "SSE",
+            "PostgreSQL",
+            "MySQL"
+          ]
+        },
+        {
+          "label": "Cloud y método",
+          "items": [
+            "Docker",
+            "Nginx",
+            "GitHub Actions",
+            "Oracle Cloud",
+            "Linux",
+            "SDD",
+            "TDD",
+            "Vitest",
+            "Pytest",
+            "Git",
+            "Scrum"
+          ]
+        },
+        {
+          "label": "IA & LLM",
+          "items": [
+            "LLM locales cuantizados",
+            "APIs multimodales",
+            "System prompts",
+            "Agentes y harnesses",
+            "RAG",
+            "Fine-tuning"
+          ]
+        }
+      ]
+    },
+    "experiencia": {
+      "title": "EXPERIENCIA",
+      "items": [
+        {
+          "org": "Right on it",
+          "role": "Full Stack Developer",
+          "dates": "MAR 2023 – DIC 2024",
+          "place": "EE. UU. · rightonitcorp.com",
+          "bullets": [
+            "Codesarrollo de un sistema de control de inventario en tiempo real para cliente corporativo, con arquitectura de microservicios y API REST.",
+            "Análisis predictivo e informes personalizados en el dashboard de gestión."
+          ]
+        }
+      ]
+    },
+    "proyectos": {
+      "title": "PROYECTOS",
+      "items": [
+        {
+          "name": "MenuUnfolded",
+          "kind": "SaaS de carta digital QR para restaurantes",
+          "dates": "2026 – PRESENTE",
+          "link": "menuunfolded.com",
+          "bullets": [
+            "Digitaliza las cartas de restaurantes con códigos QR: panel de administración, estadísticas de escaneo y suscripción freemium con pasarela de pago.",
+            "Importador de cartas con IA multimodal que extrae los platos de fotos o PDFs de la carta física."
+          ],
+          "tech": "Next.js · TypeScript · FastAPI · PostgreSQL + Alembic · JWT · Stripe · SSE",
+          "extra": "En producción con cliente real · ~100 visitas diarias"
+        },
+        {
+          "name": "Loomcast",
+          "kind": "Estudio multimedia con IA generativa 100 % local",
+          "dates": "JUL 2026 – PRESENTE",
+          "link": "",
+          "bullets": [
+            "Genera vídeo, imagen y música ejecutando los modelos íntegramente en local, sin APIs de pago: pipeline de tema a montaje final en vertical 9:16.",
+            "Inferencia sobre modelos cuantizados en Apple Silicon, con orquestación de memoria y cola de jobs con encadenado y recuperación."
+          ],
+          "tech": "FastAPI por capas · Astro + Svelte · llama.cpp · ComfyUI · Whisper/MLX · ffmpeg",
+          "extra": "Benchmarking que bajó el render de horas a ~1,5 min por vídeo"
+        },
+        {
+          "name": "NuxoAsist",
+          "kind": "Sistema de control horario y fichaje laboral",
+          "dates": "ENE – JUN 2026",
+          "link": "",
+          "bullets": [
+            "Registro de jornada alineado con la normativa española: fichajes, pausas, horas extra, ausencias, horarios con vigencias y exportación para inspección.",
+            "Corregir un fichaje no destruye el dato anterior: se conserva en una auditoría append-only con autor, fecha y motivo obligatorio."
+          ],
+          "tech": "Node 22 + Fastify 5 · React 19 + Tailwind · PostgreSQL 16 · OpenAPI 3.1 (36 endpoints) · node-cron",
+          "extra": "178 tests con Vitest"
+        },
+        {
+          "name": "MindCheck",
+          "kind": "Generador de tests con IA a partir de PDF",
+          "dates": "2025",
+          "link": "",
+          "bullets": [
+            "Plataforma educativa que convierte documentos PDF en tests interactivos de opción múltiple con IA, con autenticación, control de sesiones y arquitectura modular."
+          ],
+          "tech": "Next.js · TypeScript · FastAPI · PostgreSQL · JWT",
+          "extra": ""
+        }
+      ]
+    },
+    "educacion": {
+      "title": "EDUCACIÓN",
+      "items": [
+        {
+          "title": "Grado en Ingeniería Informática",
+          "org": "Universidad de Alicante",
+          "dates": "4.º CURSO · GRADUACIÓN 2027"
+        },
+        {
+          "title": "Grado en Marketing y Publicidad",
+          "org": "UNIR, Universidad Internacional de La Rioja",
+          "dates": "JUNIO 2025"
+        }
+      ]
+    },
+    "extra": {
+      "title": "EXTRA",
+      "items": [
+        "Español (nativo) · Inglés (B2 acreditado por la U. de Alicante)",
+        "Disponible para convenio de prácticas curriculares y extracurriculares con la UA",
+        "Diez años previos en marketing digital, eCommerce y dirección de proyectos (Colombia y EE. UU., 2006–2023)",
+        "Disponibilidad inmediata, movilidad geográfica y carné tipo B"
+      ]
+    }
   }
 }
