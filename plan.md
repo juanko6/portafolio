@@ -340,7 +340,7 @@ Fase cerrada salvo T7.6c, que queda abierta a criterio del usuario.
   - `FREELANCE FULL STACK · MAR 23 – DIC 24 · EE. UU.`
   - `WEB & MARKETING DIGITAL · 2021 – 2023 · BOGOTÁ`
 - On the web: `Mail, GitHub, LinkedIn, menuunfolded.com`
-- Colofón: `DESARROLLO: Juan C. Gutiérrez` · `TIPOGRAFÍA: Playfair Display · Inter · JetBrains Mono` · Bonus: `Me inspira la música, el cine y la intersección con el producto. Si tienes un track nuevo que funcione, mándamelo.`
+- Colofón: `DESARROLLO: Juan C. Gutiérrez` · `TIPOGRAFÍA: Playfair Display · Inter · JetBrains Mono` · Bonus: `Me gusta el punto donde la ingeniería se nota sin verse: la latencia que no existe, el estado vacío que no da miedo, el copy que decide por ti. Ahí es donde trabajo.`
 
 ### Work
 - Título: `TRABAJO SELECCIONADO (4)` / `2025—26`
