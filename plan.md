@@ -354,6 +354,11 @@ paleta y la tipografía de este sitio.
       reload. Smoke test en verde: `/resume` y `/resume.html` a 200, los dos PDF servidos como
       `application/pdf` con el mismo sha256 que los locales, `/noexiste` con 404 real, y las
       redirecciones de `http` y `www` conservando la ruta.
+- [x] T8.10 Caché de un día (`max-age=86400`) para los PDF en `nginx.conf`, en su propio `location`.
+      No van con las imágenes: su URL es estable pero el fichero se regenera con cada cambio del CV,
+      así que el año de `immutable` de los assets con hash serviría descargas viejas. Como todo
+      `location` con `add_header` propio descarta los heredados, el bloque repite las tres cabeceras
+      de seguridad (la trampa de T6.4).
 
 Notas de la fase:
 
