@@ -23,10 +23,11 @@ Thumbs.db
 # descargas temporales (Unsplash antes de mover a public/img)
 downloads/
 
-# material local, fuera del repo público
-cv/
-brand/
-referencia/
+# material local, fuera del repo público. Con `/` inicial: solo la carpeta raíz,
+# porque `public/cv/` SÍ se versiona (es el PDF generado de /resume, T8.5).
+/cv/
+/brand/
+/referencia/
 
 # artefactos de QA visual (Playwright MCP)
 .playwright-mcp/

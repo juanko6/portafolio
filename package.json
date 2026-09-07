@@ -10,6 +10,7 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "test": "vitest run",
+    "cv:pdf": "bash scripts/cv-pdf.sh",
     "deploy": "bash deploy/publish.sh"
   },
   "devDependencies": {
