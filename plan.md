@@ -349,6 +349,11 @@ paleta y la tipografía de este sitio.
       que sirve igual a la descarga y al `Cmd+P` del visitante: una sola maqueta, dos destinos.
       `?pdf=1` mide el contenido, inyecta el `@page` con el alto exacto y lo anuncia en
       `data-pdf-alto-mm`; `scripts/print-pdf.mjs` espera ese testigo y entonces imprime por CDP.
+- [x] T8.9 **Desplegado** (07/09/2026): `npm run deploy` + `deploy/nginx.conf` instalado sobre copia
+      de seguridad, validado antes en una config de usar y tirar y con `nginx -t` encadenado al
+      reload. Smoke test en verde: `/resume` y `/resume.html` a 200, los dos PDF servidos como
+      `application/pdf` con el mismo sha256 que los locales, `/noexiste` con 404 real, y las
+      redirecciones de `http` y `www` conservando la ruta.
 
 Notas de la fase:
 
