@@ -2,7 +2,7 @@
 
 **En producción: https://juanko.com**
 
-Portafolio personal estático — 4 vistas (Lobby, Info, Work, 404) con i18n ES/EN, más el
+Portafolio personal estático — 5 vistas (Lobby, Info, Work, Resume, 404) con i18n ES/EN, más el
 portafolio anterior archivado en [`/v1/`](https://juanko.com/v1/).
 
 **Stack:** vanilla JS + [Vite 8](https://vite.dev) (multi-página) + CSS por capas. Sin framework ni dependencias de runtime.
@@ -32,6 +32,7 @@ npm install
 | `npm run lint` | ESLint + Prettier (check) |
 | `npm run format` | Prettier (write) sobre todo el repo |
 | `npm test` | Ejecuta los tests de Vitest |
+| `npm run cv:pdf` | Regenera el PDF del CV imprimiendo `/resume` (ES + EN) |
 | `npm run deploy` | Publica en producción (lint + test + build + rsync) |
 
 ## Despliegue local
@@ -67,6 +68,7 @@ Sirve `dist/` en http://localhost:4173. Útil para verificar el bundle final ant
 | Lobby | `/` | `/` |
 | Info | `/info.html` | `/info.html` |
 | Work | `/work.html` | `/work.html` |
+| Resume | `/resume.html` | `/resume.html` |
 | 404 | `/404.html` | `/404.html` |
 | Archivo v1 | `/v1/index.html` | `/v1/index.html` |
 
@@ -83,7 +85,7 @@ npm test       # Vitest (tests de componentes, i18n, datos)
 
 - **ESLint** (`eslint.config.js`): reglas recomendadas + `eqeqeq` (smart) + `prefer-const`; sin `no-unused-vars` para args/vars prefijados con `_`.
 - **Prettier** (`.prettierrc.json`): dobles comillas, punto y coma, tab 2, `printWidth` 80. Ignora `*.md`, `dist/`, `node_modules/`, `referencia/`, `downloads/`, `.playwright-mcp/` y `public/v1/` (`.prettierignore`). El v1 está ahí porque es un archivo histórico: se conserva byte a byte como salió del servidor.
-- **Vitest** (`tests/`): integridad de datos, i18n, LangToggle, colofón, hero-canvas, smoke.
+- **Vitest** (`tests/`): integridad de datos, i18n, LangToggle, colofón, currículum, hero-canvas, smoke.
 - **CI** (`.github/workflows/ci.yml`): en `main`/PR → Node 22 → `npm ci` → `lint` → `test` → `build`.
 
 ## Pruebas manuales
@@ -93,6 +95,7 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 - [ ] **Lobby** (`/`): hero canvas reactivo al mouse (y autopiloto + toque en móvil), botones Info/Work, badges, footer.
 - [ ] **Info** (`/info.html`): título, badge `¡HOLA!`, bloques SOBRE MÍ / EMAIL / FOCUS / EXTRA / RESUMEN / ON THE WEB / COLOFÓN, retrato, y el enlace `VERSIÓN ANTERIOR` del colofón hacia `/v1/`.
 - [ ] **Work** (`/work.html`): lista de proyectos, expandir/colapsar detail, carrusel (scroll + flechas), bloque LET'S TALK.
+- [ ] **Resume** (`/resume.html`): raíl (descarga, contacto, stack) + cuerpo, `?lang=en` fuerza el idioma, y `Cmd+P` da la misma maqueta que el PDF descargable.
 - [ ] **404**: ruta desconocida muestra glitch `ERROR 404` + botón `Volver a /Lobby`.
 - [ ] **LangToggle ES/EN**: cambia todo el texto, persiste (localStorage), sincronizado en nav.
 - [ ] **Responsive**: móvil / tablet / desktop (p. ej. 375px, 768px, 1280px).
@@ -105,9 +108,11 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 
 ```
 .
-├── index.html info.html work.html 404.html   # entradas MPA
-├── vite.config.js                            # build MPA (4 entradas) → dist/
+├── index.html info.html work.html            # entradas MPA
+├── resume.html 404.html
+├── vite.config.js                            # build MPA (5 entradas) → dist/
 │                                             # + plugin `work-images` (ver abajo)
+├── scripts/cv-pdf.sh                         # imprime /resume → public/cv/*.pdf
 ├── deploy/
 │   ├── nginx.conf                            # config de producción (Oracle)
 │   ├── publish.sh                            # build + rsync (`npm run deploy`)
@@ -117,21 +122,37 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 │   ├── og.svg og-image.png                   # Open Graph
 │   ├── img/retrato.jpg                       # placeholder (Unsplash)
 │   ├── img/work/<slug>/                      # capturas de cada proyecto
+│   ├── cv/juan-gutierrez-cv-{es,en}.pdf      # generado con `npm run cv:pdf`
 │   └── v1/index.html                         # portafolio anterior, archivado
 ├── src/
 │   ├── css/
 │   │   ├── base/    (tokens, reset, typography)
 │   │   ├── components/ (nav, hero, footer, lang-toggle, layout)
-│   │   └── pages/   (lobby, info, work, notfound)
+│   │   └── pages/   (lobby, info, work, resume, notfound)
 │   └── js/
 │       ├── components/ (page, nav, hero-canvas, footer, lang-toggle, colofon,
 │       │               project-list, project-card, carousel)
 │       ├── data/projects.js                  # única fuente de datos de Work
 │       ├── i18n/    (index.js + locales es.json / en.json)
-│       └── pages/   (index, info, work, 404)
+│       └── pages/   (index, info, work, resume, 404)
 ├── tests/                                    # Vitest
 └── .github/workflows/ci.yml                  # CI: lint + test + build
 ```
+
+## El PDF del CV
+
+El PDF descargable de `/resume` **no se maqueta aparte**: se genera imprimiendo esa misma
+página, con los estilos `@media print` de `src/css/pages/resume.css`.
+
+```bash
+npm run cv:pdf
+```
+
+Construye, sirve `dist/` en `:4173`, y Chrome headless imprime `/resume.html?lang=es` y
+`?lang=en` a `public/cv/`. Dos A4 por idioma. El resultado se versiona en git.
+
+**Por tanto: si se toca el contenido del CV o el diseño de la página, hay que volver a
+ejecutarlo y commitear los PDF**, o la descarga se queda con la versión anterior.
 
 ## Capturas de los proyectos
 

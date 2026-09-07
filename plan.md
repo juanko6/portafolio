@@ -7,7 +7,7 @@ Estado: **En producción en https://juanko.com desde el 03/09/2026** · Fase 6 c
 | Decisión | Valor |
 |---|---|
 | Framework | Vite **vanilla** (HTML/CSS/JS ESM), **multi-página** |
-| Vistas | `/` Lobby · `/info` Aboutme · `/work` Work+detail · `404` |
+| Vistas | `/` Lobby · `/info` Aboutme · `/work` Work+detail · `/resume` CV · `404` |
 | Idiomas | `es` (default) + `en`, JSON por idioma en `src/i18n/locales/` |
 | Hero | Canvas generativo: ratón en escritorio, autopiloto + toque en móvil (sin Three.js) |
 | Imágenes | Unsplash (descargadas y versionadas en `public/img/`) |
@@ -22,8 +22,8 @@ Estado: **En producción en https://juanko.com desde el 03/09/2026** · Fase 6 c
 
 ```
 portafolio/
-├── index.html  info.html  work.html  404.html
-├── vite.config.js          # plugin MPA, 4 entradas, outDir 'dist'
+├── index.html  info.html  work.html  resume.html  404.html
+├── vite.config.js          # plugin MPA, 5 entradas, outDir 'dist'
 ├── package.json
 ├── .github/workflows/ci.yml
 ├── eslint.config.js  .prettierrc.json  .gitignore
@@ -316,6 +316,43 @@ Resultado: RAM disponible **303 → 618 MB**, disco **16 → 8,8 GB**, superfici
 Fase cerrada salvo T7.6c, que queda abierta a criterio del usuario.
 
 
+### Fase 8 — Currículum en web (`/resume`) + copy del colofón (07/09/2026)
+
+Referencia de formato: `olaolu.dev/resume` (raíl lateral + cuerpo, carga instantánea), con la
+paleta y la tipografía de este sitio.
+
+- [x] T8.1 Colofón: copy nuevo del bonus en ES/EN. El anterior («la música, el cine… mándame un
+      track») era simpático pero no decía nada de lo que hago. Ahora habla de dónde está el
+      trabajo: latencia, estados vacíos, el peso de una palabra.
+- [x] T8.2 Página `/resume`: 5ª entrada MPA (`resume.html` + `pages/resume.js` + `pages/resume.css`),
+      montada sobre `components/page.js`, así que hereda nav, footer, LangToggle e i18n. Todo el
+      contenido vive en `resume.*` de los locales; la página se reconstruye entera en `i18n:change`
+      (mismo patrón que `info.js`). Añadido `?lang=` en `i18n/index.js`: fija el idioma en la carga,
+      por delante del localStorage — sirve para compartir enlaces y es lo que usa el generador de PDF.
+- [x] T8.3 Enlace en el footer (`footer.links.resume`, `Currículum` / `Resume`) → `/resume.html`.
+      Al `.html` y no a la URL limpia: el dev server de Vite no resuelve `/resume`, solo nginx.
+- [x] T8.4 nginx: `location = /resume` junto a los de `/info` y `/work`.
+- [x] T8.5 PDF descargable **generado desde la propia página** (`scripts/cv-pdf.sh`, `npm run cv:pdf`):
+      build → `vite preview` → Chrome headless `--print-to-pdf` sobre `/resume.html?lang=es|en`.
+      La maqueta del PDF es el bloque `@media print` de `resume.css`, no un documento aparte, así que
+      web y PDF no pueden divergir. **Contrapartida: cada cambio de diseño o de contenido obliga a
+      regenerar y commitear los PDF.** Se imprime contra el build, no contra el dev server: en dev el
+      CSS lo inyecta el HMR por JS y Chrome llega a imprimir antes de que se aplique.
+- [x] T8.6 `README.md`, `plan.md` y `memoria.md` al día de la fase.
+
+Notas de la fase:
+
+- El PDF salía en **carta** (el defecto de Chrome) y con media hoja en blanco: `break-inside: avoid`
+  en la entrada completa empujaba un proyecto entero a la página siguiente. Arreglado con `size: A4`
+  y moviendo el `avoid` a la cabecera y a cada bullet, dejando que una entrada larga sí se parta.
+  Dos A4 por idioma tras apretar la escala de impresión.
+- `.gitignore` tenía `cv/` **sin barra inicial**, así que también ignoraba `public/cv/`: el PDF
+  generado no se habría subido nunca. Ahora es `/cv/` (solo la carpeta raíz, que es material local).
+- El CV en PDF de la carpeta `cv/` sigue fuera del repo y ya no es la fuente de verdad: lo es
+  `resume.*` en los locales. Ojo, ese PDF antiguo lleva `juanko6@gmail.com`; la web usa
+  `juanko.dev@gmail.com`, que es el bueno.
+
+
 ## 4. Mapa de textos ES (cerrado)
 
 ### Lobby
@@ -359,11 +396,18 @@ Fase cerrada salvo T7.6c, que queda abierta a criterio del usuario.
 - **NuxoAsist** · About: `Sistema de control horario alineado con la normativa española: fichaje, pausas, horas extra, ausencias y exportación para inspección. Auditoría append-only con autor, fecha y motivo.` · Rol: `Full Stack` `Node 22 + Fastify 5` `React 19 + Tailwind` `OpenAPI 3.1 (36 endpoints)` `178 tests Vitest`
 - **MindCheck** · About: `Plataforma educativa que convierte documentos PDF en tests interactivos de opción múltiple con IA.` · Rol: `Full Stack` `Next.js + TypeScript` `FastAPI + PostgreSQL` `JWT + sesiones`
 
+### Resume
+- Nombre: `JUAN` / `GUTIÉRREZ` · Rol: `Desarrollador Full Stack` · Sub: `GRADO EN INGENIERÍA INFORMÁTICA · UNIVERSIDAD DE ALICANTE`
+- Raíl: `DESCARGAR PDF ↓` · `CONTACTO` (Alicante · mail · GitHub · LinkedIn · juanko.com) · `STACK` (4 grupos) · `ACTUALIZADO: SEP 2026`
+- Cuerpo: `PERFIL` (2 párrafos) · `EXPERIENCIA` (Right on it) · `PROYECTOS` (los 4 de Work) · `EDUCACIÓN` (2) · `EXTRA` (4)
+- Todo el texto vive en `resume.*` de `es.json` / `en.json`; no hay copy en el JS.
+
 ### 404
 - `ERROR (404)` glitch · `Algo salió mal, la página que solicitas no está disponible.` · `Volver a /Lobby`
 
 ## 5. Criterio de done (global)
-- `npm run dev` → 4 vistas navegables, i18n ES/EN, hero reactivo (ratón y móvil).
+- `npm run dev` → 5 vistas navegables, i18n ES/EN, hero reactivo (ratón y móvil).
+- `npm run cv:pdf` → dos A4 por idioma en `public/cv/`, idénticos a `/resume` impreso.
 - `npm run lint && npm run test && npm run build` → verde.
 - CI verde en GitHub; build servido por nginx en Oracle.
 
