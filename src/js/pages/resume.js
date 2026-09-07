@@ -109,13 +109,14 @@ function buildRail() {
     contacto.appendChild(a);
   });
 
+  /* Una sola lista corta y a propósito: la parrilla de 30 tecnologías por
+     categorías decía menos, no más. */
   const stack = railGroup(t("resume.stack.title"), rail);
-  t("resume.stack.groups").forEach(({ label, items }) => {
-    stack.appendChild(el("p", "resume__stacklabel", label));
-    const list = el("ul", "resume__stacklist");
-    items.forEach((item) => list.appendChild(el("li", null, item)));
-    stack.appendChild(list);
-  });
+  const stackList = el("ul", "resume__stacklist");
+  t("resume.stack.items").forEach((item) =>
+    stackList.appendChild(el("li", null, item))
+  );
+  stack.appendChild(stackList);
 
   rail.appendChild(el("p", "resume__updated", t("resume.updated")));
   return rail;
@@ -136,16 +137,6 @@ function buildBody() {
   const perfil = block(t("resume.perfil.title"), body);
   perfil.appendChild(el("p", "resume__lede", t("resume.perfil.text")));
   perfil.appendChild(el("p", "resume__prose", t("resume.perfil.text2")));
-
-  const experiencia = block(t("resume.experiencia.title"), body);
-  t("resume.experiencia.items").forEach((item) => {
-    const entry = el("article", "resume__entry");
-    entry.appendChild(
-      entryHead(`${item.org} — ${item.role}`, item.place, item.dates)
-    );
-    entry.appendChild(bullets(item.bullets));
-    experiencia.appendChild(entry);
-  });
 
   const proyectos = block(t("resume.proyectos.title"), body);
   t("resume.proyectos.items").forEach((item) => {

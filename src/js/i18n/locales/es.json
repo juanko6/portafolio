@@ -127,77 +127,15 @@
     },
     "stack": {
       "title": "STACK",
-      "groups": [
-        {
-          "label": "Lenguajes y frontend",
-          "items": [
-            "TypeScript",
-            "JavaScript",
-            "Python",
-            "Java",
-            "SQL",
-            "React",
-            "Next.js",
-            "Astro",
-            "Svelte",
-            "Tailwind"
-          ]
-        },
-        {
-          "label": "Backend y datos",
-          "items": [
-            "FastAPI",
-            "Fastify (Node)",
-            "Spring Boot",
-            "REST / OpenAPI",
-            "JWT",
-            "SSE",
-            "PostgreSQL",
-            "MySQL"
-          ]
-        },
-        {
-          "label": "Cloud y método",
-          "items": [
-            "Docker",
-            "Nginx",
-            "GitHub Actions",
-            "Oracle Cloud",
-            "Linux",
-            "SDD",
-            "TDD",
-            "Vitest",
-            "Pytest",
-            "Git",
-            "Scrum"
-          ]
-        },
-        {
-          "label": "IA & LLM",
-          "items": [
-            "LLM locales cuantizados",
-            "APIs multimodales",
-            "System prompts",
-            "Agentes y harnesses",
-            "RAG",
-            "Fine-tuning"
-          ]
-        }
-      ]
-    },
-    "experiencia": {
-      "title": "EXPERIENCIA",
       "items": [
-        {
-          "org": "Right on it",
-          "role": "Full Stack Developer",
-          "dates": "MAR 2023 – DIC 2024",
-          "place": "EE. UU. · rightonitcorp.com",
-          "bullets": [
-            "Codesarrollo de un sistema de control de inventario en tiempo real para cliente corporativo, con arquitectura de microservicios y API REST.",
-            "Análisis predictivo e informes personalizados en el dashboard de gestión."
-          ]
-        }
+        "TypeScript",
+        "Next.js / React",
+        "Python",
+        "FastAPI / Node",
+        "PostgreSQL",
+        "Docker / Cloud",
+        "LLM & inferencia local",
+        "Agentes & RAG"
       ]
     },
     "proyectos": {

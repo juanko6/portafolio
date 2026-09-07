@@ -42,6 +42,19 @@ describe("i18n del currículum", () => {
     expect(vacios).toEqual([]);
   });
 
+  /* El raíl empezó con 33 tecnologías en cuatro grupos y confundía más que
+     informaba. Ocho, de un tirón, y dos de ellas de IA. */
+  it("el stack son 8 ítems en una sola lista", () => {
+    expect(es.resume.stack.items).toHaveLength(8);
+    expect(en.resume.stack.items).toHaveLength(8);
+    expect(es.resume.stack.groups).toBeUndefined();
+  });
+
+  it("no hay sección de experiencia: el CV va por proyectos", () => {
+    expect(es.resume.experiencia).toBeUndefined();
+    expect(en.resume.experiencia).toBeUndefined();
+  });
+
   it("los proyectos del CV son los mismos que el trabajo seleccionado", () => {
     expect(es.resume.proyectos.items.map((p) => p.name)).toEqual([
       "MenuUnfolded",

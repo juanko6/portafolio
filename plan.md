@@ -339,6 +339,11 @@ paleta y la tipografía de este sitio.
       regenerar y commitear los PDF.** Se imprime contra el build, no contra el dev server: en dev el
       CSS lo inyecta el HMR por JS y Chrome llega a imprimir antes de que se aplique.
 - [x] T8.6 `README.md`, `plan.md` y `memoria.md` al día de la fase.
+- [x] T8.7 Poda del contenido, a petición del usuario: el raíl pasa de **33 tecnologías en cuatro
+      grupos a 8 ítems** en una sola lista (dos de ellos de IA) —la parrilla larga confundía más de lo
+      que informaba— y **fuera la sección `EXPERIENCIA`**: el CV va por proyectos. El peso lo sostiene
+      `PERFIL` («producto propio en producción con cliente real»). Efecto colateral a vigilar: el único
+      puesto pagado, Right on it (mar 23 – dic 24), ya no aparece en ninguna parte del CV.
 
 Notas de la fase:
 
@@ -398,8 +403,9 @@ Notas de la fase:
 
 ### Resume
 - Nombre: `JUAN` / `GUTIÉRREZ` · Rol: `Desarrollador Full Stack` · Sub: `GRADO EN INGENIERÍA INFORMÁTICA · UNIVERSIDAD DE ALICANTE`
-- Raíl: `DESCARGAR PDF ↓` · `CONTACTO` (Alicante · mail · GitHub · LinkedIn · juanko.com) · `STACK` (4 grupos) · `ACTUALIZADO: SEP 2026`
-- Cuerpo: `PERFIL` (2 párrafos) · `EXPERIENCIA` (Right on it) · `PROYECTOS` (los 4 de Work) · `EDUCACIÓN` (2) · `EXTRA` (4)
+- Raíl: `DESCARGAR PDF ↓` · `CONTACTO` (Alicante · mail · GitHub · LinkedIn · juanko.com) · `STACK` (8 ítems, lista única) · `ACTUALIZADO: SEP 2026`
+- Stack: `TypeScript` · `Next.js / React` · `Python` · `FastAPI / Node` · `PostgreSQL` · `Docker / Cloud` · `LLM & inferencia local` · `Agentes & RAG`
+- Cuerpo: `PERFIL` (2 párrafos) · `PROYECTOS` (los 4 de Work) · `EDUCACIÓN` (2) · `EXTRA` (4)
 - Todo el texto vive en `resume.*` de `es.json` / `en.json`; no hay copy en el JS.
 
 ### 404

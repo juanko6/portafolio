@@ -127,77 +127,15 @@
     },
     "stack": {
       "title": "STACK",
-      "groups": [
-        {
-          "label": "Languages & frontend",
-          "items": [
-            "TypeScript",
-            "JavaScript",
-            "Python",
-            "Java",
-            "SQL",
-            "React",
-            "Next.js",
-            "Astro",
-            "Svelte",
-            "Tailwind"
-          ]
-        },
-        {
-          "label": "Backend & data",
-          "items": [
-            "FastAPI",
-            "Fastify (Node)",
-            "Spring Boot",
-            "REST / OpenAPI",
-            "JWT",
-            "SSE",
-            "PostgreSQL",
-            "MySQL"
-          ]
-        },
-        {
-          "label": "Cloud & method",
-          "items": [
-            "Docker",
-            "Nginx",
-            "GitHub Actions",
-            "Oracle Cloud",
-            "Linux",
-            "SDD",
-            "TDD",
-            "Vitest",
-            "Pytest",
-            "Git",
-            "Scrum"
-          ]
-        },
-        {
-          "label": "AI & LLM",
-          "items": [
-            "Local quantized LLMs",
-            "Multimodal APIs",
-            "System prompts",
-            "Agents & harnesses",
-            "RAG",
-            "Fine-tuning"
-          ]
-        }
-      ]
-    },
-    "experiencia": {
-      "title": "EXPERIENCE",
       "items": [
-        {
-          "org": "Right on it",
-          "role": "Full Stack Developer",
-          "dates": "MAR 2023 – DEC 2024",
-          "place": "US · rightonitcorp.com",
-          "bullets": [
-            "Co-developed a real-time inventory control system for a corporate client, with a microservice architecture and a REST API.",
-            "Predictive analysis and custom reporting in the management dashboard."
-          ]
-        }
+        "TypeScript",
+        "Next.js / React",
+        "Python",
+        "FastAPI / Node",
+        "PostgreSQL",
+        "Docker / Cloud",
+        "LLM & local inference",
+        "Agents & RAG"
       ]
     },
     "proyectos": {
