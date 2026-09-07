@@ -344,9 +344,24 @@ paleta y la tipografía de este sitio.
       que informaba— y **fuera la sección `EXPERIENCIA`**: el CV va por proyectos. El peso lo sostiene
       `PERFIL` («producto propio en producción con cliente real»). Efecto colateral a vigilar: el único
       puesto pagado, Right on it (mar 23 – dic 24), ya no aparece en ninguna parte del CV.
+- [x] T8.8 La descarga pasa a ser **una sola página** del alto que haga falta (210 mm de ancho),
+      en vez de un A4 paginado. Los estilos de papel salen de `@media print` a la clase `is-paper`,
+      que sirve igual a la descarga y al `Cmd+P` del visitante: una sola maqueta, dos destinos.
+      `?pdf=1` mide el contenido, inyecta el `@page` con el alto exacto y lo anuncia en
+      `data-pdf-alto-mm`; `scripts/print-pdf.mjs` espera ese testigo y entonces imprime por CDP.
 
 Notas de la fase:
 
+- **Tres trampas encadenadas hasta llegar a la página única** (T8.8), por orden de aparición:
+  1. `chrome --print-to-pdf` imprime cuando se le acaba el tiempo virtual, sin esperar a que la
+     página mida: el mismo comando daba 1 página en inglés y un A4 en dos hojas en español. De ahí
+     el salto a CDP en `scripts/print-pdf.mjs`.
+  2. `body` y `#app` llevan `min-height: 100dvh`; al imprimir, `dvh` es el alto de la **página**, así
+     que el documento se estira más allá del alto útil y se derrama. Neutralizado en `is-paper`.
+  3. La que costó: con el alto pasado por CDP, Chrome hacía el PDF de 484 mm **pero seguía paginando
+     el contenido cada 297 mm**, porque el `size: A4` del `@page` del CSS mandaba sobre la
+     fragmentación. Fuera ese `size`, y el tamaño lo fija el `@page` que inyecta la página con
+     `preferCSSPageSize`. Una sola fuente para la geometría.
 - El PDF salía en **carta** (el defecto de Chrome) y con media hoja en blanco: `break-inside: avoid`
   en la entrada completa empujaba un proyecto entero a la página siguiente. Arreglado con `size: A4`
   y moviendo el `avoid` a la cabecera y a cada bullet, dejando que una entrada larga sí se parta.
@@ -413,7 +428,7 @@ Notas de la fase:
 
 ## 5. Criterio de done (global)
 - `npm run dev` → 5 vistas navegables, i18n ES/EN, hero reactivo (ratón y móvil).
-- `npm run cv:pdf` → dos A4 por idioma en `public/cv/`, idénticos a `/resume` impreso.
+- `npm run cv:pdf` → un PDF de una sola página por idioma en `public/cv/`, idéntico a `/resume`.
 - `npm run lint && npm run test && npm run build` → verde.
 - CI verde en GitHub; build servido por nginx en Oracle.
 

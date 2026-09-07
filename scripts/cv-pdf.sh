@@ -5,10 +5,14 @@
 #   npm run cv:pdf              # ES + EN a public/cv/
 #   npm run cv:pdf -- --shot    # además, capturas PNG de página completa
 #
-# El PDF NO se maqueta aparte: sale de `resume.html` con los estilos
-# `@media print` de src/css/pages/resume.css. Así la web y el PDF no pueden
+# El PDF NO se maqueta aparte: sale de `resume.html` con la maqueta de papel
+# (clase `is-paper`) de src/css/pages/resume.css. Así la web y el PDF no pueden
 # divergir — pero implica que **cada vez que se toque el diseño hay que volver
 # a ejecutar esto y versionar el PDF resultante**.
+#
+# El parámetro `?pdf=1` pone la página en modo descarga: `resume.js` mide el
+# contenido y publica su altura, y `scripts/print-pdf.mjs` imprime UNA sola
+# página de 210 mm de ancho por ese alto — no un A4 paginado.
 #
 # Se imprime contra el build de `dist/` servido por `vite preview`, no contra
 # el dev server: en dev el CSS lo inyecta el HMR por JS y Chrome llega a
@@ -48,21 +52,29 @@ done
 mkdir -p "$OUT"
 
 for lang in es en; do
-    url="http://localhost:$PORT/resume.html?lang=$lang"
+    url="http://localhost:$PORT/resume.html?lang=$lang&pdf=1"
     step "PDF ($lang)"
-    "$CHROME" --headless --disable-gpu --no-sandbox \
-        --no-pdf-header-footer \
-        --virtual-time-budget=10000 \
-        --print-to-pdf="$OUT/juan-gutierrez-cv-$lang.pdf" \
-        "$url" 2>/dev/null
-    ls -lh "$OUT/juan-gutierrez-cv-$lang.pdf" | awk '{print "  " $9 " — " $5}'
+    CHROME="$CHROME" node scripts/print-pdf.mjs "$url" "$OUT/juan-gutierrez-cv-$lang.pdf"
+    ls -lh "$OUT/juan-gutierrez-cv-$lang.pdf" | awk '{print "  peso: " $5}'
+
+    # El objetivo es una única página. Si aparece una segunda es que la medida
+    # de `resume.js` se quedó corta (fuentes sin cargar, casi siempre).
+    if command -v pdfinfo >/dev/null 2>&1; then
+        paginas=$(pdfinfo "$OUT/juan-gutierrez-cv-$lang.pdf" | awk '/^Pages:/ {print $2}')
+        medida=$(pdfinfo "$OUT/juan-gutierrez-cv-$lang.pdf" | awk -F': +' '/^Page size/ {print $2}')
+        if [ "$paginas" = "1" ]; then
+            echo "  1 página · $medida"
+        else
+            printf '\033[31m  ✗ %s páginas (se esperaba 1)\033[0m\n' "$paginas" >&2
+        fi
+    fi
 
     if [ "$SHOT" -eq 1 ]; then
         "$CHROME" --headless --disable-gpu --no-sandbox \
             --window-size=1440,900 \
             --screenshot="/tmp/resume-$lang.png" \
             --virtual-time-budget=10000 \
-            "$url" 2>/dev/null
+            "http://localhost:$PORT/resume.html?lang=$lang" 2>/dev/null
         echo "  captura → /tmp/resume-$lang.png"
     fi
 done

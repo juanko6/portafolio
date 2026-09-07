@@ -326,130 +326,186 @@
   }
 }
 
-/* Impresión — la maqueta del PDF descargable.
-   Fondo crema y texto oscuro: imprimir el espresso del sitio sería una losa de
-   tinta. El acento naranja se mantiene porque sigue siendo la marca. */
+/* Maqueta de papel — T8.8
+
+   Una sola definición para los dos destinos, porque mantener dos que se
+   parecen es la forma más segura de que acaben distintas:
+
+     · descarga (`?pdf=1`)  → UNA página, tan alta como haga falta
+     · Cmd+P del visitante  → la misma maqueta, paginada en A4
+
+   La activa la clase `is-paper` en <html>, que pone `resume.js` al cargar con
+   `?pdf=1` y en el evento `beforeprint`. El bloque `@media print` de abajo es
+   solo la red de seguridad por si ese JS no llegó a correr.
+
+   Fondo blanco y texto oscuro: el espresso del sitio sería una losa de tinta.
+   El acento naranja se queda porque sigue siendo la marca. */
+
+:root.is-paper {
+  --color-bg: #fff;
+  --color-text: #1a100b;
+  --color-muted: #6b5d50;
+  --border-subtle: 1px solid rgba(26, 16, 11, 0.16);
+  --glow-text: none;
+}
+
+.is-paper body {
+  background: #fff;
+}
+
+/* `body` y `#app` llevan `min-height: 100dvh` (reset.css y layout.css). Al
+   imprimir, `dvh` es la altura de la PÁGINA, no la del contenido: el documento
+   se estira hasta pasarse del alto útil y se derrama a una segunda hoja. En
+   papel no hay pantalla que llenar. */
+.is-paper body,
+.is-paper #app {
+  min-height: 0;
+}
+
+.is-paper .c-header,
+.is-paper .c-footer-slot,
+.is-paper .resume__download {
+  display: none;
+}
+
+.is-paper .resume {
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: 12mm;
+  padding: 0;
+  max-width: none;
+}
+
+/* La media query de móvil (60em = 960 px) también entra aquí: una A4 útil mide
+   ~695 px. Hay que deshacer su `display: contents` y su reordenado, o el raíl
+   se desparrama por el papel. Gana por especificidad (dos clases), no por
+   orden. */
+.is-paper .resume__rail {
+  display: flex;
+  position: static;
+  gap: var(--space-5);
+}
+
+.is-paper .resume__body,
+.is-paper .resume__group,
+.is-paper .resume__updated {
+  order: 0;
+}
+
+/* Escala de papel */
+.is-paper .resume__name {
+  font-size: 2.6rem;
+}
+
+.is-paper .resume__role {
+  font-size: 1.05rem;
+}
+
+.is-paper .resume__lede {
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.is-paper .resume__prose,
+.is-paper .resume__bullets li {
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.is-paper .resume__entryname {
+  font-size: 0.95rem;
+}
+
+.is-paper .resume__stacklist {
+  columns: 1;
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
+.is-paper .resume__body {
+  gap: var(--space-5);
+}
+
+.is-paper .resume__block {
+  gap: var(--space-3);
+}
+
+.is-paper .resume__blockbody {
+  gap: var(--space-4);
+}
+
+.is-paper .resume__entry {
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+}
+
+.is-paper .resume__bullets {
+  gap: 0.32em;
+}
+
+.is-paper a {
+  text-decoration: none;
+}
+
+/* Reparto entre páginas. Solo importa en el Cmd+P a A4: en la descarga hay una
+   página única y nada que partir. Una entrada larga SÍ puede partirse (si no,
+   deja media hoja en blanco), pero nunca por debajo de su cabecera ni dentro
+   de un punto de la lista. */
+.is-paper .resume__blocklabel,
+.is-paper .resume__entryhead {
+  break-after: avoid;
+}
+
+.is-paper .resume__entryhead,
+.is-paper .resume__bullets li,
+.is-paper .resume__group {
+  break-inside: avoid;
+}
+
+.is-paper .resume__entry {
+  break-inside: auto;
+}
+
+/* Modo descarga: el ancho se clava al útil de la página (210mm − 2×13mm) para
+   que la altura que mide `resume.js` en pantalla sea exactamente la que tendrá
+   al imprimirse. El alto de página lo pone `scripts/print-pdf.mjs`. */
+.is-pdf .resume {
+  width: 184mm;
+}
+
+/* Y aquí no hay reparto entre páginas que valer: hay una sola. Dejar activas
+   las reglas de arriba es peligroso — si el contenido se pasa aunque sea por
+   un píxel, la cadena de `avoid` (viñeta → cabecera → etiqueta) arrastra el
+   corte más de 150 mm hacia arriba y deja media hoja en blanco. */
+.is-pdf .resume__blocklabel,
+.is-pdf .resume__entryhead,
+.is-pdf .resume__bullets li,
+.is-pdf .resume__group,
+.is-pdf .resume__entry {
+  break-before: auto;
+  break-after: auto;
+  break-inside: auto;
+}
 
 @media print {
+  /* Sin `size`: quien hace Cmd+P elige el papel en su diálogo. Fijarlo aquí no
+     solo era innecesario, es que **ganaba a la geometría de la descarga**: el
+     PDF salía de 484 mm de alto pero Chrome seguía paginando el contenido cada
+     297 mm, con lo que la «página única» acababa partida en dos. El modo
+     descarga inyecta su propio `@page` desde resume.js. */
   @page {
-    size: A4;
     margin: 12mm 13mm;
   }
 
-  :root {
-    --color-bg: #fff;
-    --color-text: #1a100b;
-    --color-muted: #6b5d50;
-    --border-subtle: 1px solid rgba(26, 16, 11, 0.16);
-    --glow-text: none;
-  }
-
+  /* Red de seguridad: si `beforeprint` no llegó a poner `is-paper`, que al
+     menos no salga la página oscura entera. */
   body {
     background: #fff;
+    color: #1a100b;
   }
 
   .c-header,
   .c-footer-slot,
   .resume__download {
     display: none;
-  }
-
-  .resume {
-    grid-template-columns: 13rem minmax(0, 1fr);
-    gap: 12mm;
-    padding: 0;
-    max-width: none;
-  }
-
-  /* Una A4 mide ~816 px, así que la media query de móvil (60em = 960 px)
-     TAMBIÉN entra al imprimir: hay que deshacer aquí su `display: contents` y
-     su reordenado, o el raíl se desparrama por el PDF. */
-  .resume__rail {
-    display: flex;
-    position: static;
-    gap: var(--space-5);
-  }
-
-  .resume__body,
-  .resume__group,
-  .resume__updated {
-    order: 0;
-  }
-
-  .resume__stacklist {
-    columns: 1;
-  }
-
-  /* Escala de papel: el objetivo son DOS hojas A4. Si se añade un proyecto o
-     un puesto habrá que reapretar aquí (o aceptar la tercera hoja). */
-  .resume__name {
-    font-size: 2.6rem;
-  }
-
-  .resume__role {
-    font-size: 1.05rem;
-  }
-
-  .resume__lede {
-    font-size: 0.88rem;
-    line-height: 1.45;
-  }
-
-  .resume__prose,
-  .resume__bullets li {
-    font-size: 0.76rem;
-    line-height: 1.45;
-  }
-
-  .resume__entryname {
-    font-size: 0.95rem;
-  }
-
-  .resume__stacklist {
-    font-size: 0.7rem;
-    line-height: 1.55;
-  }
-
-  .resume__body {
-    gap: var(--space-5);
-  }
-
-  .resume__block {
-    gap: var(--space-3);
-  }
-
-  .resume__blockbody {
-    gap: var(--space-4);
-  }
-
-  .resume__entry {
-    gap: var(--space-2);
-    padding-top: var(--space-4);
-  }
-
-  .resume__bullets {
-    gap: 0.32em;
-  }
-
-  /* Reparto entre páginas: una entrada larga SÍ puede partirse (si no, deja
-     media hoja en blanco), pero nunca por debajo de su cabecera ni dentro de
-     un punto de la lista. La etiqueta de sección viaja con lo que etiqueta. */
-  .resume__blocklabel,
-  .resume__entryhead {
-    break-after: avoid;
-  }
-
-  .resume__entryhead,
-  .resume__bullets li,
-  .resume__group {
-    break-inside: avoid;
-  }
-
-  .resume__entry {
-    break-inside: auto;
-  }
-
-  a {
-    text-decoration: none;
   }
 }

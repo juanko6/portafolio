@@ -174,3 +174,51 @@ function build() {
 
 build();
 document.addEventListener("i18n:change", build);
+
+/* T8.8 — Maqueta de papel. La clase `is-paper` (ver resume.css) sirve a los dos
+   destinos: la descarga y el Cmd+P del visitante. Lo único que los separa es el
+   tamaño de página, y eso se decide aquí. */
+
+const PAGINA_ANCHO_MM = 210;
+const PAGINA_MARGEN_MM = 13;
+const MM_POR_PX = 25.4 / 96; /* CSS fija 96 px por pulgada */
+
+function modoPapel(activo) {
+  document.documentElement.classList.toggle("is-paper", activo);
+}
+
+/* Cmd+P: la misma maqueta, paginada en A4 por el `@page` de la hoja de estilos. */
+addEventListener("beforeprint", () => modoPapel(true));
+addEventListener("afterprint", () => modoPapel(false));
+
+/* `?pdf=1` (lo usa `npm run cv:pdf`): modo descarga. La página no imprime nada
+   por su cuenta: se mide, inyecta un `@page` con el tamaño exacto de una única
+   hoja y publica la altura en `data-pdf-alto-mm`. `scripts/print-pdf.mjs` espera
+   a ese testigo antes de imprimir (con `preferCSSPageSize`, para que mande este
+   `@page`), que es lo que evita la carrera con la carga de fuentes.
+
+   Se mide en pantalla, no al imprimir, y por eso `.is-pdf` clava el ancho al
+   útil de la página: con otro ancho la altura medida no valdría. */
+async function prepararPaginaUnica() {
+  document.documentElement.classList.add("is-paper", "is-pdf");
+
+  /* Sin esperar a las fuentes se mide con las de sistema, que son más
+     estrechas: el PDF saldría corto y con una segunda página casi vacía. */
+  if (document.fonts) await document.fonts.ready;
+  await new Promise((listo) => requestAnimationFrame(() => listo()));
+
+  const alto = document.querySelector(".resume").getBoundingClientRect().height;
+  /* Holgura de 8mm. Entre el redondeo de px a puntos y el que hace Chrome al
+     fijar el alto de página, un cálculo al milímetro se pasa de largo y saca
+     una segunda hoja; una franja blanca al pie no la ve nadie. */
+  const altoMm = Math.ceil(alto * MM_POR_PX + 2 * PAGINA_MARGEN_MM + 8);
+
+  const estilo = document.createElement("style");
+  estilo.textContent = `@media print { @page { size: ${PAGINA_ANCHO_MM}mm ${altoMm}mm; margin: ${PAGINA_MARGEN_MM}mm; } }`;
+  document.head.appendChild(estilo);
+
+  /* Testigo: hasta que no está, el generador no imprime. */
+  document.documentElement.dataset.pdfAltoMm = String(altoMm);
+}
+
+if (new URLSearchParams(location.search).has("pdf")) prepararPaginaUnica();

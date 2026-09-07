@@ -95,7 +95,7 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 - [ ] **Lobby** (`/`): hero canvas reactivo al mouse (y autopiloto + toque en móvil), botones Info/Work, badges, footer.
 - [ ] **Info** (`/info.html`): título, badge `¡HOLA!`, bloques SOBRE MÍ / EMAIL / FOCUS / EXTRA / RESUMEN / ON THE WEB / COLOFÓN, retrato, y el enlace `VERSIÓN ANTERIOR` del colofón hacia `/v1/`.
 - [ ] **Work** (`/work.html`): lista de proyectos, expandir/colapsar detail, carrusel (scroll + flechas), bloque LET'S TALK.
-- [ ] **Resume** (`/resume.html`): raíl (descarga, contacto, stack) + cuerpo, `?lang=en` fuerza el idioma, y `Cmd+P` da la misma maqueta que el PDF descargable.
+- [ ] **Resume** (`/resume.html`): raíl (descarga, contacto, stack) + cuerpo, `?lang=en` fuerza el idioma, el botón descarga un PDF de **una sola página**, y `Cmd+P` da esa misma maqueta paginada (y al salir del diálogo la página vuelve a su aspecto oscuro).
 - [ ] **404**: ruta desconocida muestra glitch `ERROR 404` + botón `Volver a /Lobby`.
 - [ ] **LangToggle ES/EN**: cambia todo el texto, persiste (localStorage), sincronizado en nav.
 - [ ] **Responsive**: móvil / tablet / desktop (p. ej. 375px, 768px, 1280px).
@@ -112,7 +112,9 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 ├── resume.html 404.html
 ├── vite.config.js                            # build MPA (5 entradas) → dist/
 │                                             # + plugin `work-images` (ver abajo)
-├── scripts/cv-pdf.sh                         # imprime /resume → public/cv/*.pdf
+├── scripts/
+│   ├── cv-pdf.sh                             # build + preview + imprime los dos idiomas
+│   └── print-pdf.mjs                         # /resume → PDF de una página, vía CDP
 ├── deploy/
 │   ├── nginx.conf                            # config de producción (Oracle)
 │   ├── publish.sh                            # build + rsync (`npm run deploy`)
@@ -142,17 +144,29 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 ## El PDF del CV
 
 El PDF descargable de `/resume` **no se maqueta aparte**: se genera imprimiendo esa misma
-página, con los estilos `@media print` de `src/css/pages/resume.css`.
+página. La maqueta de papel es la clase `is-paper` de `src/css/pages/resume.css`, y sirve a
+los dos destinos:
+
+| Destino | Cómo se activa | Resultado |
+|---|---|---|
+| Descarga | `?pdf=1` | **una sola página** de 210 mm de ancho por el alto que haga falta |
+| `Cmd+P` del visitante | evento `beforeprint` | la misma maqueta, paginada en el papel que elija |
 
 ```bash
 npm run cv:pdf
 ```
 
-Construye, sirve `dist/` en `:4173`, y Chrome headless imprime `/resume.html?lang=es` y
-`?lang=en` a `public/cv/`. Dos A4 por idioma. El resultado se versiona en git.
+Construye, sirve `dist/` en `:4173` y lanza `scripts/print-pdf.mjs` por idioma → `public/cv/`.
+El resultado se versiona en git.
 
-**Por tanto: si se toca el contenido del CV o el diseño de la página, hay que volver a
-ejecutarlo y commitear los PDF**, o la descarga se queda con la versión anterior.
+Ese script habla con Chrome por CDP en vez de usar `--print-to-pdf` porque hace falta
+**esperar**: la página necesita las fuentes cargadas para medir su altura real, inyectar su
+`@page` y anunciarlo en `data-pdf-alto-mm`. Con la bandera de línea de comandos Chrome
+imprimía cuando se le acababa el tiempo virtual, llegara o no la medida — y el mismo comando
+daba una página en un idioma y un A4 partido en dos en el otro.
+
+**Si se toca el contenido del CV o el diseño de la página, hay que volver a ejecutarlo y
+commitear los PDF**, o la descarga se queda con la versión anterior.
 
 ## Capturas de los proyectos
 
