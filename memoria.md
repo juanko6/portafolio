@@ -11,6 +11,7 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 - **T6.2 ✅:** `canonical`/`og:*`/`twitter:image` ya apuntan a `https://juanko.com`. El despliegue ya no tiene bloqueantes de contenido.
 - **Fase 7 cerrada.** El usuario añadió las reglas ICMP (T7.6b) y rotó la `OPENAI_API_KEY` (T7.7) el 03/09/2026. Queda abierto solo **T7.6c**: cuatro DNS huérfanos siguen apuntando al servidor y dan error de certificado.
 - **Ojo con los IDs:** la Fase 6 se renumeró el 02/09/2026 en orden de ejecución (T6.1–T6.11). El commit `941adbf` habla de «T6.3» refiriéndose al README, que ahora es **T6.1**. Tabla de equivalencias al final de la Fase 6 en `plan.md`.
+- **Fase 9 (21/09/2026):** **Cuquita Restaurant** entra en `/work` y el carrusel aprende a montar vídeo. Es el primer proyecto cuyo valor está en cómo se mueve, así que sus diapositivas se reproducen en vez de ser capturas fijas: nueve en total, tres de ellas clips. El fondo de las composiciones lo eligió el usuario (`referencia/cuquita-bg.png`, el plato con la sopa y el arroz).
 - **Cómo actualizar:** editar "Estado actual" + añadir fila en "Log" al terminar cada tarea (1 commit = 1 tarea, `T#.# desc`).
 
 ## Decisiones tomadas (no reabrir sin motivo)
@@ -66,6 +67,8 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
 **Fase 6 cerrada el 03/09/2026** (detalle completo en `plan.md` §3 y §7): **T6.1** README, **T6.2** dominio, **T6.3** archivo v1, **T6.4** nginx, **T6.5** publish.sh, **T6.6** oracle.md, **T6.7** vaciado del servidor, **T6.8** despliegue, **T6.9** README, **T6.10** limpieza del reloj, **T6.11** capturas reales.
 - **Retrato del colofón**: sigue siendo el placeholder de Unsplash. Es lo único que queda de T6.11, y depende de una foto del usuario. El «bust 3D» del enunciado original ya no aplica: el hero acabó siendo un canvas de partículas.
 - **URL de Loomcast** (si aparece) → actualizar `projects.js`.
+- **Cuquita: `site` sigue en `null`.** El sitio está desplegado en `cuquita.juanko.com` esperando la aprobación del cliente, y el dominio final será `cuquitarestaurant.co` (ya es el `canonical` de su HTML). Cuando se apruebe, poner la URL buena y ajustar el test «solo MenuUnfolded expone Site vivo».
+- ~~**Cuquita: fondo de las composiciones**~~ **resuelto el 21/09/2026**: el usuario pasó la foto y las diapositivas 01, 02 y 04 se remontaron con ella. El original vive en `referencia/cuquita-bg.png`, que está fuera del repo público. **No dejarlo en `public/img/work/cuquita/`**: ahí el plugin lo tomaría como una diapositiva más.
 - ~~Verificación pendiente en dispositivo real~~ **hecha el 03/09/2026**: el usuario confirmó que el móvil se ve bien en un teléfono físico. Sigue vigente la limitación de fondo: el panel del navegador del entorno de desarrollo congela `rAF` y los observers, así que las animaciones no se pueden dar por verificadas ahí.
 
 ### Capturas y carrusel (T6.11, 03/09/2026)
@@ -92,6 +95,43 @@ Archivo de continuidad: leerlo al empezar cualquier sesión nueva.
   `downloads/compuestas-originales/`.
 - **Las flechas** avanzaban siempre el ancho de la primera imagen. Con anchos variables eso ya no
   es una diapositiva, así que `step()` mide la que asoma por el borde izquierdo.
+
+### Vídeo en el carrusel (T9.1–T9.3, 21/09/2026)
+
+- **Un medio es un grupo de ficheros que comparten nombre**, no un fichero. `01.mp4` y `01.jpg`
+  son una diapositiva de vídeo con su cartel. Es lo que permite tener cartel y varios formatos sin
+  inventar una lista aparte, y por eso el plugin pasó de `work-images` a `work-media` y el módulo
+  virtual exporta `{ kind, sources, poster }` en vez de rutas sueltas.
+- **Sin `autoplay`.** Los clips los arranca `start()` y los para `stop()`, que es lo que ya ataba
+  el desplazamiento a desplegar la tarjeta. Una tarjeta plegada no descarga ni reproduce nada, y
+  con `prefers-reduced-motion` —donde `start()` no hace nada— el clip se queda en el cartel. Salía
+  gratis: el enganche ya existía.
+- **Chrome pausa el vídeo mudo con la pestaña de fondo** («video-only background media was paused
+  to save power») **y al volver no lo reanuda**. El bucle de la pista sí vuelve solo, porque rAF se
+  reanuda, así que el síntoma era una tarjeta abierta con los clips congelados y todo lo demás
+  moviéndose. De ahí el enganche a `visibilitychange`. Esto también explica por qué en el panel del
+  navegador del entorno —que está oculto— los clips no se ven nunca: ahí no es un fallo.
+- **Trampa de Playwright que costó una vuelta entera:** `recordVideo.size` es el lienzo del vídeo,
+  y Playwright dibuja la página a su tamaño **CSS** y rellena de gris lo que sobre. Pedir
+  `viewport × deviceScaleFactor` (390×844 a escala 2 → 780×1688) daba clips con la página en el
+  cuadrante superior izquierdo y el resto gris. Peor aún: en una hoja de contacto ese gris se
+  confunde con el separador entre fotogramas, así que pasó desapercibido hasta el montaje.
+- **h264 con `yuv420p` exige lados pares**, así que el lienzo de los clips es 1120×700 y no
+  1119×700 como el de los jpg. Un píxel no se ve y el carrusel manda por altura.
+- **VP9 no gana aquí.** El carrusel admite `webm` y lo pondría delante del mp4, pero no se publica
+  ninguno: estas tomas son una foto quieta con una pantalla moviéndose dentro, y x264 salta mejor
+  los bloques que no cambian. Clip 01: mp4 crf 26 → 233 KB; VP9 con crf 34, 40 y 44 → 460, 331 y
+  270 KB, y el de 44 ya se ve peor. Medido, no supuesto.
+- **Las capturas de móvil hay que componerlas.** La diapositiva manda por altura (350 px en
+  escritorio), así que un vertical solo mediría 72 px de ancho. Van de tres en tres sobre una foto
+  del local, en un lienzo 16:10, igual que las de MenuUnfolded. Las de escritorio no: 1440×900 ya
+  es 16:10 y reducirlo es exacto.
+- **El fondo de las composiciones es material de origen, no publicado.** Va a `referencia/`, que
+  está en el `.gitignore`. Dentro de `public/img/work/<slug>/` el plugin lo tomaría como una
+  diapositiva más, porque ahí todo lo que tenga extensión de imagen o vídeo entra al carrusel.
+- **Los scripts de captura y montaje no están en el repo** (viven en el scratchpad de la sesión).
+  Dependen de Playwright y de ffmpeg, que no son dependencias del portafolio, y lo que se commitea
+  es el resultado — igual que con las capturas de T6.11.
 
 ## Convenciones
 - 1 commit = 1 tarea del `plan.md` (mensajes: `T#.# descripción`).

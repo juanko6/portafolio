@@ -383,6 +383,54 @@ Notas de la fase:
   `juanko.dev@gmail.com`, que es el bueno.
 
 
+### Fase 9 — Cuquita Restaurant en `/work` + carrusel con vídeo (21/09/2026)
+
+El proyecto nuevo es una web de restaurante cuyo valor está en cómo se mueve: la portada abre con
+el vídeo a pantalla completa y lo recoge en su marco antes de que entren los textos, y el menú
+converge hacia el centro al abrirse. Una captura fija no cuenta nada de eso, así que la tarjeta
+necesita diapositivas que se reproduzcan.
+
+Las tareas están partidas por **commit que deja el árbol verde**, no por unidad de trabajo: el
+plugin y el carrusel se tocan a la vez porque renombrar el módulo virtual rompe al otro, y la
+ficha del proyecto va detrás de sus ficheros porque los tests cuentan proyectos y medios.
+
+- [x] T9.1 Plugin `work-media` (antes `work-images`) y carrusel que monta vídeo. El módulo virtual
+      deja de exportar rutas y exporta medios `{ kind, sources, poster }`. **Un medio es un grupo
+      de ficheros que comparten nombre**: `01.mp4` y `01.jpg` son una diapositiva de vídeo con su
+      cartel, no dos diapositivas. Es lo que permite tener cartel y varios formatos sin inventar
+      una lista aparte. En el carrusel, cada diapositiva monta `<img>` o `<video>` según su `kind`;
+      el vídeo va mudo, en bucle, `playsinline` y **sin `autoplay`**, porque lo arranca `start()` y
+      lo para `stop()` —el mismo enganche que ya ataba el desplazamiento a desplegar la tarjeta—.
+      Así una tarjeta plegada no descarga ni reproduce nada, y con `prefers-reduced-motion` —donde
+      `start()` no hace nada— el clip se queda en su cartel. La clase de la diapositiva pasa de
+      `work-carousel__img` a `work-carousel__media`, que es la que mide la pista, y los vídeos
+      llevan `aspect-ratio` para que la pista no dé un tirón al llegar los metadatos.
+- [x] T9.2 Chrome pausa el vídeo mudo cuando la pestaña se va a segundo plano («video-only
+      background media was paused to save power») y **al volver no lo reanuda**. El bucle de la
+      pista sí vuelve solo porque rAF se reanuda, así que el síntoma habría sido una tarjeta
+      abierta con los clips congelados y todo lo demás moviéndose. El carrusel se engancha a
+      `visibilitychange` y los rearranca.
+- [x] T9.3 Capturas y clips de Cuquita. Grabados de `cuquita.juanko.com` con Playwright sobre
+      Chrome (el vídeo de la portada es h264 y el Chromium de Playwright no lo decodifica). La
+      coreografía arranca con la carga, así que no se puede «grabar y luego lanzarla»: se carga, se
+      congela todo en el fotograma 0 con la Web Animations API, y se suelta de golpe.
+      **Trampa a no repetir:** `recordVideo.size` es el lienzo, y Playwright dibuja la página a su
+      tamaño CSS y rellena de gris lo que sobre. Pedir `viewport × deviceScaleFactor` daba clips
+      con la mitad del fotograma vacío, y en una hoja de contacto ese gris se confunde con el
+      separador entre fotogramas.
+      Montaje: las tomas de móvil van de tres en tres sobre una foto del local, en un lienzo 16:10
+      —un vertical solo mediría 72 px de ancho en el carrusel—; las de escritorio a pelo, que
+      1440×900 ya es 16:10 y reducirlo a 1120×700 es exacto. El lienzo de los clips es 1120×700 y
+      no 1119×700 porque h264 con `yuv420p` exige lados pares.
+      Solo `mp4`, aunque el carrusel admita `webm`: en capturas de pantalla, casi todo quietas,
+      x264 salta mejor los bloques que no cambian. Clip 01: mp4 crf 26 → 168 KB; VP9 con crf 34, 40
+      y 44 → 460, 331 y 270 KB sobre el montaje anterior, y el de 44 ya se ve peor.
+- [x] T9.4 Ficha del proyecto en `projects.js`, detrás de MenuUnfolded y no la primera pese a ser
+      la más reciente: su carta se genera desde MenuUnfolded y leídas seguidas se entiende de dónde
+      sale. `site: null` hasta que el cliente apruebe; `repo` ya es la URL real, porque el
+      repositorio es público.
+- [x] T9.5 Docs: README (formatos, diapositivas animadas, lienzo par), plan y memoria.
+
 ## 4. Mapa de textos ES (cerrado)
 
 ### Lobby

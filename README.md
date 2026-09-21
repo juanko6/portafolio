@@ -111,7 +111,7 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 ├── index.html info.html work.html            # entradas MPA
 ├── resume.html 404.html
 ├── vite.config.js                            # build MPA (5 entradas) → dist/
-│                                             # + plugin `work-images` (ver abajo)
+│                                             # + plugin `work-media` (ver abajo)
 ├── scripts/
 │   ├── cv-pdf.sh                             # build + preview + imprime los dos idiomas
 │   └── print-pdf.mjs                         # /resume → PDF de una página, vía CDP
@@ -123,7 +123,7 @@ Checklist recomendado antes de desplegar (útil para la fase de cambios UX/UI):
 │   ├── favicon.svg apple-touch-icon.png
 │   ├── og.svg og-image.png                   # Open Graph
 │   ├── img/retrato.jpg                       # placeholder (Unsplash)
-│   ├── img/work/<slug>/                      # capturas de cada proyecto
+│   ├── img/work/<slug>/                      # capturas y clips de cada proyecto
 │   ├── cv/juan-gutierrez-cv-{es,en}.pdf      # generado con `npm run cv:pdf`
 │   └── v1/index.html                         # portafolio anterior, archivado
 ├── src/
@@ -177,16 +177,40 @@ captura a Loomcast basta con dejar el fichero aquí:
 public/img/work/loomcast/06.jpg
 ```
 
-No hay que tocar `projects.js` ni ninguna lista: el plugin `work-images` de `vite.config.js`
-lee `public/img/work/<slug>/` y expone el módulo virtual `virtual:work-images`. Se hace en el
+No hay que tocar `projects.js` ni ninguna lista: el plugin `work-media` de `vite.config.js`
+lee `public/img/work/<slug>/` y expone el módulo virtual `virtual:work-media`. Se hace en el
 build porque el sitio es estático y el navegador no puede listar un directorio; en desarrollo,
 añadir o borrar un fichero recarga la página.
 
 - La carpeta debe llamarse igual que el `slug` del proyecto en `projects.js`.
-- Formatos: `jpg`, `jpeg`, `png`, `webp`, `avif`.
+- Formatos: `jpg`, `jpeg`, `png`, `webp`, `avif` para imagen; `mp4` y `webm` para vídeo.
 - **El orden del carrusel es el del nombre del fichero**, en orden natural (`2.jpg` va antes
   que `10.jpg`). Renombrar es la forma de reordenar.
 - Si una carpeta está vacía o no existe, ese proyecto simplemente no monta carrusel.
+
+### Diapositivas animadas
+
+Una diapositiva puede ser un vídeo, que es la forma de enseñar una animación —la entrada de una
+portada, un menú que se abre— sin que haya que ir al sitio a verla. **Los ficheros que comparten
+nombre son una sola diapositiva**, no varias:
+
+```
+public/img/work/cuquita/01.mp4     el clip
+public/img/work/cuquita/01.jpg     su cartel
+```
+
+El `.jpg` no sale como diapositiva aparte: es el `poster` del vídeo, y es lo que se ve mientras
+el clip no arranca. Si alguna vez conviene un `01.webm`, entra en la misma diapositiva como
+fuente alternativa y el navegador elige (el webm va primero, porque el `<source>` que gana es el
+primero que se sabe reproducir).
+
+Los clips van **mudos, en bucle y sin `autoplay`**: los arranca el carrusel al desplegar la
+tarjeta y los para al plegarla, así que una tarjeta cerrada no descarga ni reproduce nada. Con
+`prefers-reduced-motion` no arrancan y se quedan en el cartel.
+
+> Sobre el formato: en estas capturas —una foto quieta con una pantalla moviéndose dentro— **x264
+> sale más pequeño que VP9**, así que hoy solo se publica `mp4`. Medido sobre el clip de entrada de
+> Cuquita: mp4 crf 26 → 233 KB, frente a 460 / 331 / 270 KB en VP9 con crf 34, 40 y 44.
 
 ### Dimensiones
 
@@ -205,7 +229,10 @@ en el fichero. Anchos resultantes en escritorio:
 Con **700 px de alto** vas sobrado en cualquier caso; más allá solo pesa. Dos avisos:
 
 - Las capturas de móvil salen como una tira estrecha (197 px de ancho): se ven, pero pierden
-  fuerza al lado de una apaisada.
+  fuerza al lado de una apaisada. Por eso las de Cuquita van compuestas de tres en tres dentro
+  de un lienzo 16:10, sobre una foto del local — igual que las de MenuUnfolded.
+- **Un vídeo tiene que traer los lados pares** (h264 con `yuv420p` lo exige): el lienzo de los
+  clips es 1120×700 y no 1119×700 como el de los jpg.
 - El reset aplica `max-width: 100%` a las imágenes, así que algo más ancho que la pista se
   recorta (`object-fit: cover`) en lugar de deformarse. En móvil la pista mide ~292 px, lo que
   admite hasta 16:9 sin recorte.
