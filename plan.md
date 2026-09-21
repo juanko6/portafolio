@@ -430,6 +430,13 @@ ficha del proyecto va detrás de sus ficheros porque los tests cuentan proyectos
       sale. `site: null` hasta que el cliente apruebe; `repo` ya es la URL real, porque el
       repositorio es público.
 - [x] T9.5 Docs: README (formatos, diapositivas animadas, lienzo par), plan y memoria.
+- [ ] T9.6 nginx: los vídeos entran en la regla de caché de los medios. Se vio al comprobar
+      producción tras desplegar: los `.jpg` salían con `Cache-Control: public, max-age=604800` y
+      los `.mp4` **sin cabecera ninguna**, porque el regex de esa `location` solo listaba
+      extensiones de imagen. Son ~700 KB de clips re-descargados en cada visita. Van en la misma
+      regla y no en una aparte: URL estable bajo `img/work/<slug>/` y el mismo ciclo de vida que
+      las capturas. **Queda pendiente aplicarlo en el servidor** (`scp` + `nginx -t` + `reload`,
+      receta en `deploy/oracle.md`); el repo ya lo tiene.
 
 ## 4. Mapa de textos ES (cerrado)
 
