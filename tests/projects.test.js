@@ -5,8 +5,8 @@ const IMAGEN = /\.(?:jpe?g|png|webp|avif)$/;
 const VIDEO = /\.(?:webm|mp4)$/;
 
 describe("data/projects (integridad)", () => {
-  it("contiene 4 proyectos", () => {
-    expect(PROJECTS).toHaveLength(4);
+  it("contiene 5 proyectos", () => {
+    expect(PROJECTS).toHaveLength(5);
   });
 
   it("slugs únicos y en formato kebab/minúsculas", () => {
@@ -115,5 +115,13 @@ describe("data/projects (integridad)", () => {
       );
       expect(nombres).toEqual(ordenadas);
     }
+  });
+
+  /* Cuquita es el primero que lleva vídeo (T9.1): es su animación de entrada lo
+     que hay que enseñar, y una captura fija no la cuenta. */
+  it("Cuquita monta al menos un vídeo en su carrusel", () => {
+    const cuquita = PROJECTS.find((p) => p.slug === "cuquita");
+    expect(cuquita).toBeTruthy();
+    expect(cuquita.media.some((m) => m.kind === "video")).toBe(true);
   });
 });

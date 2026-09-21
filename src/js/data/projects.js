@@ -49,6 +49,40 @@ const PROYECTOS = [
       },
     },
   },
+  /* Va detrás de MenuUnfolded y no el primero pese a ser el más reciente: su
+     carta se genera desde MenuUnfolded, y leídos seguidos se entiende de dónde
+     sale. */
+  {
+    slug: "cuquita",
+    name: "Cuquita Restaurant",
+    rol: [
+      "Full Stack",
+      "Astro 7 + TypeScript",
+      "Carta desde la API de MenuUnfolded",
+      "Bilingüe ES/EN",
+      "Vitest + Playwright",
+    ],
+    site: null,
+    repo: "https://github.com/juanko6/cuquita-restaurant-web",
+    content: {
+      es: {
+        timeline: "SEP 2026 – PRESENTE",
+        place: "PENSILVANIA",
+        about:
+          "Sitio del restaurante colombiano Cuquita, en Fountain Hill. Sustituye un WordPress con Elementor por un estático bilingüe cuya carta se genera en el build desde la API de MenuUnfolded y se cachea en disco, para que un fallo de esa API nunca publique una carta vacía.",
+        extra:
+          "Ocho piezas de movimiento sin una sola librería: el CI tumba el merge que pase de 40 KB de HTML, 25 de CSS o 15 de JS",
+      },
+      en: {
+        timeline: "SEP 2026 – PRESENT",
+        place: "PENNSYLVANIA",
+        about:
+          "Website for Cuquita, a Colombian restaurant in Fountain Hill. It replaces a WordPress and Elementor build with a bilingual static site whose menu is generated at build time from the MenuUnfolded API and cached on disk, so an API outage never ships an empty menu.",
+        extra:
+          "Eight motion pieces without a single library: CI blocks any merge over 40 KB of HTML, 25 of CSS or 15 of JS",
+      },
+    },
+  },
   {
     slug: "loomcast",
     name: "Loomcast",
