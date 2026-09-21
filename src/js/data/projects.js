@@ -1,14 +1,18 @@
 // ÚNICA fuente de datos de Work (listado + details). T4.1 / T5.2.
 // Regla: todo lo estructurado de /work vive aquí; el chrome UI va por i18n.
 // T5.2 — bilingüe completo: la prosa traducible (timeline/place/about/extra)
-// vive en `content: { es, en }`. `name`, `rol`, `site`, `repo`, `images` y
+// vive en `content: { es, en }`. `name`, `rol`, `site`, `repo`, `media` y
 // `slug` son universales (términos técnicos / URLs) y no se traducen.
-// `repo` apunta a la cuenta GitHub como placeholder hasta tener las URLs reales
-// de cada repo (pendiente, ver memoria.md → "Pendiente / abierto").
+// `repo` apunta a la cuenta GitHub como placeholder en los cuatro primeros,
+// hasta tener las URLs reales (pendiente, ver memoria.md → "Pendiente /
+// abierto"); Cuquita ya lleva la suya porque su repo es público.
 // Las capturas NO se listan aquí: salen de `public/img/work/<slug>/`, que lee
-// el plugin `work-images` de vite.config.js. Añadir o quitar un fichero de esa
+// el plugin `work-media` de vite.config.js. Añadir o quitar un fichero de esa
 // carpeta cambia el carrusel; el orden lo marca el nombre (orden natural).
-import WORK_IMAGES from "virtual:work-images";
+// Desde T9.1 una diapositiva puede ser un vídeo: los ficheros que comparten
+// nombre (`03.webm`, `03.mp4`, `03.jpg`) son un solo medio con sus formatos y
+// su cartel. El detalle está en el comentario del plugin.
+import WORK_MEDIA from "virtual:work-media";
 
 export function getProjectContent(project, lang) {
   const c = project.content;
@@ -135,9 +139,9 @@ const PROYECTOS = [
   },
 ];
 
-/* Cada proyecto recibe las capturas de su carpeta. Si la carpeta no existe o
-   está vacía, `images` queda como array vacío y la tarjeta no monta carrusel. */
+/* Cada proyecto recibe los medios de su carpeta. Si la carpeta no existe o
+   está vacía, `media` queda como array vacío y la tarjeta no monta carrusel. */
 export const PROJECTS = PROYECTOS.map((p) => ({
   ...p,
-  images: WORK_IMAGES[p.slug] ?? [],
+  media: WORK_MEDIA[p.slug] ?? [],
 }));

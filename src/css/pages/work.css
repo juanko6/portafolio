@@ -182,7 +182,7 @@
    pista (una captura 16:10 y una cuadrada se alinean por arriba y por abajo, y
    cada una ocupa el ancho que le toca). Antes iba al revés —ancho fijo más
    `aspect-ratio: 16/10`— y eso recortaba a 16:10 todo lo que no lo fuera. */
-.work-carousel__img {
+.work-carousel__media {
   flex: 0 0 auto;
   height: 156px;
   width: auto;
@@ -191,6 +191,13 @@
      recortarlas. Con ancho automático no hace nada; solo actúa en ese caso. */
   object-fit: cover;
   border-radius: var(--radius-chip);
+}
+
+/* Un vídeo sin metadatos cargados mide 300x150 por defecto y da un tirón en la
+   pista al llegar su tamaño real. Los clips se componen en el mismo lienzo que
+   las capturas, así que se le puede reservar el hueco por adelantado. */
+.work-carousel__media:is(video) {
+  aspect-ratio: 1119 / 700;
 }
 
 .work-carousel__arrow {
@@ -234,7 +241,7 @@
 /* 350 px de alto es lo que medía la diapositiva de escritorio antes del cambio
    (560 px de ancho a 16:10), así que el carrusel conserva su tamaño. */
 @media (min-width: 640px) {
-  .work-carousel__img {
+  .work-carousel__media {
     height: 350px;
   }
 }

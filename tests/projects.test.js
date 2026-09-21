@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { PROJECTS, getProjectContent } from "../src/js/data/projects.js";
 
+const IMAGEN = /\.(?:jpe?g|png|webp|avif)$/;
+const VIDEO = /\.(?:webm|mp4)$/;
+
 describe("data/projects (integridad)", () => {
   it("contiene 4 proyectos", () => {
     expect(PROJECTS).toHaveLength(4);
@@ -20,8 +23,8 @@ describe("data/projects (integridad)", () => {
       expect(Array.isArray(p.rol)).toBe(true);
       expect(p.rol.length).toBeGreaterThan(0);
       for (const r of p.rol) expect(typeof r).toBe("string");
-      expect(Array.isArray(p.images)).toBe(true);
-      expect(p.images.length).toBeGreaterThan(0);
+      expect(Array.isArray(p.media)).toBe(true);
+      expect(p.media.length).toBeGreaterThan(0);
       expect(p.repo).toMatch(/^https:\/\//);
       expect(p.content).toBeTypeOf("object");
     }
@@ -58,22 +61,59 @@ describe("data/projects (integridad)", () => {
     }
   });
 
-  it("imágenes salen de la carpeta /img/work/<slug>/", () => {
+  it("los medios salen de la carpeta /img/work/<slug>/", () => {
     for (const p of PROJECTS) {
-      for (const src of p.images) {
-        expect(src).toMatch(
-          new RegExp(`^/img/work/${p.slug}/[^/]+\\.(?:jpe?g|png|webp|avif)$`)
-        );
+      for (const medio of p.media) {
+        for (const src of medio.sources) {
+          expect(src).toMatch(new RegExp(`^/img/work/${p.slug}/[^/]+$`));
+        }
+        if (medio.poster !== null) {
+          expect(medio.poster).toMatch(
+            new RegExp(`^/img/work/${p.slug}/[^/]+$`)
+          );
+        }
       }
+    }
+  });
+
+  /* El `kind` es lo que decide si el carrusel monta <img> o <video>, así que
+     tiene que concordar con la extensión de todas sus fuentes: un "image" con
+     un .mp4 dentro daría una diapositiva rota y muda. */
+  it("cada medio declara un kind coherente con sus fuentes", () => {
+    for (const p of PROJECTS) {
+      for (const medio of p.media) {
+        expect(["image", "video"]).toContain(medio.kind);
+        expect(medio.sources.length).toBeGreaterThan(0);
+        const patron = medio.kind === "video" ? VIDEO : IMAGEN;
+        for (const src of medio.sources) expect(src).toMatch(patron);
+        /* El cartel solo tiene sentido en un vídeo, y siempre es una imagen. */
+        if (medio.kind === "image") expect(medio.poster).toBeNull();
+        if (medio.poster) expect(medio.poster).toMatch(IMAGEN);
+      }
+    }
+  });
+
+  /* Hoy no se publica ningún webm (x264 sale más pequeño en estas capturas),
+     así que esto no afirma que exista: vigila que, si alguien añade uno, quede
+     delante del mp4. Detrás no lo pediría nadie. */
+  it("si un vídeo trae webm, va antes que el mp4", () => {
+    const videos = PROJECTS.flatMap((p) =>
+      p.media.filter((m) => m.kind === "video")
+    );
+    for (const medio of videos) {
+      const mp4 = medio.sources.findIndex((s) => s.endsWith(".mp4"));
+      const webm = medio.sources.findIndex((s) => s.endsWith(".webm"));
+      if (mp4 !== -1 && webm !== -1) expect(webm).toBeLessThan(mp4);
     }
   });
 
   it("las capturas de cada proyecto van en orden natural", () => {
     for (const p of PROJECTS) {
-      const ordenadas = [...p.images].sort((a, b) =>
+      const nombres = p.media.map((m) => m.sources[0]);
+      const ordenadas = [...nombres].sort((a, b) =>
         a.localeCompare(b, "es", { numeric: true })
       );
-      expect(p.images).toEqual(ordenadas);
+      expect(nombres).toEqual(ordenadas);
     }
   });
 });

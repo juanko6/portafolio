@@ -79,7 +79,7 @@ function makeLink(label, href) {
 
 function buildDetail(detail, project, content) {
   const carouselWrap = document.createElement("div");
-  const carousel = mountCarousel(carouselWrap, { images: project.images });
+  const carousel = mountCarousel(carouselWrap, { media: project.media });
   detail.appendChild(carouselWrap);
 
   detail.appendChild(makeSection("project.about", content.about));

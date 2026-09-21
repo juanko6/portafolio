@@ -1,10 +1,16 @@
 /* Carrusel de capturas de un proyecto (T4.5).
    Bucle circular continuo: el contenido se desplaza de derecha a izquierda y
-   vuelve a empezar sin costura, porque la pista repite el set de imágenes
+   vuelve a empezar sin costura, porque la pista repite el set de medios
    varias veces y el scroll se rebobina un set entero al pasarse.
    La animación arranca cuando la tarjeta se expande (start/stop desde
    project-card.js). No se pausa al pasar el ratón por encima: el carrusel
-   aparece bajo el cursor al desplegar y eso lo dejaba congelado. */
+   aparece bajo el cursor al desplegar y eso lo dejaba congelado.
+
+   Una diapositiva puede ser imagen o vídeo (T9.1). El vídeo entra sin
+   `autoplay`: lo arranca `start()` y lo para `stop()`, igual que el bucle de
+   desplazamiento. Así una tarjeta plegada no descarga ni reproduce nada, y con
+   `prefers-reduced-motion` —donde `start()` no llega a hacer nada— el vídeo se
+   queda en su cartel y no se mueve. */
 
 const CHEV = {
   prev: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
@@ -19,31 +25,31 @@ const NUDGE_MS = 420;
 /* Tope del delta entre fotogramas: si la pestaña pasa a segundo plano rAF deja
    de emitir y al volver el primer fotograma acumularía todo ese tiempo. */
 const MAX_FRAME_MS = 50;
-/* Mínimo de diapositivas en la pista: con pocas imágenes hace falta repetir
+/* Mínimo de diapositivas en la pista: con pocos medios hace falta repetir
    más veces el set para que el rebobinado nunca tope con el final del scroll. */
 const MIN_SLIDES = 8;
 
-export function mount(el, { images }) {
+/* Clase común a imágenes y vídeos: es la que mide la pista y la que ordena el
+   salto de las flechas, así que tiene que estar en los dos. */
+const SLIDE = "work-carousel__media";
+
+export function mount(el, { media }) {
   el.className = "work-carousel";
 
-  /* Sin imágenes no hay carrusel. Importa protegerlo: la lista viene de leer
+  /* Sin medios no hay carrusel. Importa protegerlo: la lista viene de leer
      `public/img/work/<slug>/`, así que una carpeta vacía es un caso real, y
      `MIN_SLIDES / 0` daría Infinity y colgaría el bucle que crea las slides. */
-  if (!images.length) return { start() {}, stop() {} };
+  if (!media?.length) return { start() {}, stop() {} };
 
-  const reps = Math.max(2, Math.ceil(MIN_SLIDES / images.length));
+  const reps = Math.max(2, Math.ceil(MIN_SLIDES / media.length));
 
   const track = document.createElement("div");
   track.className = "work-carousel__track";
   for (let i = 0; i < reps; i++) {
-    for (const src of images) {
-      const img = document.createElement("img");
-      img.className = "work-carousel__img";
-      img.src = src;
-      img.alt = "";
-      img.loading = "lazy";
-      img.decoding = "async";
-      track.appendChild(img);
+    for (const medio of media) {
+      track.appendChild(
+        medio.kind === "video" ? crearVideo(medio) : crearImagen(medio)
+      );
     }
   }
 
@@ -51,19 +57,23 @@ export function mount(el, { images }) {
   const next = makeArrow("next");
   el.append(prev, track, next);
 
-  /* Ancho de un set completo de imágenes (incluido su hueco). */
+  /* Todas las copias del mismo clip se reproducen a la vez: la pista repite el
+     set varias veces y en pantalla puede haber dos a la vez. */
+  const videos = [...track.querySelectorAll("video")];
+
+  /* Ancho de un set completo de medios (incluido su hueco). */
   function setWidth() {
     const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
     return (track.scrollWidth + gap) / reps;
   }
 
   /* Avance de una diapositiva: la que está asomando por el borde izquierdo, no
-     siempre la primera. Las imágenes ya no miden todas lo mismo —mandan por
-     altura y cada proporción da un ancho distinto—, así que tomar la primera
+     siempre la primera. Los medios ya no miden todos lo mismo —mandan por
+     altura y cada proporción da un ancho distinto—, así que tomar el primero
      haría que la flecha saltara de más o de menos según qué se esté viendo. */
   function step() {
     const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-    const slides = track.querySelectorAll(".work-carousel__img");
+    const slides = track.querySelectorAll(`.${SLIDE}`);
     if (!slides.length) return 0;
     const actual =
       [...slides].find((s) => s.offsetLeft + s.offsetWidth > pos + 1) ??
@@ -150,12 +160,51 @@ export function mount(el, { images }) {
       if (reduced?.matches) return;
       running = true;
       play();
+      /* `play()` devuelve una promesa que se rechaza si el navegador bloquea la
+         reproducción. Están en `muted`, así que no debería pasar, pero un rechazo
+         sin capturar ensucia la consola por algo que no rompe nada. */
+      for (const v of videos) v.play?.().catch(() => {});
     },
     stop() {
       running = false;
       halt();
+      for (const v of videos) v.pause?.();
     },
   };
+}
+
+function crearImagen({ sources }) {
+  const img = document.createElement("img");
+  img.className = SLIDE;
+  img.src = sources[0];
+  img.alt = "";
+  img.loading = "lazy";
+  img.decoding = "async";
+  return img;
+}
+
+function crearVideo({ sources, poster }) {
+  const video = document.createElement("video");
+  video.className = SLIDE;
+  video.muted = true;
+  video.loop = true;
+  /* En iOS, sin esto el vídeo se abre a pantalla completa al reproducirse. */
+  video.playsInline = true;
+  video.setAttribute("playsinline", "");
+  /* Decorativo, como las capturas: ni foco ni lectura de pantalla. */
+  video.setAttribute("aria-hidden", "true");
+  video.tabIndex = -1;
+  /* Sin `autoplay`: manda `start()`. `metadata` basta para que la pista pueda
+     medir el ancho del vídeo antes de reproducirlo. */
+  video.preload = "metadata";
+  if (poster) video.poster = poster;
+  for (const src of sources) {
+    const source = document.createElement("source");
+    source.src = src;
+    source.type = src.endsWith(".webm") ? "video/webm" : "video/mp4";
+    video.appendChild(source);
+  }
+  return video;
 }
 
 function makeArrow(dir) {
