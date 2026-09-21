@@ -65,8 +65,11 @@ const video = (n) => ({
 });
 
 let originales;
+/* Handlers que el componente cuelga de `document`, para poder dispararlos. */
+let enDocumento;
 
 beforeEach(() => {
+  enDocumento = {};
   originales = {
     document: globalThis.document,
     window: globalThis.window,
@@ -74,7 +77,13 @@ beforeEach(() => {
     requestAnimationFrame: globalThis.requestAnimationFrame,
     cancelAnimationFrame: globalThis.cancelAnimationFrame,
   };
-  globalThis.document = { createElement: crearNodo };
+  globalThis.document = {
+    createElement: crearNodo,
+    hidden: false,
+    addEventListener: (tipo, fn) => {
+      enDocumento[tipo] = fn;
+    },
+  };
   /* El bucle de desplazamiento no se ejercita aquí: rAF no llama a nadie, así
      que `start()` solo deja constancia de que ha arrancado. */
   globalThis.requestAnimationFrame = () => 1;
@@ -151,6 +160,40 @@ describe("carousel", () => {
 
     carousel.stop();
     for (const v of videos) expect(v.pause).toHaveBeenCalled();
+  });
+
+  /* Chrome pausa el vídeo mudo al irse la pestaña a segundo plano y no lo
+     reanuda al volver, así que el carrusel tiene que reengancharlo él. */
+  it("al volver la pestaña al frente vuelve a reproducir, si estaba en marcha", () => {
+    const el = crearNodo("div");
+    const carousel = mount(el, { media: [video(1)] });
+    const videos = el.querySelectorAll("video");
+
+    carousel.start();
+    for (const v of videos) v.play.mockClear();
+
+    /* Con la pestaña oculta no se toca nada: la reanudación la manda el
+       navegador, no nosotros. */
+    globalThis.document.hidden = true;
+    enDocumento.visibilitychange();
+    for (const v of videos) expect(v.play).not.toHaveBeenCalled();
+
+    globalThis.document.hidden = false;
+    enDocumento.visibilitychange();
+    for (const v of videos) expect(v.play).toHaveBeenCalled();
+  });
+
+  it("con la tarjeta plegada, volver al frente no arranca nada", () => {
+    const el = crearNodo("div");
+    const carousel = mount(el, { media: [video(1)] });
+    const videos = el.querySelectorAll("video");
+
+    carousel.start();
+    carousel.stop();
+    for (const v of videos) v.play.mockClear();
+
+    enDocumento.visibilitychange();
+    for (const v of videos) expect(v.play).not.toHaveBeenCalled();
   });
 
   /* Quien pide no moverse no se mueve: ni la pista ni el vídeo. */

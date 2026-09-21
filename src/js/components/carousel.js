@@ -154,16 +154,28 @@ export function mount(el, { media }) {
 
   const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
+  /* `play()` devuelve una promesa que se rechaza si el navegador bloquea la
+     reproducción —con la pestaña de fondo pasa siempre—. Un rechazo sin
+     capturar ensucia la consola por algo que no rompe nada. */
+  function reproducir() {
+    for (const v of videos) v.play?.().catch(() => {});
+  }
+
+  /* Chrome pausa el vídeo mudo cuando la pestaña se va a segundo plano ("video-
+     only background media was paused to save power") y al volver no lo reanuda.
+     El bucle de la pista sí vuelve solo, porque rAF se reanuda; los clips se
+     quedarían congelados con la tarjeta abierta. De ahí este reenganche. */
+  document.addEventListener?.("visibilitychange", () => {
+    if (running && !document.hidden) reproducir();
+  });
+
   return {
     /* Arranca el bucle cuando la tarjeta se expande y la pista ya mide. */
     start() {
       if (reduced?.matches) return;
       running = true;
       play();
-      /* `play()` devuelve una promesa que se rechaza si el navegador bloquea la
-         reproducción. Están en `muted`, así que no debería pasar, pero un rechazo
-         sin capturar ensucia la consola por algo que no rompe nada. */
-      for (const v of videos) v.play?.().catch(() => {});
+      reproducir();
     },
     stop() {
       running = false;
