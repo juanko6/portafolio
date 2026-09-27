@@ -13,7 +13,7 @@ Estado: **En producción en https://juanko.com desde el 03/09/2026** · Fase 6 c
 | Imágenes | Unsplash (descargadas y versionadas en `public/img/`) |
 | Git | Repo **GitHub público**, 1 commit = 1 tarea, commits solo a nombre del autor |
 | QA | ESLint + Prettier + Vitest (tests clave: i18n, hero, datos, navegación) |
-| Deploy | Instancia **Oracle Cloud** ya en uso (`ssh mindcheck`) · build estático + nginx |
+| Deploy | Instancia **Oracle Cloud** ya en uso (`ssh juankoweb`) · build estático + nginx |
 | Dominio | **`juanko.com`** en la raíz · `www` → apex · portafolio antiguo archivado en `/v1/` |
 | Publicación | `npm run build` en local + `rsync` vía `deploy/publish.sh` (el servidor no tiene Node) |
 | Sin | Página secreta `/256` (descartada) |
@@ -510,7 +510,7 @@ ficha del proyecto va detrás de sus ficheros porque los tests cuentan proyectos
 
 ## 7. Inventario del servidor (tras el vaciado de T6.7, 02/09/2026)
 
-Acceso: `ssh mindcheck` → `ubuntu@168.75.106.115` (Oracle Cloud, Ubuntu 22.04, x86_64, 2 vCPU,
+Acceso: `ssh juankoweb` → `ubuntu@168.75.106.115` (Oracle Cloud, Ubuntu 22.04, x86_64, 2 vCPU,
 956 MB RAM + 2 GB de swap, disco 45 GB al 20 %). `ubuntu` es un usuario normal con `sudo`; SSH solo por
 clave pública, sin contraseñas.
 

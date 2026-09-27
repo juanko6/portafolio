@@ -9,7 +9,7 @@ resultado. En el servidor no hay build, ni Node, ni contenedores.
 
 | | |
 |---|---|
-| Acceso | `ssh mindcheck` → `ubuntu@168.75.106.115` |
+| Acceso | `ssh juankoweb` → `ubuntu@168.75.106.115` |
 | Sistema | Ubuntu 22.04 LTS, x86_64, 2 vCPU |
 | Memoria | 956 MB + 2 GB de swap en `/swapfile` |
 | Disco | 45 GB (~20 % usado) |
@@ -78,8 +78,8 @@ sudo apt-get install -y rsync
 **3. La configuración de nginx.** Se copia `deploy/nginx.conf` del repo, se prueba y se recarga:
 
 ```bash
-scp deploy/nginx.conf mindcheck:/tmp/juanko.com.conf
-ssh mindcheck 'sudo cp /tmp/juanko.com.conf /etc/nginx/sites-available/juanko.com \
+scp deploy/nginx.conf juankoweb:/tmp/juanko.com.conf
+ssh juankoweb 'sudo cp /tmp/juanko.com.conf /etc/nginx/sites-available/juanko.com \
   && sudo ln -sf /etc/nginx/sites-available/juanko.com /etc/nginx/sites-enabled/ \
   && sudo nginx -t && sudo systemctl reload nginx'
 ```
@@ -99,8 +99,8 @@ Se puede probar un `nginx.conf` sin instalarlo, montando una configuración de u
 solo lo incluya a él:
 
 ```bash
-scp deploy/nginx.conf mindcheck:/tmp/test.conf
-ssh mindcheck 'printf "events {}\nhttp {\n  include /etc/nginx/mime.types;\n  include /tmp/test.conf;\n}\n" > /tmp/nginx-test.conf
+scp deploy/nginx.conf juankoweb:/tmp/test.conf
+ssh juankoweb 'printf "events {}\nhttp {\n  include /etc/nginx/mime.types;\n  include /tmp/test.conf;\n}\n" > /tmp/nginx-test.conf
   sudo nginx -t -c /tmp/nginx-test.conf; rm -f /tmp/test.conf /tmp/nginx-test.conf'
 ```
 
@@ -114,7 +114,7 @@ Comprueba sintaxis, rutas y certificados sin tocar lo que está sirviendo.
 atrás basta con devolver el `root` y recargar:
 
 ```bash
-ssh mindcheck 'sudo sed -i "s|root /var/www/portafolio;|root /var/www/juanko.com;|" \
+ssh juankoweb 'sudo sed -i "s|root /var/www/portafolio;|root /var/www/juanko.com;|" \
   /etc/nginx/sites-available/juanko.com && sudo nginx -t && sudo systemctl reload nginx'
 ```
 
@@ -133,9 +133,9 @@ Verificado el 03/09/2026: `certbot renew --dry-run` → *all simulated renewals 
 varios minutos en esta máquina, y mientras corre bloquea cualquier otro `certbot`.
 
 ```bash
-ssh mindcheck 'sudo certbot certificates'      # qué hay y cuándo caduca
-ssh mindcheck 'sudo certbot renew --dry-run'   # ensayo de renovación
-ssh mindcheck 'systemctl list-timers certbot.timer'
+ssh juankoweb 'sudo certbot certificates'      # qué hay y cuándo caduca
+ssh juankoweb 'sudo certbot renew --dry-run'   # ensayo de renovación
+ssh juankoweb 'systemctl list-timers certbot.timer'
 ```
 
 Si una renovación falla, casi siempre es que el puerto 80 no llega: certbot valida por HTTP. Repasa
@@ -165,8 +165,8 @@ publicar; el guardián del script debería haberlo impedido.
 Registros:
 
 ```bash
-ssh mindcheck 'sudo tail -50 /var/log/nginx/portafolio.error.log'
-ssh mindcheck 'sudo tail -50 /var/log/nginx/portafolio.access.log'
+ssh juankoweb 'sudo tail -50 /var/log/nginx/portafolio.error.log'
+ssh juankoweb 'sudo tail -50 /var/log/nginx/portafolio.access.log'
 ```
 
 ---

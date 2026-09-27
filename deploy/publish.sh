@@ -10,13 +10,13 @@
 # de RAM un `vite build` allí es pedir un OOM. Ver deploy/oracle.md.
 #
 # Variables de entorno para apuntar a otro sitio sin tocar el script:
-#   DEPLOY_HOST (por defecto: mindcheck, el alias de ~/.ssh/config)
+#   DEPLOY_HOST (por defecto: juankoweb, el alias de ~/.ssh/config)
 #   DEPLOY_PATH (por defecto: /var/www/portafolio)
 #   DEPLOY_URL  (por defecto: https://juanko.com)
 
 set -euo pipefail
 
-HOST="${DEPLOY_HOST:-mindcheck}"
+HOST="${DEPLOY_HOST:-juankoweb}"
 DEST="${DEPLOY_PATH:-/var/www/portafolio}"
 URL="${DEPLOY_URL:-https://juanko.com}"
 
